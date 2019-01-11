@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
  *  Actor class stores data such as position and rotation.
  */
 open class ActorBeta : Actor() {
-    private val textureRegion: TextureRegion = TextureRegion()
+    internal val textureRegion: TextureRegion = TextureRegion()
     private val rectangle: Rectangle = Rectangle()
 
     fun setTexture (t: Texture) {
@@ -54,6 +54,5 @@ open class ActorBeta : Actor() {
                 scaleY,
                 rotation
             )
-
     }
 }

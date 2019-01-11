@@ -5,16 +5,16 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Stage
 
-class GameBeta : Game() {
+abstract class GameBeta : Game() {
 
-    private lateinit var mainStage: Stage
+    protected lateinit var mainStage: Stage
 
     override fun create() {
         mainStage = Stage()
         initialize()
     }
 
-    fun initialize () {}
+    abstract fun initialize ()
 
     override fun render () {
         val dt: Float = Gdx.graphics.deltaTime
@@ -33,5 +33,5 @@ class GameBeta : Game() {
         mainStage.draw()
     }
 
-    fun update(dt: Float) {}
+    abstract fun update(dt: Float)
 }

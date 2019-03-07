@@ -22,3 +22,6 @@ Lightweight Java Game Application (LWJGL) simplifies game development by accessi
 
 ## Texture
 A texture is an object that stores image-related data: the dimensions (width and height) of an image and the color of each pixel.
+
+## Driver Class
+A driver class is a class whose purpose is to drive the execution of another class, which often involves creating an instance of the class and calling one or more of its methods. Gives potential to create driver classes for multiple platforms.

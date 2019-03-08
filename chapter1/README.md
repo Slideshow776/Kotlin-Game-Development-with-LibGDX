@@ -4,7 +4,7 @@ A simple "Hello, World!" example
 ![image](https://user-images.githubusercontent.com/4059636/51062390-0d8d9a00-15f7-11e9-9c70-3adb52e18a26.png)
 
 # Chapter Notes
-## New imports:
+## New imports
 **import com.badlogic.gdx.Game** - An ApplicationListener that delegates to a Screen. This allows an application to easily have multiple screens.
 
 **import com.badlogic.gdx.Gdx** - Environment class holding references to the Application, Graphics, Audio, Files and Input instances. The references are held in public static fields which allows static access to all sub systems. Do not use Graphics in a thread that is not the rendering thread.

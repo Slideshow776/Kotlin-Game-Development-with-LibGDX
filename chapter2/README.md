@@ -14,7 +14,7 @@ Added sharky as suggested in summary
 
 ![untitled diagram](https://user-images.githubusercontent.com/4059636/53964770-38c0d100-40f0-11e9-8d25-e6e0f1d7319d.png)
 
-## New Imports:
+## New Imports
 **import com.badlogic.gdx.ApplicationListener** - An ApplicationListener is called when the Application is created, resumed, rendering, paused or destroyed. All methods are called in a thread that has the OpenGL context current. You can thus safely create and manipulate graphics resources.
 
 The ApplicationListener interface follows the standard Android activity life-cycle and is emulated on the desktop accordingly.

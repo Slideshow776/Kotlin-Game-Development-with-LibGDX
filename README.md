@@ -5,3 +5,5 @@ In no way do I claim ownership of the [code or assets](https://github.com/Apress
 This is simply for my own training and recreation.
 
 _The code is converted from Java to Kotlin._
+
+![Book cover of "Java Game Development with LibGDX by Lee Stemkoski"](https://images-na.ssl-images-amazon.com/images/I/41jIXLls7PL._SX348_BO1,204,203,200_.jpg)

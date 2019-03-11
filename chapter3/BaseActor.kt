@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.Texture.TextureFilter
+import com.badlogic.gdx.utils.Array
 
 /**
 *   Extend functionality of the LibGDX Actor class.
@@ -62,7 +66,69 @@ class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
                 rotation
             )
         }
+    }
 
+    fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean): Animation<TextureRegion> {
+        val fileCount: Int = fileNames.size
+        // val textureArray: Array<TextureRegion> = Array<TextureRegion>()
+        val textureArray: Array<TextureRegion> = Array<TextureRegion>()
+
+        for (i in 0..fileCount) {
+            val fileName: String = fileNames[i]
+            val texture: Texture = Texture(Gdx.files.internal(fileName))
+            texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
+            textureArray.add(TextureRegion(texture))
+        }
+
+        val anim: Animation<TextureRegion> = Animation<TextureRegion>(frameDuration, textureArray)
+
+        if (loop)
+            anim.playMode = Animation.PlayMode.LOOP
+        else
+            anim.playMode = Animation.PlayMode.NORMAL
+
+        if (animation == null)
+            setAnimation(anim)
+
+        return anim
+    }
+
+    fun loadAnimationFromSheet(fileName: String, rows: Int, cols: Int, frameDuration: Float, loop: Boolean): Animation<TextureRegion> {
+        val texture: Texture = Texture(Gdx.files.internal(fileName), true)
+        texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
+        val frameWidth: Int = texture.width / cols
+        val frameHeight: Int = texture.height / rows
+
+        val temp = TextureRegion.split(texture, frameWidth, frameHeight)
+        val textureArray: Array<TextureRegion> = Array<TextureRegion>()
+
+        for (r in 0..rows) {
+            for (c in 0..cols) {
+                textureArray.add(temp[r][c])
+            }
+        }
+
+        val anim: Animation<TextureRegion> = Animation(frameDuration, textureArray)
+
+        if (loop)
+            anim.playMode = Animation.PlayMode.LOOP
+        else
+            anim.playMode = Animation.PlayMode.NORMAL
+
+        if (animation == null)
+            setAnimation(anim)
+
+        return anim
+    }
+
+    fun loadTexture(fileName: String): Animation<TextureRegion> {
+        val fileNames: Array<String> = Array(1)
+        fileNames[0] = fileName
+        return loadAnimationFromFiles(fileNames, 1.toFloat(), true)
+    }
+
+    fun isAnimationFinished(): Boolean {
+        return animation.isAnimationFinished(elapsedTime)
     }
 }
 

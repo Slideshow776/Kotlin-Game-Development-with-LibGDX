@@ -17,6 +17,20 @@ In computer graphics, texture filtering or texture smoothing is the method used 
 ![Texture filtering: nearest vs Linear](https://www.gamedevelopment.blog/wp-content/uploads/2017/11/nearest-vs-linear-texture-filter.png)
 ![Texture filtering: nearest vs Linear](https://love2d.org/w/images/8/8f/ComparisonFilters.png)
 
+## Physics and Movement
+### Velocity
+How an object's position  (speed and direction) changes over time.
+* Position (x, y) [m]
+* velocity <x, y> [m/s]
+
+![figure of a vector](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVziijmlIcnAnqHetkzw7e3lhLhooLLbsZ2SgfioxXAuP80mIU)
+
+The image above is a visual representation of the vector <Vx, Va> with length V and direction angle ø.
+LibGDX uses its own Vector2 and Mathutils libraries to handle vector calculations.
+
+### Acceleration
+### Movement
+
 ## New Imports
 **import com.badlogic.gdx.utils.array** - A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
 

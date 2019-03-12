@@ -10,6 +10,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector
 
 /**
 *   Extend functionality of the LibGDX Actor class.
@@ -19,6 +22,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     private var animation: Animation<TextureRegion>?
     private var elapsedTime: Float = 0F
     private var animationPaused: Boolean = false
+    private var velocityVec: Vector2 = Vector2(0f, 0f)
 
     init {
         this.x = x
@@ -132,5 +136,17 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     fun isAnimationFinished(): Boolean {
         return animation!!.isAnimationFinished(elapsedTime)
     }
-}
 
+    fun setSpeed(speed: Float) {
+        // If length is zero, then assume motion angle is zero degrees
+        if (velocityVec.len() == 0f)
+            velocityVec.set(speed, 0f)
+        else
+            velocityVec.setLength(speed)
+    }
+
+    fun getSpeed() = velocityVec.len()
+    fun setMotionAngle(angle: Float) = velocityVec.setAngle(angle)
+    fun getMotionAngle() = velocityVec.angle()
+    fun isMoving() = getSpeed() > 0
+}

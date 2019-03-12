@@ -14,13 +14,15 @@ import com.badlogic.gdx.utils.Array
 /**
 *   Extend functionality of the LibGDX Actor class.
 */
-class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
+open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
 
     private lateinit var animation: Animation<TextureRegion>
     private var elapsedTime: Float = 0.toFloat()
     private var animationPaused: Boolean = false
 
     init {
+        if(x==null||y==null||s==null)
+            println("Whirlpool.kt: Error: x is: $x, y is: $y, s is: $s")
         setPosition(x, y)
         s.addActor(this)
     }
@@ -73,7 +75,7 @@ class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         // val textureArray: Array<TextureRegion> = Array<TextureRegion>()
         val textureArray: Array<TextureRegion> = Array<TextureRegion>()
 
-        for (i in 0..fileCount) {
+        for (i in 0..(fileCount-1)) {
             val fileName: String = fileNames[i]
             val texture: Texture = Texture(Gdx.files.internal(fileName))
             texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
@@ -122,8 +124,8 @@ class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     }
 
     fun loadTexture(fileName: String): Animation<TextureRegion> {
-        val fileNames: Array<String> = Array(1)
-        fileNames[0] = fileName
+        val fileNames: Array<String> = Array(2)
+        fileNames.add(fileName)
         return loadAnimationFromFiles(fileNames, 1.toFloat(), true)
     }
 

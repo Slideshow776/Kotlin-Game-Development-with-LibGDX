@@ -4,8 +4,12 @@
 **Value-Based Animations** uses a single image and continuously changes associated values (such as position or rotation).
 These effects can easily be added to the game by using LibGDX's Action class.
 
+![animation of square rotating and changing color](https://camo.githubusercontent.com/c30621e6c4fe034f630f02ae177126cd84d26bb3/687474703a2f2f7777772e636f736d69636d696e642e636f6d2f6d6f74696f6e2f616e696d6174696f6e732f726f746174652e676966) ![animation of circle fading](https://camo.githubusercontent.com/41deb847c8c34f9a257b76264040d6dcc6424446/687474703a2f2f7777772e636f736d69636d696e642e636f6d2f6d6f74696f6e2f616e696d6174696f6e732f666164652e676966) ![animation of square growing and shrinking](https://camo.githubusercontent.com/dad6d0d48e5d2d856cc2fb278753c3cc07e753cf/687474703a2f2f7777772e636f736d69636d696e642e636f6d2f6d6f74696f6e2f616e696d6174696f6e732f73697a652e676966)
+
 **Image-Based Animations** is created from images that are rapidly displayed in sequence to create the illusion of movement.
 In LibGDX this is accomplished by using the Animation class.
+
+![spritesheet of mario walking](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQknIrEmlPTg_WckDUat3EUnky-RXjrgPvqzqdW_bMz2Uhn9fMM2g)
 
 ## Texture Filtering
 In computer graphics, texture filtering or texture smoothing is the method used to determine the texture color for a texture mapped pixel, using the colors of nearby texels (pixels of the texture). There are two main categories of texture filtering, magnification filtering and minification filtering.

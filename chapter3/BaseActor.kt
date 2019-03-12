@@ -16,20 +16,20 @@ import com.badlogic.gdx.utils.Array
 */
 open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
 
-    private lateinit var animation: Animation<TextureRegion>
-    private var elapsedTime: Float = 0.toFloat()
+    private var animation: Animation<TextureRegion>?
+    private var elapsedTime: Float = 0F
     private var animationPaused: Boolean = false
 
     init {
-        if(x==null||y==null||s==null)
-            println("Whirlpool.kt: Error: x is: $x, y is: $y, s is: $s")
-        setPosition(x, y)
+        this.x = x
+        this.y = y
         s.addActor(this)
+        animation = null
     }
 
     fun setAnimation(anim: Animation<TextureRegion>) {
         animation = anim
-        val tr: TextureRegion = animation.getKeyFrame(0.toFloat())
+        val tr: TextureRegion = animation!!.getKeyFrame(0.toFloat())
         val w: Float = tr.regionWidth.toFloat()
         val h: Float = tr.regionHeight.toFloat()
         setSize(w, h)
@@ -56,7 +56,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
 
         if (animation != null && isVisible) {
             batch.draw(
-                animation.getKeyFrame(elapsedTime),
+                animation!!.getKeyFrame(elapsedTime),
                 x,
                 y,
                 originX,
@@ -73,16 +73,16 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean): Animation<TextureRegion> {
         val fileCount: Int = fileNames.size
         // val textureArray: Array<TextureRegion> = Array<TextureRegion>()
-        val textureArray: Array<TextureRegion> = Array<TextureRegion>()
+        val textureArray: Array<TextureRegion> = Array()
 
         for (i in 0..(fileCount-1)) {
             val fileName: String = fileNames[i]
-            val texture: Texture = Texture(Gdx.files.internal(fileName))
+            val texture = Texture(Gdx.files.internal(fileName))
             texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
             textureArray.add(TextureRegion(texture))
         }
 
-        val anim: Animation<TextureRegion> = Animation<TextureRegion>(frameDuration, textureArray)
+        val anim: Animation<TextureRegion> = Animation(frameDuration, textureArray)
 
         if (loop)
             anim.playMode = Animation.PlayMode.LOOP
@@ -96,13 +96,13 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     }
 
     fun loadAnimationFromSheet(fileName: String, rows: Int, cols: Int, frameDuration: Float, loop: Boolean): Animation<TextureRegion> {
-        val texture: Texture = Texture(Gdx.files.internal(fileName), true)
+        val texture = Texture(Gdx.files.internal(fileName), true)
         texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
         val frameWidth: Int = texture.width / cols
         val frameHeight: Int = texture.height / rows
 
         val temp = TextureRegion.split(texture, frameWidth, frameHeight)
-        val textureArray: Array<TextureRegion> = Array<TextureRegion>()
+        val textureArray: Array<TextureRegion> = Array()
 
         for (r in 0..rows) {
             for (c in 0..cols) {
@@ -130,7 +130,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     }
 
     fun isAnimationFinished(): Boolean {
-        return animation.isAnimationFinished(elapsedTime)
+        return animation!!.isAnimationFinished(elapsedTime)
     }
 }
 

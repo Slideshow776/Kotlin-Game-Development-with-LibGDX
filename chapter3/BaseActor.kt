@@ -29,20 +29,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         this.y = y
         s.addActor(this)
         animation = null
-    }
-
-    fun setAnimation(anim: Animation<TextureRegion>) {
-        animation = anim
-        val tr: TextureRegion = animation!!.getKeyFrame(0.toFloat())
-        val w: Float = tr.regionWidth.toFloat()
-        val h: Float = tr.regionHeight.toFloat()
-        setSize(w, h)
-        setOrigin(w/2, h/2)
-    }
-
-    fun setAnimationPaused(pause: Boolean) {
-        animationPaused = pause
-    }
+    }    
 
     override fun act(dt: Float) {
         super.act(dt)
@@ -72,6 +59,20 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
                 rotation
             )
         }
+    }
+    
+    // Graphics ---------------------------------------------------------------------------------------------------
+    fun setAnimation(anim: Animation<TextureRegion>) {
+        animation = anim
+        val tr: TextureRegion = animation!!.getKeyFrame(0.toFloat())
+        val w: Float = tr.regionWidth.toFloat()
+        val h: Float = tr.regionHeight.toFloat()
+        setSize(w, h)
+        setOrigin(w/2, h/2)
+    }
+
+    fun setAnimationPaused(pause: Boolean) {
+        animationPaused = pause
     }
 
     fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean): Animation<TextureRegion> {
@@ -137,6 +138,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         return animation!!.isAnimationFinished(elapsedTime)
     }
 
+    // Physics ---------------------------------------------------------------------------------------------------
     fun setSpeed(speed: Float) {
         // If length is zero, then assume motion angle is zero degrees
         if (velocityVec.len() == 0f)

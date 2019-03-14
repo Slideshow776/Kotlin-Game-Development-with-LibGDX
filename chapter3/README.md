@@ -37,6 +37,7 @@ Acceleration represents how fast velocity is changing
 If an object's initial velocity is <a, b> and there is a constant acceleration of <c, d>, then after t seconds, the formula at that time is <a + tc, b + td>
 
 ### Movement
+Movement is implemented by the BaseActor.applyPhysics and keys are set in Turtle.kt
 
 ## New Imports
 **import com.badlogic.gdx.utils.array** - A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).

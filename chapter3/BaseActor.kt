@@ -23,6 +23,8 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     private var elapsedTime: Float = 0F
     private var animationPaused: Boolean = false
     private var velocityVec: Vector2 = Vector2(0f, 0f)
+    private var accelerationVec: Vector2 = Vector2(0f, 0f)
+    private var acceleration: Float = 0f
 
     init {
         this.x = x

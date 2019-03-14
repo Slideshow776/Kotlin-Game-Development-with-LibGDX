@@ -29,6 +29,13 @@ The image above is a visual representation of the vector <Vx, Va> with length V 
 LibGDX uses its own Vector2 and Mathutils libraries to handle vector calculations.
 
 ### Acceleration
+Acceleration represents how fast velocity is changing
+* Position (x, y) [m]
+* Velocity <x, y> [m/s]
+* Acceleration <x, y> [m/(s^2)]
+
+If an object's initial velocity is <a, b> and there is a constant acceleration of <c, d>, then after t seconds, the formula at that time is <a + tc, b + td>
+
 ### Movement
 
 ## New Imports

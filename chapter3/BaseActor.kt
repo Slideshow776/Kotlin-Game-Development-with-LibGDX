@@ -79,15 +79,12 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         animationPaused = pause
     }
 
-    fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean): Animation<TextureRegion> {
-        val fileCount: Int = fileNames.size
-        // val textureArray: Array<TextureRegion> = Array<TextureRegion>()
+    fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean, textureFilter: TextureFilter = TextureFilter.Linear): Animation<TextureRegion> {
         val textureArray: Array<TextureRegion> = Array()
 
-        for (i in 0..(fileCount-1)) {
-            val fileName: String = fileNames[i]
-            val texture = Texture(Gdx.files.internal(fileName))
-            texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
+        for (i in 0..fileNames.size-1) {
+            val texture = Texture(Gdx.files.internal(fileNames[i]))
+            texture.setFilter(textureFilter, textureFilter)
             textureArray.add(TextureRegion(texture))
         }
 
@@ -104,9 +101,9 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         return anim
     }
 
-    fun loadAnimationFromSheet(fileName: String, rows: Int, cols: Int, frameDuration: Float, loop: Boolean): Animation<TextureRegion> {
+    fun loadAnimationFromSheet(fileName: String, rows: Int, cols: Int, frameDuration: Float, loop: Boolean, textureFilter: TextureFilter = TextureFilter.Linear): Animation<TextureRegion> {
         val texture = Texture(Gdx.files.internal(fileName), true)
-        texture.setFilter(TextureFilter.Linear, TextureFilter.Linear)
+        texture.setFilter(textureFilter, textureFilter)
         val frameWidth: Int = texture.width / cols
         val frameHeight: Int = texture.height / rows
 

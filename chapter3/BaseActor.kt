@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.math.*
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.math.Intersector.MinimumTranslationVector
 
 /**
 *   Extend functionality of the LibGDX Actor class.
@@ -200,9 +201,9 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
 
         val vertices = FloatArray(2*numSides)
         for (i in 0 until numSides) {
-            val angle: Float = i * MathUtils.PI2
-            vertices[2*i] = w/2 * MathUtils.cosDeg(angle) + w/2     // x-coordinate
-            vertices[2*i+1] = h/2 * MathUtils.sinDeg(angle) + h/2   // y-coordinate
+            val angle: Float = i * 6.28f / numSides
+            vertices[2*i] = w/2 * MathUtils.cos(angle) + w/2    // x-coordinates
+            vertices[2*i+1] = h/2 * MathUtils.sin(angle) + h/2  // y-coordinates
         }
         boundaryPolygon = Polygon(vertices)
     }
@@ -223,6 +224,25 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         if (!poly1.boundingRectangle.overlaps(poly2.boundingRectangle))
             return false
         return Intersector.overlapConvexPolygons(poly1, poly2)
+    }
+
+    fun preventOverlap(other: BaseActor): Vector2? {
+        val poly1: Polygon = this.getBoundaryPolygon()
+        val poly2: Polygon = other.getBoundaryPolygon()
+
+        // initial test to improve performance
+        if(!poly1.boundingRectangle.overlaps(poly2.boundingRectangle))
+            return null
+
+        val mtv = MinimumTranslationVector()
+        val polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv)
+
+        if(!polygonOverlap)
+            return null
+
+        this.moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth)
+        return mtv.normal
+
     }
 
     // miscellaneous ------------------------------------------------------------------------------------------

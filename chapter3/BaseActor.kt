@@ -9,10 +9,8 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter
+import com.badlogic.gdx.math.*
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector
 
 /**
 *   Extend functionality of the LibGDX Actor class.
@@ -22,11 +20,14 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     private var animation: Animation<TextureRegion>?
     private var elapsedTime: Float = 0F
     private var animationPaused: Boolean = false
+
     private var velocityVec: Vector2 = Vector2(0f, 0f)
     private var accelerationVec: Vector2 = Vector2(0f, 0f)
     private var acceleration: Float = 0f
     private var maxSpeed: Float = 1000f
     private var deceleration: Float = 0f
+
+    private var boundaryPolygon: Polygon? = null
 
     init {
         this.x = x
@@ -73,6 +74,9 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         val h: Float = tr.regionHeight.toFloat()
         setSize(w, h)
         setOrigin(w/2, h/2)
+
+        if (boundaryPolygon == null)
+            setBoundaryRectangle()
     }
 
     fun setAnimationPaused(pause: Boolean) {
@@ -113,8 +117,8 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         val temp = TextureRegion.split(texture, frameWidth, frameHeight)
         val textureArray: Array<TextureRegion> = Array()
 
-        for (r in 0..rows) {
-            for (c in 0..cols) {
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
                 textureArray.add(temp[r][c])
             }
         }
@@ -133,7 +137,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     }
 
     fun loadTexture(fileName: String): Animation<TextureRegion> {
-        val fileNames: Array<String> = Array(2)
+        val fileNames: Array<String> = Array(1)
         fileNames.add(fileName)
         return loadAnimationFromFiles(fileNames, 1.toFloat(), true)
     }
@@ -184,4 +188,55 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         // reset acceleration
         accelerationVec.set(0f, 0f)
     }
+
+    // Collision detection ------------------------------------------------------------------------------------------
+    fun setBoundaryRectangle() {
+        val w: Float = width
+        val h: Float = height
+        val vertices: FloatArray = floatArrayOf(0f, 0f, w, 0f, w, h, 0f, h)
+        boundaryPolygon = Polygon(vertices)
+    }
+
+    fun setBoundaryPolygon(numSides: Int) {
+        val w: Float = width
+        val h: Float = height
+
+        val vertices = FloatArray(2*numSides)
+        for (i in 0 until numSides) {
+            val angle: Float = i * MathUtils.PI2
+            vertices[2*i] = w/2 * MathUtils.cosDeg(angle) + w/2     // x-coordinate
+            vertices[2*i+1] = h/2 * MathUtils.sinDeg(angle) + h/2   // y-coordinate
+        }
+        boundaryPolygon = Polygon(vertices)
+    }
+
+    fun getBoundaryPolygon(): Polygon {
+        boundaryPolygon!!.setPosition(x, y)
+        boundaryPolygon!!.setOrigin(originX, originY)
+        boundaryPolygon!!.rotation = rotation
+        boundaryPolygon!!.setScale(scaleX, scaleY)
+        return boundaryPolygon as Polygon
+    }
+
+    fun overlaps(other: BaseActor): Boolean {
+        val poly1: Polygon = this.getBoundaryPolygon()
+        val poly2: Polygon = other.getBoundaryPolygon()
+
+        // initial test to improve performance
+        if (!poly1.boundingRectangle.overlaps(poly2.boundingRectangle))
+            return false
+        return Intersector.overlapConvexPolygons(poly1, poly2)
+    }
+
+    // miscellaneous ------------------------------------------------------------------------------------------
+    fun centerAtPosition(x: Float, y: Float) = setPosition(x - width/2, y - height/2)
+    fun centerAtActor(other: BaseActor) = centerAtPosition(other.x + other.width/2, other.y + other.height/2)
+    fun setOpacity(opacity: Float) { this.color.a = opacity }
 }
+
+
+
+
+
+
+

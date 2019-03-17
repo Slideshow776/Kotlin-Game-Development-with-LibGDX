@@ -1,5 +1,7 @@
 package chapter3
 
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+
 class StarfishCollector: GameBeta() {
 
     private lateinit var turtle: Turtle
@@ -16,6 +18,20 @@ class StarfishCollector: GameBeta() {
     }
 
     override fun update(dt: Float) {
-        // code will be added later
+        if (turtle.overlaps(starfish) && !starfish.isCollected()) {
+            starfish.collect()
+
+            val whirl = Whirlpool(0f, 0f, mainStage)
+            whirl.centerAtActor(starfish)
+            whirl.setOpacity(.25f)
+
+            val youWinMessage = BaseActor(0f, 0f, mainStage)
+            youWinMessage.loadTexture("assets/you-win.png")
+            youWinMessage.centerAtPosition(400f, 300f)
+            youWinMessage.setOpacity(0f)
+            youWinMessage.addAction(Actions.delay(1f))
+            youWinMessage.addAction(Actions.after(Actions.fadeIn(1f)))
+
+        }
     }
 }

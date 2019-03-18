@@ -39,6 +39,15 @@ If an object's initial velocity is <a, b> and there is a constant acceleration o
 ### Movement
 Movement is implemented by the BaseActor.applyPhysics and keys are set in Turtle.kt
 
+## Collision detection
+All BaseActors have their default collision box set to a rectangle.
+
+![default_collision_box-png](https://user-images.githubusercontent.com/4059636/54528810-527ad780-497e-11e9-9f18-cc6325064b8b.png)
+
+Custom collision box is supported, based on the BaseActor's width and height and dependent on number of points chosen will approximate roundness. E.g. an actor with a width that equals it's height will be an octagon if the number of sides chosen is eight.
+
+![octagon](https://user-images.githubusercontent.com/4059636/54529294-d08bae00-497f-11e9-8212-59e74d8095a9.png)
+
 ## New Imports
 **import com.badlogic.gdx.utils.array** - A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
 

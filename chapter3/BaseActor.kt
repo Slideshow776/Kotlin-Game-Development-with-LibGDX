@@ -249,6 +249,30 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     fun centerAtPosition(x: Float, y: Float) = setPosition(x - width/2, y - height/2)
     fun centerAtActor(other: BaseActor) = centerAtPosition(other.x + other.width/2, other.y + other.height/2)
     fun setOpacity(opacity: Float) { this.color.a = opacity }
+    
+    companion object {
+        fun getList(stage: Stage, className: String): ArrayList<BaseActor> {
+            var list: ArrayList<BaseActor> = ArrayList()
+
+            var theClass: Class<*>? = null
+            try {
+                theClass = Class.forName(className)
+            } catch (error: Exception) {
+                error.printStackTrace()
+            }
+
+            for(actor in list.indices) {
+                if(theClass!!.isInstance(actor)) {
+                    list.add(actor as BaseActor)
+                }
+            }
+            return list
+        }
+
+        fun count(stage: Stage, className: String): Int {
+            return getList(stage, className).size
+        }
+    }
 }
 
 

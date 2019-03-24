@@ -4,9 +4,9 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
-private var collected: Boolean = false
-
 class Starfish(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+    private var collected: Boolean = false
+
     init {
         loadTexture("assets/starfish.png")
         setBoundaryPolygon(8)

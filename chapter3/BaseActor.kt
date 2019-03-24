@@ -201,7 +201,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
 
         val vertices = FloatArray(2*numSides)
         for (i in 0 until numSides) {
-            val angle: Float = i * 6.28f / numSides
+            val angle: Float = i * MathUtils.PI2 / numSides
             vertices[2*i] = w/2 * MathUtils.cos(angle) + w/2    // x-coordinates
             vertices[2*i+1] = h/2 * MathUtils.sin(angle) + h/2  // y-coordinates
         }
@@ -249,25 +249,33 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     fun centerAtPosition(x: Float, y: Float) = setPosition(x - width/2, y - height/2)
     fun centerAtActor(other: BaseActor) = centerAtPosition(other.x + other.width/2, other.y + other.height/2)
     fun setOpacity(opacity: Float) { this.color.a = opacity }
-    
+
     companion object {
         fun getList(stage: Stage, className: String): ArrayList<BaseActor> {
             var list: ArrayList<BaseActor> = ArrayList()
 
             var theClass: Class<*>? = null
             try {
+                /*println("--------------------------------------------------------------------- Trying!")
+                println(stage.actors)
+                println(className)*/
                 theClass = Class.forName(className)
+                /*println("--------------------------------------------------------------------- Success!")
+                println(theClass)*/
             } catch (error: Exception) {
+                /*println("--------------------------------------------------------------------- Error!")*/
                 error.printStackTrace()
             }
 
-            for(actor in list.indices) {
+            for(actor in stage.actors) {
                 if(theClass!!.isInstance(actor)) {
                     list.add(actor as BaseActor)
                 }
             }
             return list
         }
+
+
 
         fun count(stage: Stage, className: String): Int {
             return getList(stage, className).size

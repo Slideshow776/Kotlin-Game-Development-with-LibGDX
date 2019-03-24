@@ -5,36 +5,50 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 class StarfishCollector: GameBeta() {
 
     private lateinit var turtle: Turtle
-    private lateinit var starfish: Starfish
-    private lateinit var ocean: BaseActor
-    private lateinit var rock: Rock
+    private var win = false
 
     override fun initialize() {
-        ocean = BaseActor(0.toFloat(), 0.toFloat(), mainStage)
+        val ocean = BaseActor(0f, 0f, mainStage)
         ocean.loadTexture("assets/water.jpg")
         ocean.setSize(800.toFloat(), 600.toFloat())
 
-        starfish = Starfish(380f, 380f, mainStage)
+        Starfish(400f, 400f, mainStage)
+        Starfish(500f, 100f, mainStage)
+        Starfish(100f, 450f, mainStage)
+        Starfish(200f, 250f, mainStage)
+
+        Rock(200f, 150f, mainStage)
+        Rock(100f, 300f, mainStage)
+        Rock(300f, 350f, mainStage)
+        Rock(4500f, 200f, mainStage)
+
         turtle = Turtle(20f, 20f, mainStage)
-        rock = Rock(200f, 200f, mainStage)
     }
 
     override fun update(dt: Float) {
-        turtle.preventOverlap(rock)
-        if (turtle.overlaps(starfish) && !starfish.isCollected()) {
-            starfish.collect()
+        for (rockActor: BaseActor in BaseActor.getList(mainStage, Rock::class.java.canonicalName)) {
+            turtle.preventOverlap(rockActor)
+        }
 
-            val whirl = Whirlpool(0f, 0f, mainStage)
-            whirl.centerAtActor(starfish)
-            whirl.setOpacity(.25f)
+        for ( starfishActor: BaseActor in BaseActor.getList(mainStage, Starfish::class.java.canonicalName)) {
+            var starfish = starfishActor as Starfish
+            if (turtle.overlaps(starfish) && !starfish.isCollected()) {
+                starfish.collect()
 
+                val whirl = Whirlpool(0f, 0f, mainStage)
+                whirl.centerAtActor(starfish)
+                whirl.setOpacity(.25f)
+            }
+        }
+
+        if(BaseActor.count(mainStage, Starfish::class.java.canonicalName) == 0 && !win) {
+            win = true
             val youWinMessage = BaseActor(0f, 0f, mainStage)
             youWinMessage.loadTexture("assets/you-win.png")
             youWinMessage.centerAtPosition(400f, 300f)
             youWinMessage.setOpacity(0f)
             youWinMessage.addAction(Actions.delay(1f))
             youWinMessage.addAction(Actions.after(Actions.fadeIn(1f)))
-
         }
     }
 }

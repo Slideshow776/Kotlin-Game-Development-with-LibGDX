@@ -9,8 +9,8 @@ class StarfishCollector: GameBeta() {
 
     override fun initialize() {
         val ocean = BaseActor(0f, 0f, mainStage)
-        ocean.loadTexture("assets/water.jpg")
-        ocean.setSize(800.toFloat(), 600.toFloat())
+        ocean.loadTexture("assets/water-border.jpg")
+        ocean.setSize(1200f, 900f)
         BaseActor.setWorldBounds(ocean)
 
         Starfish(400f, 400f, mainStage)

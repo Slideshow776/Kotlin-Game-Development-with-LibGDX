@@ -7,7 +7,7 @@ import com.badlogic.gdx.Input.Keys
 
 class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     init {
-        val fileNames: Array<String> = Array<String>()
+        val fileNames: Array<String> = Array()
         fileNames.add("assets/turtle-1.png")
         fileNames.add("assets/turtle-2.png")
         fileNames.add("assets/turtle-3.png")
@@ -43,5 +43,6 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             rotation = getMotionAngle()
 
         boundToWorld()
+        alignCamera()
     }
 }

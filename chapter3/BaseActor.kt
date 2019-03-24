@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.math.*
@@ -251,6 +252,42 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     fun centerAtActor(other: BaseActor) = centerAtPosition(other.x + other.width/2, other.y + other.height/2)
     fun setOpacity(opacity: Float) { this.color.a = opacity }
 
+    fun boundToWorld() {
+        // check left edge
+        if (x < 0)
+            x = 0f
+        // check right edge
+        if (x +width > worldBounds.width)
+            x = worldBounds.width - width
+        // check bottom edge
+        if (y < 0)
+            y = 0f
+        // check top edge
+        if (y + height > worldBounds.height)
+            y = worldBounds.height - height
+    }
+
+    fun alignCamera() {
+        val camera = this.stage.camera
+        val viewport = this.stage.viewport
+
+        // center camera on actor
+        camera.position.set(x + originX, y + originY, 0f)
+
+        // center camera on actor
+        camera.position.x = MathUtils.clamp(
+            camera.position.x,
+            camera.viewportWidth / 2,
+            worldBounds.width - camera.viewportWidth / 2
+        )
+        camera.position.y = MathUtils.clamp(
+            camera.position.y,
+            camera.viewportHeight / 2,
+            worldBounds.height - camera.viewportHeight / 2
+        )
+        camera.update()
+    }
+
     companion object {
         private lateinit var worldBounds: Rectangle
 
@@ -284,21 +321,6 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         fun count(stage: Stage, className: String): Int {
             return getList(stage, className).size
         }
-    }
-
-    fun boundToWorld() {
-        // check left edge
-        if (x < 0)
-            x = 0f
-        // check right edge
-        if (x +width > worldBounds.width)
-            x = worldBounds.width - width
-        // check bottom edge
-        if (y < 0)
-            y = 0f
-        // check top edge
-        if (y + height > worldBounds.height)
-            y = worldBounds.height - height
     }
 }
 

@@ -7,9 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 
 abstract class GameBeta: Game() {
     protected lateinit var mainStage: Stage
+    protected lateinit var uiStage: Stage
 
     override fun create() {
         mainStage = Stage()
+        uiStage = Stage()
         initialize()
     }
 
@@ -20,6 +22,7 @@ abstract class GameBeta: Game() {
 
         // act method
         mainStage.act(dt)
+        uiStage.act(dt)
 
         // defined by user
         update(dt)
@@ -30,6 +33,7 @@ abstract class GameBeta: Game() {
 
         // draw the graphics
         mainStage.draw()
+        uiStage.draw()
     }
 
     abstract fun update(dt: Float)

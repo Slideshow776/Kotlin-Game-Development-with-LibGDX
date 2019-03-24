@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.math.*
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector
+import com.badlogic.gdx.math.Rectangle
 
 /**
 *   Extend functionality of the LibGDX Actor class.
@@ -251,6 +252,11 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     fun setOpacity(opacity: Float) { this.color.a = opacity }
 
     companion object {
+        private lateinit var worldBounds: Rectangle
+
+        fun setWorldBounds(width: Float, height: Float) { worldBounds = Rectangle(0f, 0f, width, height) }
+        fun setWorldBounds(ba: BaseActor) = setWorldBounds(ba.width, ba.height)
+
         fun getList(stage: Stage, className: String): ArrayList<BaseActor> {
             var list: ArrayList<BaseActor> = ArrayList()
 
@@ -275,11 +281,24 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
             return list
         }
 
-
-
         fun count(stage: Stage, className: String): Int {
             return getList(stage, className).size
         }
+    }
+
+    fun boundToWorld() {
+        // check left edge
+        if (x < 0)
+            x = 0f
+        // check right edge
+        if (x +width > worldBounds.width)
+            x = worldBounds.width - width
+        // check bottom edge
+        if (y < 0)
+            y = 0f
+        // check top edge
+        if (y + height > worldBounds.height)
+            y = worldBounds.height - height
     }
 }
 

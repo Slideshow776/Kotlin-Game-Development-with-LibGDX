@@ -11,6 +11,7 @@ class StarfishCollector: GameBeta() {
         val ocean = BaseActor(0f, 0f, mainStage)
         ocean.loadTexture("assets/water.jpg")
         ocean.setSize(800.toFloat(), 600.toFloat())
+        BaseActor.setWorldBounds(ocean)
 
         Starfish(400f, 400f, mainStage)
         Starfish(500f, 100f, mainStage)

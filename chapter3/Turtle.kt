@@ -41,5 +41,7 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         if (getSpeed() > 0)
             rotation = getMotionAngle()
+
+        boundToWorld()
     }
 }

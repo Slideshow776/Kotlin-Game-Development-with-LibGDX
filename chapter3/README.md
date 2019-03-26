@@ -48,6 +48,11 @@ Custom collision box is supported, based on the BaseActor's width and height and
 
 ![octagon](https://user-images.githubusercontent.com/4059636/54529294-d08bae00-497f-11e9-8212-59e74d8095a9.png)
 
+
+Note that LibGDX's Polygon collision algorithm only supports convex polygons.
+
+![convex vs. concave polygon](https://user-images.githubusercontent.com/4059636/54909018-80fe3280-4ee9-11e9-9ca1-a75d25f7360a.png)
+
 ## New Imports
 **import com.badlogic.gdx.utils.array** - A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
 

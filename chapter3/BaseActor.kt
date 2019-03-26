@@ -274,7 +274,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         // center camera on actor
         camera.position.set(x + originX, y + originY, 0f)
 
-        // center camera on actor
+        // bind camera to layout
         camera.position.x = MathUtils.clamp(
             camera.position.x,
             camera.viewportWidth / 2,
@@ -299,14 +299,8 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
 
             var theClass: Class<*>? = null
             try {
-                /*println("--------------------------------------------------------------------- Trying!")
-                println(stage.actors)
-                println(className)*/
                 theClass = Class.forName(className)
-                /*println("--------------------------------------------------------------------- Success!")
-                println(theClass)*/
             } catch (error: Exception) {
-                /*println("--------------------------------------------------------------------- Error!")*/
                 error.printStackTrace()
             }
 

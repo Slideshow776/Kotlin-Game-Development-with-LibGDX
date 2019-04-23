@@ -53,6 +53,11 @@ Note that LibGDX's Polygon collision algorithm only supports convex polygons.
 
 ![convex vs. concave polygon](https://user-images.githubusercontent.com/4059636/54909018-80fe3280-4ee9-11e9-9ca1-a75d25f7360a.png)
 
+Relationships between the classes in the final version of the Starfish Collector game
+
+![Relationships between the classes in the final version of the Starfish Collector game](https://user-images.githubusercontent.com/4059636/56556879-6f1bb800-6599-11e9-9a5a-198c5be68b0e.png)
+
+
 ## New Imports
 **import com.badlogic.gdx.utils.array** - A resizable, ordered or unordered array of objects. If unordered, this class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
 

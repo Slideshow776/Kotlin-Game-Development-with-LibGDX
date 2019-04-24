@@ -17,6 +17,8 @@ A simple "Hello, World!" example
 
 **import com.badlogic.gdx.graphics.Texture** - A Texture wraps a standard OpenGL ES texture. A Texture must be disposed when it is no longer used.
 
+**com.badlogic.gdx.backends.lwjgl.LwjglApplication** - An OpenGL surface fullscreen or in a lightweight window.
+
 ## LWJGL
 Lightweight Java Game Application (LWJGL) simplifies game development by accessing desktop computer hardware resources. Sets up the window and manages the graphics and audio, keyboard and mouse input, and file access.
 

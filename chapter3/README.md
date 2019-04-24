@@ -53,7 +53,9 @@ Note that LibGDX's Polygon collision algorithm only supports convex polygons.
 
 ![convex vs. concave polygon](https://user-images.githubusercontent.com/4059636/54909018-80fe3280-4ee9-11e9-9ca1-a75d25f7360a.png)
 
-Relationships between the classes in the final version of the Starfish Collector game
+
+Relationships between the classes in the final version of the Starfish Collector game.
+There are four main groups of classes involved in creating a game with this framework: the Launcher, the BaseGame class and its extensions, the BaseScreen class and its extensions, and the BaseActor class and its extensions.
 
 ![Relationships between the classes in the final version of the Starfish Collector game](https://user-images.githubusercontent.com/4059636/56556879-6f1bb800-6599-11e9-9a5a-198c5be68b0e.png)
 
@@ -69,3 +71,16 @@ Relationships between the classes in the final version of the Starfish Collector
 
 **import com.badlogic.gdx.g2d.Animation.PlayMode** - Defines possible playback modes for an Animation.
 
+**import com.badlogic.gdx.math.Vector2** - Encapsulates a 2D vector. Allows chaining methods by returning a reference to itself
+
+**import com.badlogic.gdx.math.MathUtils** - Utility and fast math functions.
+
+**import com.badlogic.gdx.graphics.Camera** - Base class for OrthographicCamera and PerspectiveCamera.
+
+**import com.badlogic.gdx.utils.viewport.Viewport** - Manages a Camera and determines how world coordinates are mapped to and from the screen.
+
+**import com.badlogic.gdx.Screen** - Represents one of many application screens, such as a main menu, a settings menu, the game screen and so on.
+
+**import com.badlogic.gdx.scenes.scene2d.Action** - Actions attach to an Actor and perform some task, often over time.
+
+**import com.badlogic.gdx.scenes.scene2d.actions.Actions** - Static convenience methods for using pooled actions, intended for static import.

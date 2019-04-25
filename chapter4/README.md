@@ -4,7 +4,7 @@
 A _game design document_ (GDD) is a blueprint for creating a game: it describes the overall vision of a game, provide clarity and focus, and serves as a guide and a reference to the people working on the game.
 A GDD is often based on a framework, such as MDA.
 
-The [Mechanics-Dynamis-Aesthetics](https://en.wikipedia.org/wiki/MDA_framework) (MDA) _framework_ is a useful way to categorize the components of a game.
+The [Mechanics-Dynamics-Aesthetics](https://en.wikipedia.org/wiki/MDA_framework) (MDA) _framework_ is a useful way to categorize the components of a game.
 In appendix A in the [book](https://www.apress.com/gp/book/9781484233238) on page 402 there is a list of GDD questions which are very helpful with the creation of a GDD.
 The core questions can be summarised as follows: 
 1. Overall Vision

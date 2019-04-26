@@ -12,6 +12,7 @@ abstract class BaseGame : Game() {
      */
     init {
         game = this
+        print("mark1 $game\n")
     }
 
     companion object {
@@ -25,6 +26,7 @@ abstract class BaseGame : Game() {
          * Method is static to simplify usage.
          */
         fun setActiveScreen(s: BaseScreen) {
+            print("mark2 $game\n")
             game?.setScreen(s)
         }
     }

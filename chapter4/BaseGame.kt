@@ -1,6 +1,8 @@
-package chapter3
+package chapter4
 
 import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 
 /**
  * Created when program is launched;
@@ -12,7 +14,6 @@ abstract class BaseGame : Game() {
      */
     init {
         game = this
-        print("mark1 $game\n")
     }
 
     companion object {
@@ -26,8 +27,13 @@ abstract class BaseGame : Game() {
          * Method is static to simplify usage.
          */
         fun setActiveScreen(s: BaseScreen) {
-            print("mark2 $game\n")
             game?.setScreen(s)
         }
+    }
+
+    override fun create() {
+        // prepare for multiple classes/stages to receive discrete input
+        var im = InputMultiplexer()
+        Gdx.input.inputProcessor = im
     }
 }

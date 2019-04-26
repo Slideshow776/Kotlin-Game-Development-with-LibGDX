@@ -79,4 +79,5 @@ Continuous actions takes place over an _interval_ of time. E.g holding down a ke
 Input polling repeatedly checks the status of an input device (such as a keyboard).
 
 ## New Imports
+**import com.badlogic.gdx.InputProcessor** - An InputProcessor is used to receive input events from the keyboard and the touch screen (mouse on the desktop). For this it has to be registered with the Input.setInputProcessor(InputProcessor) method. It will be called each frame before the call to ApplicationListener.render(). Each method returns a boolean in case you want to use this with the InputMultiplexer to chain input processors.
 **import com.badlogic.gdx.InputMultiplexer** - An InputProcessor that delegates to an ordered list of other InputProcessors. Delegation for an event stops if a processor returns true, which indicates that the event was handled.

@@ -6,7 +6,9 @@ import com.badlogic.gdx.Input.Keys
 
 class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
-    internal var thrusters: Thrusters
+    private var thrusters: Thrusters
+    private var shield: Shield
+    var shieldPower: Int
 
     init {
         // super(x, y, s)
@@ -20,6 +22,11 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         thrusters = Thrusters(0f, 0f, s)
         addActor(thrusters)
         thrusters.setPosition(-thrusters.width, height / 2 - thrusters.height / 2)
+
+        shield = Shield(0f, 0f, s)
+        addActor(shield)
+        shield.centerAtPosition(width / 2, height / 2)
+        shieldPower = 100
     }
 
     override fun act(dt: Float) {
@@ -40,5 +47,9 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         applyPhysics(dt)
         wrapArpundWorld()
+
+        shield.setOpacity(shieldPower / 100f)
+        if (shieldPower <= 0)
+            shield.isVisible = false
     }
 }

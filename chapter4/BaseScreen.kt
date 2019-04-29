@@ -46,6 +46,7 @@ abstract class BaseScreen : Screen, InputProcessor {
         var im: InputMultiplexer = Gdx.input.inputProcessor as InputMultiplexer
         im.addProcessor(this)
         im.addProcessor(uiStage)
+        im.removeProcessor(mainStage)
     }
 
     override fun hide() {

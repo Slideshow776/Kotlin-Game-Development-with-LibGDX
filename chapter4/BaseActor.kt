@@ -13,11 +13,12 @@ import com.badlogic.gdx.math.*
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.scenes.scene2d.Group
 
 /**
  *   Extend functionality of the LibGDX Actor class.
  */
-open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
+open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
 
     private var animation: Animation<TextureRegion>?
     private var elapsedTime: Float = 0F
@@ -46,8 +47,6 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        super.draw(batch, parentAlpha)
-
         //  apply color tint effect
         val c: Color = color
         batch.setColor(c.r, c.g, c.b, c.a)
@@ -66,6 +65,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
                 rotation
             )
         }
+        super.draw(batch, parentAlpha)
     }
 
     // Graphics ---------------------------------------------------------------------------------------------------

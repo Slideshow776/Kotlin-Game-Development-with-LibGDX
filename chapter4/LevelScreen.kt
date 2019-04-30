@@ -22,6 +22,8 @@ class LevelScreen : BaseScreen() {
     override fun keyDown(keycode: Int): Boolean {
         if (keycode == Keys.X)
             spaceship.warp()
+        if (keycode == Keys.SPACE)
+            spaceship.shoot()
         return false
     }
 }

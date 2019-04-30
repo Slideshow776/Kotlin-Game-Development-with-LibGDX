@@ -63,4 +63,13 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         var warp2 = Warp(0f, 0f, this.stage)
         warp2.centerAtActor(this)
     }
+
+    fun shoot() {
+        if (stage == null)
+            return
+        var laser = Laser(0f, 0f, this.stage)
+        laser.centerAtActor(this)
+        laser.rotation = this.rotation
+        laser.setMotionAngle(this.rotation)
+    }
 }

@@ -3,6 +3,7 @@ package chapter4
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.math.MathUtils
 
 class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
@@ -51,5 +52,15 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         shield.setOpacity(shieldPower / 100f)
         if (shieldPower <= 0)
             shield.isVisible = false
+    }
+
+    fun warp() {
+        if (stage == null)
+            return
+        var warp1 = Warp(0f, 0f, this.stage)
+        warp1.centerAtActor(this)
+        setPosition(MathUtils.random(800f), MathUtils.random(600f))
+        var warp2 = Warp(0f, 0f, this.stage)
+        warp2.centerAtActor(this)
     }
 }

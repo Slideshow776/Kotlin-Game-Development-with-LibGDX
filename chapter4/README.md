@@ -1,5 +1,7 @@
 # Shoot-em-up Games
 
+TODO: Detail additions added as suggested by the book.
+
 ![Chapter 4 gameplay](https://user-images.githubusercontent.com/4059636/57120333-ff63b500-6d70-11e9-84cb-241bb2e39472.PNG)
 
 ## The Game Design Document

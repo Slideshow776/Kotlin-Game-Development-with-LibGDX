@@ -1,5 +1,7 @@
 # Extended Starfish Collector
 
+![Chapter 3 gameplay](https://user-images.githubusercontent.com/4059636/57120350-28844580-6d71-11e9-844b-dd9ca5b03a64.PNG)
+
 ## Animation
 **Value-Based Animations** uses a single image and continuously changes associated values (such as position or rotation).
 These effects can easily be added to the game by using LibGDX's Action class.

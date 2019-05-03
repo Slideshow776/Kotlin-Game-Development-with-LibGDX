@@ -1,5 +1,7 @@
 # Shoot-em-up Games
 
+![Chapter 4 gameplay](https://user-images.githubusercontent.com/4059636/57120333-ff63b500-6d70-11e9-84cb-241bb2e39472.PNG)
+
 ## The Game Design Document
 A _game design document_ (GDD) is a blueprint for creating a game: it describes the overall vision of a game, provide clarity and focus, and serves as a guide and a reference to the people working on the game.
 A GDD is often based on a framework, such as MDA.

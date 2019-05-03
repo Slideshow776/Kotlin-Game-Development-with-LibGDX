@@ -1,10 +1,12 @@
 package chapter4
 
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
 class LevelScreen : BaseScreen() {
 
     lateinit var spaceship: Spaceship
+    private var gameOver = false
 
     override fun initialize() {
         var space = BaseActor(0f, 0f, mainStage)
@@ -33,6 +35,13 @@ class LevelScreen : BaseScreen() {
                     boom.centerAtActor(spaceship)
                     spaceship.remove()
                     spaceship.setPosition(-1000f, -1000f)
+
+                    var messageLose = BaseActor(0f, 0f, uiStage)
+                    messageLose.loadTexture("assets/message-lose.png")
+                    messageLose.centerAtPosition(400f, 300f)
+                    messageLose.setOpacity(0f)
+                    messageLose.addAction(Actions.fadeIn(1f))
+                    gameOver = true
                 } else {
                     spaceship.shieldPower -=34
                     var boom = Explosion(0f, 0f, mainStage)
@@ -48,6 +57,15 @@ class LevelScreen : BaseScreen() {
                     rockActor.remove()
                 }
             }
+        }
+
+        if (!gameOver && BaseActor.count(mainStage, Rock::class.java.canonicalName) == 0) {
+            var messageWin = BaseActor(0f, 0f, uiStage)
+            messageWin.loadTexture("assets/message-win.png")
+            messageWin.centerAtPosition(400f, 300f)
+            messageWin.setOpacity(0f)
+            messageWin.addAction(Actions.fadeIn(1f))
+            gameOver = true
         }
     }
 

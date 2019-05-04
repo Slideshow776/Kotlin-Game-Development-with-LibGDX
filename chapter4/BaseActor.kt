@@ -3,7 +3,6 @@ package chapter4
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.Gdx
@@ -85,10 +84,11 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         animationPaused = pause
     }
 
-    fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean, textureFilter: TextureFilter = TextureFilter.Linear): Animation<TextureRegion> {
+    fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean,
+                               textureFilter: TextureFilter = TextureFilter.Linear): Animation<TextureRegion> {
         val textureArray: Array<TextureRegion> = Array()
 
-        for (i in 0..fileNames.size-1) {
+        for (i in 0 until fileNames.size) {
             val texture = Texture(Gdx.files.internal(fileNames[i]))
             texture.setFilter(textureFilter, textureFilter)
             textureArray.add(TextureRegion(texture))
@@ -138,7 +138,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
     fun loadTexture(fileName: String): Animation<TextureRegion> {
         val fileNames: Array<String> = Array(1)
         fileNames.add(fileName)
-        return loadAnimationFromFiles(fileNames, 1.toFloat(), true)
+        return loadAnimationFromFiles(fileNames, 1f, true)
     }
 
     fun isAnimationFinished(): Boolean {
@@ -287,7 +287,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         camera.update()
     }
 
-    fun wrapArpundWorld() {
+    fun wrapAroundWorld() {
         if (x + width < 0)
             x = worldBounds.width
         if (x > worldBounds.width)

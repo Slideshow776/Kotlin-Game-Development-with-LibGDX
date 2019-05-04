@@ -22,6 +22,6 @@ class Rock(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     override fun act(dt: Float) {
         super.act(dt)
         applyPhysics(dt)
-        wrapArpundWorld()
+        wrapAroundWorld()
     }
 }

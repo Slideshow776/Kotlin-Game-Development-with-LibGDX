@@ -12,8 +12,8 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     var shieldPower: Int
 
     init {
-        // super(x, y, s)
         loadTexture("assets/spaceship.png")
+        setScale(Constants.scale, Constants.scale)
         setBoundaryPolygon(8)
 
         setAcceleration(220f)
@@ -38,7 +38,6 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             rotateBy(degreesPerSecond * dt)
         if(Gdx.input.isKeyPressed((Keys.D)))
             rotateBy(-degreesPerSecond * dt)
-
         if(Gdx.input.isKeyPressed((Keys.W))) {
             accelerateAtAngle(rotation)
             thrusters.isVisible = true
@@ -47,9 +46,9 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         }
 
         applyPhysics(dt)
-        wrapArpundWorld()
+        wrapAroundWorld()
 
-        shield.setOpacity(shieldPower / 100f)
+        shield.setOpacity(shieldPower / 200f)
         if (shieldPower <= 0)
             shield.isVisible = false
     }

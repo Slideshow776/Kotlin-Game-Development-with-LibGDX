@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 class Shield(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     init {
         loadTexture("assets/shields.png")
+        setScale(Constants.scale, Constants.scale)
 
         var pulse = Actions.sequence(
             Actions.scaleTo(1.05f, 1.05f, 1f),

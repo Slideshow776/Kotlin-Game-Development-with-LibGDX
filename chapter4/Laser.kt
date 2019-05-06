@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 class Laser(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     init {
         loadTexture("assets/laser.png")
-        setScale(Constants.scale, Constants.scale)
+        setScale(Constants.scale * .5f, Constants.scale * .5f)
 
         addAction(Actions.delay(1f))
         addAction(Actions.after(Actions.fadeOut(.25f)))

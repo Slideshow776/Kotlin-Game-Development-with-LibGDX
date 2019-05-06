@@ -10,8 +10,11 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     private var thrusters: Thrusters
     private var shield: Shield
     var shieldPower: Int
+    private val s: Stage
 
     init {
+        this.s = s
+
         loadTexture("assets/spaceship.png")
         setScale(Constants.scale, Constants.scale)
         setBoundaryPolygon(8)
@@ -66,6 +69,9 @@ class Spaceship(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     fun shoot() {
         if (stage == null)
             return
+        if (count(s, Laser::class.java.canonicalName) >= 4)
+            return
+
         var laser = Laser(0f, 0f, this.stage)
         laser.centerAtActor(this)
         laser.rotation = this.rotation

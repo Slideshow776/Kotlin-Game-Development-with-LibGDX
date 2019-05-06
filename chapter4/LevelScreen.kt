@@ -25,6 +25,9 @@ class LevelScreen : BaseScreen() {
         Rock(200f, 300f, mainStage)
         Rock(200f, 500f, mainStage)
         Rock(400f, 500f, mainStage)
+        Rock(200f, 200f, mainStage)
+        Rock(300f, 100f, mainStage)
+        Rock(500f, 300f, mainStage)
     }
 
     override fun update(dt: Float) {

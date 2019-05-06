@@ -1,16 +1,16 @@
 package chapter4
 
-import chapter4.Constants.MyCompanionObject.scale
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
-class Rock(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+class Rock(x: Float, y: Float, s: Stage, scale: Float, speed: Float) : BaseActor(x, y, s) {
+
     init {
         loadTexture("assets/rock.png")
         setScale(scale)
 
-        var random = MathUtils.random(60f)
+        var random = MathUtils.random(speed)
 
         addAction(Actions.forever(Actions.rotateBy(30f + random, 1f)))
 

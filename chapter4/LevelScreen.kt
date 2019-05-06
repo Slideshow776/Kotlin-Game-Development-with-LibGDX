@@ -1,6 +1,7 @@
 package chapter4
 
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
 class LevelScreen : BaseScreen() {
@@ -17,17 +18,13 @@ class LevelScreen : BaseScreen() {
 
         spaceship = Spaceship(400f, 300f, mainStage)
 
-        Rock(600f, 500f, mainStage)
-        Rock(600f, 300f, mainStage)
-        Rock(600f, 100f, mainStage)
-        Rock(400f, 100f, mainStage)
-        Rock(200f, 100f, mainStage)
-        Rock(200f, 300f, mainStage)
-        Rock(200f, 500f, mainStage)
-        Rock(400f, 500f, mainStage)
-        Rock(200f, 200f, mainStage)
-        Rock(300f, 100f, mainStage)
-        Rock(500f, 300f, mainStage)
+        Rock(600f, 500f, mainStage, 1.5f, 5f)
+        Rock(600f, 300f, mainStage, 1.5f, 5f)
+        Rock(600f, 100f, mainStage, 1.5f, 5f)
+        Rock(400f, 100f, mainStage, 1.5f, 5f)
+        Rock(200f, 100f, mainStage, 1.5f, 5f)
+        Rock(200f, 300f, mainStage, 1.5f, 5f)
+        Rock(200f, 500f, mainStage, 1.5f, 5f)
     }
 
     override fun update(dt: Float) {
@@ -49,6 +46,11 @@ class LevelScreen : BaseScreen() {
                     spaceship.shieldPower -=34
                     var boom = Explosion(0f, 0f, mainStage)
                     boom.centerAtActor(rockActor)
+
+                    if (rockActor.scaleX >= 1.5f * Constants.scale)
+                        spawnRocks(rockActor, 1f, 60f)
+                    else if (rockActor.scaleX >= 1f * Constants.scale)
+                        spawnRocks(rockActor, .5f, 200f)
                     rockActor.remove()
                 }
             }
@@ -57,6 +59,11 @@ class LevelScreen : BaseScreen() {
                     var boom = Explosion(0f, 0f, mainStage)
                     boom.centerAtActor(rockActor)
                     laserActor.remove()
+
+                    if (rockActor.scaleX >= 1.5f * Constants.scale)
+                        spawnRocks(rockActor, 1f, 60f)
+                    else if (rockActor.scaleX >= 1f * Constants.scale)
+                        spawnRocks(rockActor, .5f, 200f)
                     rockActor.remove()
                 }
             }
@@ -79,5 +86,11 @@ class LevelScreen : BaseScreen() {
         if (keycode == Keys.SPACE)
             spaceship.shoot()
         return false
+    }
+
+    private fun spawnRocks(rockActor: Actor, scale: Float, speed: Float) {
+        Rock(rockActor.x, rockActor.y, mainStage, scale, speed)
+        Rock(rockActor.x, rockActor.y, mainStage, scale, speed)
+        Rock(rockActor.x, rockActor.y, mainStage, scale, speed)
     }
 }

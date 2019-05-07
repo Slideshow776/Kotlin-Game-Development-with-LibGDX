@@ -12,6 +12,9 @@ class LevelScreen : BaseScreen() {
     private var ufoSpawnTimer = 0f
     private var ufoSpawnFrequence = MathUtils.random(15f)+15f
 
+    private var powerUpSpawnTimer = 0f
+    private var powerUpSpawnFrequence = MathUtils.random(15f)+15f
+
     private var gameOver = false
 
     override fun initialize() {
@@ -28,8 +31,8 @@ class LevelScreen : BaseScreen() {
         Rock(600f, 100f, mainStage, 1.5f, 5f)
         Rock(400f, 100f, mainStage, 1.5f, 5f)
         Rock(200f, 100f, mainStage, 1.5f, 5f)
-        Rock(200f, 300f, mainStage, 1.5f, 5f)
-        Rock(200f, 500f, mainStage, 1.5f, 5f)
+        /*Rock(200f, 300f, mainStage, 1.5f, 5f)
+        Rock(200f, 500f, mainStage, 1.5f, 5f)*/
     }
 
     override fun update(dt: Float) {
@@ -41,12 +44,7 @@ class LevelScreen : BaseScreen() {
                     spaceship.remove()
                     spaceship.setPosition(-1000f, -1000f)
 
-                    var messageLose = BaseActor(0f, 0f, uiStage)
-                    messageLose.loadTexture("assets/message-lose.png")
-                    messageLose.centerAtPosition(400f, 300f)
-                    messageLose.setOpacity(0f)
-                    messageLose.addAction(Actions.fadeIn(1f))
-                    gameOver = true
+                    gameOver(false)
                 } else {
                     spaceship.shieldPower -=34
                     var boom = Explosion(0f, 0f, mainStage)
@@ -75,22 +73,25 @@ class LevelScreen : BaseScreen() {
         }
 
         for (ufoActor: BaseActor in BaseActor.getList(mainStage, Ufo::class.java.canonicalName)) {
-            if (ufoActor.overlaps(spaceship)) {
+            if (!gameOver && ufoActor.overlaps(spaceship)) {
                 var boom = Explosion(0f, 0f, mainStage)
                 boom.centerAtActor(spaceship)
                 spaceship.remove()
                 spaceship.setPosition(-1000f, -1000f)
-                gameOver = true
+
+                gameOver(false)
+            }
+        }
+
+        for (powerUpActor: BaseActor in BaseActor.getList(mainStage, PowerUp::class.java.canonicalName)) {
+            if (powerUpActor.overlaps(spaceship)) {
+                spaceship.shieldPower = 100
+                powerUpActor.remove()
             }
         }
 
         if (!gameOver && BaseActor.count(mainStage, Rock::class.java.canonicalName) == 0) {
-            var messageWin = BaseActor(0f, 0f, uiStage)
-            messageWin.loadTexture("assets/message-win.png")
-            messageWin.centerAtPosition(400f, 300f)
-            messageWin.setOpacity(0f)
-            messageWin.addAction(Actions.fadeIn(1f))
-            gameOver = true
+            gameOver(true)
         }
 
         if (ufoSpawnTimer >= ufoSpawnFrequence) {
@@ -99,6 +100,14 @@ class LevelScreen : BaseScreen() {
         }
         else {
             ufoSpawnTimer += dt
+        }
+
+        if (powerUpSpawnTimer >= powerUpSpawnFrequence) {
+            spawnPowerUp()
+            powerUpSpawnTimer = 0f
+        }
+        else {
+            powerUpSpawnTimer += dt
         }
     }
 
@@ -126,5 +135,30 @@ class LevelScreen : BaseScreen() {
         val randomX = MathUtils.cos(randomAngle)*810f + 400f
         val randomY = MathUtils.sin(randomAngle)*610f + 300f
         Ufo(randomX, randomY, mainStage)
+    }
+
+    private fun spawnPowerUp() {
+        val x = MathUtils.random(750f)
+        val y = MathUtils.random(550f)
+        PowerUp(x, y, mainStage)
+    }
+
+    private fun gameOver(win: Boolean) {
+        if (win) {
+            var messageWin = BaseActor(0f, 0f, uiStage)
+            messageWin.loadTexture("assets/message-win.png")
+            messageWin.centerAtPosition(400f, 300f)
+            messageWin.setOpacity(0f)
+            messageWin.addAction(Actions.fadeIn(1f))
+            gameOver = true
+        }
+        else {
+            var messageLose = BaseActor(0f, 0f, uiStage)
+            messageLose.loadTexture("assets/message-lose.png")
+            messageLose.centerAtPosition(400f, 300f)
+            messageLose.setOpacity(0f)
+            messageLose.addAction(Actions.fadeIn(1f))
+            gameOver = true
+        }
     }
 }

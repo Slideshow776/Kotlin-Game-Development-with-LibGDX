@@ -1,4 +1,5 @@
 # Extended Starfish Collector
+This chapter extends the basic model from chapter 2 with more complex mechanics seen in many games.
 
 ![Chapter 3 gameplay](https://user-images.githubusercontent.com/4059636/57120350-28844580-6d71-11e9-844b-dd9ca5b03a64.PNG)
 
@@ -14,7 +15,7 @@ In LibGDX this is accomplished by using the Animation class.
 ![spritesheet of mario walking](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQknIrEmlPTg_WckDUat3EUnky-RXjrgPvqzqdW_bMz2Uhn9fMM2g)
 
 ## Texture Filtering
-In computer graphics, texture filtering or texture smoothing is the method used to determine the texture color for a texture mapped pixel, using the colors of nearby texels (pixels of the texture). There are two main categories of texture filtering, magnification filtering and minification filtering.
+In computer graphics, texture filtering or texture smoothing is the method used to determine the texture color for a texture mapped pixel, using the colors of nearby texels (pixels of the texture). There are two main categories of texture filtering, magnification filtering, and minification filtering.
 
 ![Texture filtering: nearest vs Linear](https://www.gamedevelopment.blog/wp-content/uploads/2017/11/nearest-vs-linear-texture-filter.png)
 ![Texture filtering: nearest vs Linear](https://love2d.org/w/images/8/8f/ComparisonFilters.png)
@@ -46,7 +47,7 @@ All BaseActors have their default collision box set to a rectangle.
 
 ![default_collision_box-png](https://user-images.githubusercontent.com/4059636/54528810-527ad780-497e-11e9-9f18-cc6325064b8b.png)
 
-Custom collision box is supported, based on the BaseActor's width and height and dependent on number of points chosen will approximate roundness. E.g. an actor with a width that equals it's height will be an octagon if the number of sides chosen is eight.
+A custom collision box is supported, based on the BaseActor's width and height and dependent on the number of points chosen will approximate roundness. E.g. an actor with a width that equals its height will be an octagon if the number of sides chosen is eight.
 
 ![octagon](https://user-images.githubusercontent.com/4059636/54529294-d08bae00-497f-11e9-8212-59e74d8095a9.png)
 
@@ -57,7 +58,7 @@ Note that LibGDX's Polygon collision algorithm only supports convex polygons.
 
 
 Relationships between the classes in the final version of the Starfish Collector game.
-There are four main groups of classes involved in creating a game with this framework: the Launcher, the BaseGame class and its extensions, the BaseScreen class and its extensions, and the BaseActor class and its extensions.
+There are four main groups of classes involved in creating a game with this framework: the Launcher, the BaseGame class, and its extensions, the BaseScreen class and its extensions, and the BaseActor class and its extensions.
 
 ![Relationships between the classes in the final version of the Starfish Collector game](https://user-images.githubusercontent.com/4059636/56556879-6f1bb800-6599-11e9-9a5a-198c5be68b0e.png)
 

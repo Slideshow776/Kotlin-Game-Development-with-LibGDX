@@ -1,6 +1,13 @@
 # Shoot-em-up Games
+This chapter shows how easy it is to use the object-oriented groundwork created in the previous chapter to create simple games efficiently.
 
-As suggested by the book the following features have been added: A start screen. 
+As suggested by the book the following features have been added: 
+* A start screen
+* Tweaking of various game variables for better gameplay
+* Limiting laser firing rate
+* larger rocks spawn smaller rocks.
+* Added a UFO which randomly spawns after some time and randomly appears at an edge traveling through the center of the screen and destroys the spaceship if in contact with it.
+* Added a powerup that randomly appears at a time and place, when the spaceship collides with it full shield power is restored. 
 
 ![Chapter 4 gameplay](https://user-images.githubusercontent.com/4059636/57120333-ff63b500-6d70-11e9-84cb-241bb2e39472.PNG)
 
@@ -9,7 +16,7 @@ A _game design document_ (GDD) is a blueprint for creating a game: it describes 
 A GDD is often based on a framework, such as MDA.
 
 The [Mechanics-Dynamics-Aesthetics](https://en.wikipedia.org/wiki/MDA_framework) (MDA) _framework_ is a useful way to categorize the components of a game.
-In appendix A in the [book](https://www.apress.com/gp/book/9781484233238) on page 402 there is a list of GDD questions which are very helpful with the creation of a GDD.
+In appendix A in the [book](https://www.apress.com/gp/book/9781484233238) on page 402, there is a list of GDD questions which are very helpful with the creation of a GDD.
 The core questions can be summarised as follows: 
 1. Overall Vision
 
@@ -31,7 +38,7 @@ The core questions can be summarised as follows:
     
     d. What item can the character obtain
     
-    e. What resources must me managed?
+    e. What resources must be managed?
     
     f. Describe the game-world environment.  
 
@@ -57,7 +64,7 @@ The core questions can be summarised as follows:
     
     d. What is the relevant backstory for the game?
     
-    e. What emotional state(s) does te game try to provoke?
+    e. What emotional state(s) does the game try to provoke?
     
     f. What makes the game fun?
         
@@ -79,12 +86,12 @@ The ```InputProcessor``` interface handles discrete events.
 An ```InputMultiplexer``` contains a list of InputProcessors, which makes sure every screen overlay will be responsive.  
 
 ## Input Polling
-Continuous actions takes place over an _interval_ of time. E.g holding down a key for a period of time.
+Continuous actions take place over an _interval_ of time. E.g holding down a key for a period of time.
 Input polling repeatedly checks the status of an input device (such as a keyboard).
 
 ## New Imports
 
-**import com.badlogic.gdx.InputProcessor** - An InputProcessor is used to receive input events from the keyboard and the touch screen (mouse on the desktop). For this it has to be registered with the Input.setInputProcessor(InputProcessor) method. It will be called each frame before the call to ApplicationListener.render(). Each method returns a boolean in case you want to use this with the InputMultiplexer to chain input processors.
+**import com.badlogic.gdx.InputProcessor** - An InputProcessor is used to receive input events from the keyboard and the touch screen (mouse on the desktop). For this, it has to be registered with the Input.setInputProcessor(InputProcessor) method. It will be called each frame before the call to ApplicationListener.render(). Each method returns a boolean in case you want to use this with the InputMultiplexer to chain input processors.
 
 **import com.badlogic.gdx.InputMultiplexer** - An InputProcessor that delegates to an ordered list of other InputProcessors. Delegation for an event stops if a processor returns true, which indicates that the event was handled.
 

@@ -1,5 +1,6 @@
 package chapter5.starfishCollector
 
+import chapter5.BaseScreen
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
@@ -20,23 +21,6 @@ abstract class BaseGame : Game() {
      */
     init {
         game = this
-
-        println("Working Directory = " + System.getProperty("user.dir"))
-        println(Gdx.files.internal("assets/cooper.fnt"))
-        labelStyle.font = BitmapFont(Gdx.files.internal("assets/cooper.fnt"))
-
-        val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("assets/OpenSans.ttf"))
-        val fontParameters = FreeTypeFontParameter()
-        fontParameters.size = 48
-        fontParameters.color = Color.WHITE
-        fontParameters.borderWidth = 2f
-        fontParameters.borderColor = Color.BLACK
-        fontParameters.borderStraight = true
-        fontParameters.minFilter = Texture.TextureFilter.Linear
-        fontParameters.magFilter = Texture.TextureFilter.Linear
-
-        val customFont = fontGenerator.generateFont(fontParameters)
-        labelStyle.font = customFont
     }
 
     companion object {
@@ -45,7 +29,7 @@ abstract class BaseGame : Game() {
          */
         private var game: BaseGame? = null
 
-        private var labelStyle: LabelStyle = LabelStyle()
+        var labelStyle: LabelStyle? = null
 
         /**
          * Used to switch screens while game is running.
@@ -60,5 +44,21 @@ abstract class BaseGame : Game() {
         // prepare for multiple classes/stages to receive discrete input
         var im = InputMultiplexer()
         Gdx.input.inputProcessor = im
+
+        val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("assets/OpenSans.ttf"))
+        val fontParameters = FreeTypeFontParameter()
+        fontParameters.size = 48
+        fontParameters.color = Color.WHITE
+        fontParameters.borderWidth = 2f
+        fontParameters.borderColor = Color.BLACK
+        fontParameters.borderStraight = true
+        fontParameters.minFilter = Texture.TextureFilter.Linear
+        fontParameters.magFilter = Texture.TextureFilter.Linear
+
+        val customFont = fontGenerator.generateFont(fontParameters)
+
+        labelStyle = LabelStyle()
+        labelStyle!!.font = customFont
+        /*labelStyle!!.font = BitmapFont(Gdx.files.internal("assets/cooper.fnt"))*/
     }
 }

@@ -1,11 +1,15 @@
 package chapter5
 
+import chapter5.starfishCollector.BaseGame
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 
 class LevelScreen: BaseScreen() {
 
     private lateinit var turtle: Turtle
     private var win: Boolean = false
+    private lateinit var starfishLabel: Label
 
     override fun initialize() {
         val ocean = BaseActor(0f, 0f, mainStage)
@@ -24,6 +28,11 @@ class LevelScreen: BaseScreen() {
         Rock(4500f, 200f, mainStage)
 
         turtle = Turtle(20f, 20f, mainStage)
+
+        starfishLabel = Label("Starfish left: ", BaseGame.labelStyle)
+        starfishLabel.color = Color.CYAN
+        starfishLabel.setPosition(20f, 520f)
+        uiStage.addActor(starfishLabel)
     }
 
     override fun update(dt: Float) {
@@ -51,5 +60,7 @@ class LevelScreen: BaseScreen() {
             youWinMessage.addAction(Actions.delay(1f))
             youWinMessage.addAction(Actions.after(Actions.fadeIn(1f)))
         }
+
+        starfishLabel.setText("Starfish left: " + BaseActor.count(mainStage, Starfish::class.java.canonicalName))
     }
 }

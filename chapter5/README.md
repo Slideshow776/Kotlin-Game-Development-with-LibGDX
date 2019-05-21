@@ -18,8 +18,55 @@ The class-based approach makes it easier to change font parameters, but is not v
 
 To create a bitmapfont class-based in code a TrueType Font file (.ttf) must be supplied as an asset.
  
+## Functional Interfaces and Lambda Expressions
+### Functional Interface
+Some languages may store methods in variables, others may not. A substitute for this lack of flexibility is a _functional interface_: an interface which consists of a single method.
+When storage of a method is required rather implement the interface and then specify the function as needed.
+For example, to configure a button to exit a program the following class may be created:
+```
+public class QuitFunction implements Function {
+	public void run() {
+		System.exit(0);
+	}
+}
+```
 
+A button class is needed as well:
+```
+public class Button {
+	private Function clickFunction;
 
+	public void setFunction(Function f) {
+		clickFunction = f;
+	}
+}
+```
+
+The application's implementation would be:
+
+```
+Button button = new Button();
+button.setFunction(new QuitFunction());
+```
+
+In this instance `QuitFunction()` is an _inner class_. 
+An _anonymous inner class_ may be created by writing the class definition as the argument passed to the method, as follows: 
+```
+button.setFunction() {
+	new Function() {
+		public void run() {
+			System.exit();
+		}
+	}
+}
+```
+### Lambda Expressions
+Lambda expressions are compact syntax for creating anonymous inner classes for functional interfaces. This may save a great deal of time and pain when writing code.
+```
+button.setFunction(
+	() -> { System.exit(); }
+)
+```
 
 ## New Imports
 

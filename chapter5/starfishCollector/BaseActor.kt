@@ -3,7 +3,6 @@ package chapter5
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.Gdx
@@ -13,11 +12,12 @@ import com.badlogic.gdx.math.*
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.scenes.scene2d.Group
 
 /**
-*   Extend functionality of the LibGDX Actor class.
-*/
-open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
+ *   Extend functionality of the LibGDX Actor class.
+ */
+open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
 
     private var animation: Animation<TextureRegion>?
     private var elapsedTime: Float = 0F
@@ -36,7 +36,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         this.y = y
         s.addActor(this)
         animation = null
-    }    
+    }
 
     override fun act(dt: Float) {
         super.act(dt)
@@ -46,8 +46,6 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
-        super.draw(batch, parentAlpha)
-
         //  apply color tint effect
         val c: Color = color
         batch.setColor(c.r, c.g, c.b, c.a)
@@ -66,8 +64,9 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
                 rotation
             )
         }
+        super.draw(batch, parentAlpha)
     }
-    
+
     // Graphics ---------------------------------------------------------------------------------------------------
     fun setAnimation(anim: Animation<TextureRegion>) {
         animation = anim
@@ -85,10 +84,11 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
         animationPaused = pause
     }
 
-    fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean, textureFilter: TextureFilter = TextureFilter.Linear): Animation<TextureRegion> {
+    fun loadAnimationFromFiles(fileNames: Array<String>, frameDuration: Float, loop: Boolean,
+                               textureFilter: TextureFilter = TextureFilter.Linear): Animation<TextureRegion> {
         val textureArray: Array<TextureRegion> = Array()
 
-        for (i in 0..fileNames.size-1) {
+        for (i in 0 until fileNames.size) {
             val texture = Texture(Gdx.files.internal(fileNames[i]))
             texture.setFilter(textureFilter, textureFilter)
             textureArray.add(TextureRegion(texture))
@@ -138,7 +138,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
     fun loadTexture(fileName: String): Animation<TextureRegion> {
         val fileNames: Array<String> = Array(1)
         fileNames.add(fileName)
-        return loadAnimationFromFiles(fileNames, 1.toFloat(), true)
+        return loadAnimationFromFiles(fileNames, 1f, true)
     }
 
     fun isAnimationFinished(): Boolean {
@@ -285,6 +285,17 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Actor() {
             worldBounds.height - camera.viewportHeight / 2
         )
         camera.update()
+    }
+
+    fun wrapAroundWorld() {
+        if (x + width < 0)
+            x = worldBounds.width
+        if (x > worldBounds.width)
+            x = -width
+        if (y + height < 0)
+            y = worldBounds.height
+        if (y > worldBounds.height)
+            y = -height
     }
 
     companion object {

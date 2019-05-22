@@ -1,11 +1,13 @@
 package chapter5
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.InputProcessor
 
-abstract class BaseScreen : Screen {
+abstract class BaseScreen : Screen, InputProcessor {
     protected var mainStage: Stage
     protected var uiStage: Stage
 
@@ -40,10 +42,32 @@ abstract class BaseScreen : Screen {
         uiStage.draw()
     }
 
-    override fun hide() {}
-    override fun show() {}
+    override fun show() {
+        var im: InputMultiplexer = Gdx.input.inputProcessor as InputMultiplexer
+        im.addProcessor(this)
+        im.addProcessor(uiStage)
+        im.removeProcessor(mainStage)
+    }
+
+    override fun hide() {
+        var im: InputMultiplexer = Gdx.input.inputProcessor as InputMultiplexer
+        im.removeProcessor(this)
+        im.removeProcessor(uiStage)
+        im.removeProcessor(mainStage)
+    }
+
     override fun pause() {}
     override fun resume() {}
     override fun resize(width: Int, height: Int) {}
     override fun dispose() {}
+
+    // methods required by InputProcessor interface
+    override fun keyDown(keycode: Int): Boolean { return false }
+    override fun keyUp(keycode: Int): Boolean { return false }
+    override fun keyTyped(character: Char): Boolean { return false }
+    override fun mouseMoved(screenX: Int, screenY: Int): Boolean { return false }
+    override fun scrolled(amount: Int): Boolean { return false }
+    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean { return false }
+    override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean { return false }
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean { return false }
 }

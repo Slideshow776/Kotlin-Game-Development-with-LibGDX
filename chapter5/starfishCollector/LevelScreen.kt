@@ -1,9 +1,18 @@
 package chapter5
 
 import chapter5.starfishCollector.BaseGame
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.scenes.scene2d.Event
+import com.badlogic.gdx.scenes.scene2d.ui.Button
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type
 
 class LevelScreen: BaseScreen() {
 
@@ -29,10 +38,30 @@ class LevelScreen: BaseScreen() {
 
         turtle = Turtle(20f, 20f, mainStage)
 
+        // User interface code
+
         starfishLabel = Label("Starfish left: ", BaseGame.labelStyle)
         starfishLabel.color = Color.CYAN
         starfishLabel.setPosition(20f, 520f)
         uiStage.addActor(starfishLabel)
+
+        val buttonStyle = ButtonStyle()
+
+        val buttonTex = Texture(Gdx.files.internal("assets/undo.png"))
+        val buttonRegion = TextureRegion(buttonTex)
+        buttonStyle.up = TextureRegionDrawable(buttonRegion)
+
+        val restartButton = Button(buttonStyle)
+        restartButton.color = Color.CYAN
+        restartButton.setPosition(720f,520f);
+        uiStage.addActor(restartButton);
+
+        restartButton.addListener { e: Event ->
+            val ie = e as InputEvent
+            if (ie.type == Type.touchDown)
+                BaseGame.setActiveScreen(LevelScreen())
+            false
+        }
     }
 
     override fun update(dt: Float) {

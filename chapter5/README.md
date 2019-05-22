@@ -18,8 +18,9 @@ The class-based approach makes it easier to change font parameters, but is not v
 
 To create a bitmapfont class-based in code a TrueType Font file (.ttf) must be supplied as an asset.
  
-## Functional Interfaces and Lambda Expressions
-### Functional Interface
+## Buttons
+### Functional Interfaces and Lambda Expressions
+#### Functional Interface
 Some languages may store methods in variables, others may not. A substitute for this lack of flexibility is a _functional interface_: an interface which consists of a single method.
 When storage of a method is required rather implement the interface and then specify the function as needed.
 For example, to configure a button to exit a program the following class may be created:
@@ -60,12 +61,43 @@ button.setFunction() {
 	}
 }
 ```
-### Lambda Expressions
+#### Lambda Expressions
 Lambda expressions are compact syntax for creating anonymous inner classes for functional interfaces. This may save a great deal of time and pain when writing code.
 ```
 button.setFunction(
 	() -> { System.exit(); }
 )
+```
+
+### Image-Based Buttons
+In a nutshell:
+```
+// Get the images
+Texture buttonTexture = new Texture(Gdx.files.internal("button.png"));
+TextureRegion buttonRegion = new TextureRegion(buttonTexture);
+
+// Apply the images
+ButtonStyle buttonStyle = new ButtonStyle();
+buttonStyle.up = new TextureRegionDrawable(buttonRegion);
+
+// Add the button
+Button quitButton = new Button(buttonStyle);
+quitButton.setPosition(200, 200);
+
+// Add a listener
+quitButton.addListener(
+	(Event e) -> {
+		if (!(e instanceOf InputEvent) ||
+		!((InputEvent)e).getType().equals(Type.touchDown))
+		return false;
+
+		System.exit(0);
+		return false;
+	}
+)
+
+// Apply the listener
+Gdx.input.setInputProcessor(quitButton);
 ```
 
 ## New Imports

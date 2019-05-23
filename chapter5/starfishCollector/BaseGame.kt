@@ -7,9 +7,12 @@ import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.NinePatch
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 
 /**
  * Created when program is launched;
@@ -30,6 +33,7 @@ abstract class BaseGame : Game() {
         private var game: BaseGame? = null
 
         var labelStyle: LabelStyle? = null
+        var textButtonStyle: TextButtonStyle? = null
 
         /**
          * Used to switch screens while game is running.
@@ -60,5 +64,12 @@ abstract class BaseGame : Game() {
         labelStyle = LabelStyle()
         labelStyle!!.font = customFont
         /*labelStyle!!.font = BitmapFont(Gdx.files.internal("assets/cooper.fnt"))*/
+
+        textButtonStyle = TextButtonStyle()
+        val buttonTex = Texture(Gdx.files.internal("assets/button.png"))
+        val buttonPatch = NinePatch(buttonTex, 24, 24, 24, 24)
+        textButtonStyle!!.up = NinePatchDrawable(buttonPatch)
+        textButtonStyle!!.font = customFont
+        textButtonStyle!!.fontColor = Color.PINK
     }
 }

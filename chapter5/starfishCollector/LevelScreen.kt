@@ -1,6 +1,8 @@
 package chapter5
 
 import chapter5.starfishCollector.BaseGame
+import chapter5.starfishCollector.DialogBox
+import chapter5.starfishCollector.Sign
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.graphics.Color
@@ -19,6 +21,7 @@ class LevelScreen: BaseScreen() {
     private lateinit var turtle: Turtle
     private var win: Boolean = false
     private lateinit var starfishLabel: Label
+    private lateinit var dialogBox: DialogBox
 
     override fun initialize() {
         val ocean = BaseActor(0f, 0f, mainStage)
@@ -67,6 +70,23 @@ class LevelScreen: BaseScreen() {
         uiTable.add(starfishLabel).top()
         uiTable.add().expandX().expandY()
         uiTable.add(restartButton).top()
+
+        val sign1 = Sign(20f, 400f, mainStage)
+        sign1.setText("West Starfish Bay")
+
+        val sign2 = Sign(600f, 300f, mainStage)
+        sign2.setText("East Starfish Bay")
+
+        dialogBox = DialogBox(0f, 0f, mainStage)
+        dialogBox.setBackgroundColor(Color.TAN)
+        dialogBox.setFontColor(Color.BROWN)
+        dialogBox.setDialogSize(600f, 100f)
+        dialogBox.setFontScale(.8f)
+        dialogBox.alignCenter()
+        dialogBox.isVisible = false
+
+        uiTable.row()
+        uiTable.add(dialogBox).colspan(3)
     }
 
     override fun update(dt: Float) {
@@ -96,5 +116,23 @@ class LevelScreen: BaseScreen() {
         }
 
         starfishLabel.setText("Starfish left: " + BaseActor.count(mainStage, Starfish::class.java.canonicalName))
+
+        for ( signActor: BaseActor in BaseActor.getList(mainStage, Sign::class.java.canonicalName)) {
+            val sign = signActor as Sign
+            turtle.preventOverlap(sign)
+            val nearBy = turtle.isWithinDistance(4f, sign)
+
+            if (nearBy && !sign.isViewing()) {
+                dialogBox.setText(sign.getText())
+                dialogBox.isVisible = true
+                sign.setViewing(true)
+            }
+
+            if (sign.isViewing() && !nearBy) {
+                dialogBox.setText(" ")
+                dialogBox.isVisible = false
+                sign.setViewing(false)
+            }
+        }
     }
 }

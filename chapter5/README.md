@@ -101,8 +101,8 @@ Gdx.input.setInputProcessor(quitButton);
 ```
 
 ## Organizing Layouts with Tables
-Setting GUI elements's position manually is often unnecessary. With LibGDX's Table this is simplified. Table is a subclass of Actor and can be added to Stage objects. Table is also a subclass of Group which means objects may be added to a Table additionally.
-Tables consists of Cell objects ordered in rows and columns, each Cell containing an Actor.
+Setting GUI elements' position manually is often unnecessary. With LibGDX's Table this is simplified. Table is a subclass of Actor and can be added to Stage objects. Table is also a subclass of Group which means objects may be added to a Table additionally.
+Tables consist of Cell objects ordered in rows and columns, each Cell containing an Actor.
 
 The following code results in a table as shown in the figure below. 
 ```
@@ -115,6 +115,13 @@ t.add(d);
 ```
 ![table](https://user-images.githubusercontent.com/4059636/58312344-64a84480-7e0b-11e9-84f3-7d89dcede23a.png)
 
+
+## Determine if two actors are close
+To determine if two actors/entities are _close_ to each other the following algorithm suffices.
+* Temporarily scale up the acting actors bounding rectangle/polygon,
+* Check if new bounding rectangle/polygon overlaps the other actor
+
+Note: Scaling happens from the center of the actor, if a specific detection distance is required this needs to be multiplied by two.
 
 ## New Imports
 

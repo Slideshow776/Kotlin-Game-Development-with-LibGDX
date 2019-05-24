@@ -100,6 +100,22 @@ quitButton.addListener(
 Gdx.input.setInputProcessor(quitButton);
 ```
 
+## Organizing Layouts with Tables
+Setting GUI elements's position manually is often unnecessary. With LibGDX's Table this is simplified. Table is a subclass of Actor and can be added to Stage objects. Table is also a subclass of Group which means objects may be added to a Table additionally.
+Tables consists of Cell objects ordered in rows and columns, each Cell containing an Actor.
+
+The following code results in a table as shown in the figure below. 
+```
+Table t = new Table();
+t.add(a);
+t.add(b);
+t.row();
+t.add(c);
+t.add(d);
+```
+![table](https://user-images.githubusercontent.com/4059636/58312344-64a84480-7e0b-11e9-84f3-7d89dcede23a.png)
+
+
 ## New Imports
 
 **import com.badlogic.gdx.graphics.g2d.BitmapFont** - Renders bitmap fonts. The font consists of 2 files: an image file or TextureRegion containing the glyphs and a file in the AngleCode BMFont text format that describes where each glyph is on the image.

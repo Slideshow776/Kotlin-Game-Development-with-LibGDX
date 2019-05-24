@@ -16,8 +16,8 @@ class MenuScreen: BaseScreen() {
 
         val title = BaseActor(0f, 0f, mainStage)
         title.loadTexture("assets/starfish-collector.png")
-        title.centerAtPosition(400f, 300f)
-        title.moveBy(0f, 100f)
+        /*title.centerAtPosition(400f, 300f)
+        title.moveBy(0f, 100f)*/
 
         /*var start = BaseActor(0f, 0f, mainStage)
         start.loadTexture("assets/message-start.png")
@@ -25,8 +25,8 @@ class MenuScreen: BaseScreen() {
         start.moveBy(0f, -100f)*/
 
         val startButton = TextButton("Start", BaseGame.textButtonStyle)
-        startButton.setPosition(150f, 150f)
-        uiStage.addActor(startButton)
+        /*startButton.setPosition(150f, 150f)
+        uiStage.addActor(startButton)*/
         startButton.addListener { e: Event ->
             val ie = e as InputEvent
             if (ie.type == Type.touchDown)
@@ -35,14 +35,19 @@ class MenuScreen: BaseScreen() {
         }
 
         val quitButton = TextButton("Quit", BaseGame.textButtonStyle)
-        quitButton.setPosition(500f, 150f)
-        uiStage.addActor(quitButton)
+        /*quitButton.setPosition(500f, 150f)
+        uiStage.addActor(quitButton)*/
         quitButton.addListener { e: Event ->
             val ie = e as InputEvent
             if (ie.type == Type.touchDown)
                 Gdx.app.exit()
             false
         }
+
+        uiTable.add(title).colspan(2)
+        uiTable.row()
+        uiTable.add(startButton)
+        uiTable.add(quitButton)
     }
 
     override fun keyDown(keyCode: Int) : Boolean {

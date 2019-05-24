@@ -42,8 +42,8 @@ class LevelScreen: BaseScreen() {
 
         starfishLabel = Label("Starfish left: ", BaseGame.labelStyle)
         starfishLabel.color = Color.CYAN
-        starfishLabel.setPosition(20f, 520f)
-        uiStage.addActor(starfishLabel)
+        /*starfishLabel.setPosition(20f, 520f)
+        uiStage.addActor(starfishLabel)*/
 
         val buttonStyle = ButtonStyle()
 
@@ -53,8 +53,8 @@ class LevelScreen: BaseScreen() {
 
         val restartButton = Button(buttonStyle)
         restartButton.color = Color.CYAN
-        restartButton.setPosition(720f,520f);
-        uiStage.addActor(restartButton);
+        /*restartButton.setPosition(720f,520f);
+        uiStage.addActor(restartButton);*/
 
         restartButton.addListener { e: Event ->
             val ie = e as InputEvent
@@ -62,6 +62,11 @@ class LevelScreen: BaseScreen() {
                 BaseGame.setActiveScreen(LevelScreen())
             false
         }
+
+        uiTable.pad(10f)
+        uiTable.add(starfishLabel).top()
+        uiTable.add().expandX().expandY()
+        uiTable.add(restartButton).top()
     }
 
     override fun update(dt: Float) {
@@ -70,7 +75,7 @@ class LevelScreen: BaseScreen() {
         }
 
         for ( starfishActor: BaseActor in BaseActor.getList(mainStage, Starfish::class.java.canonicalName)) {
-            var starfish = starfishActor as Starfish
+            val starfish = starfishActor as Starfish
             if (turtle.overlaps(starfish) && !starfish.isCollected()) {
                 starfish.collect()
 

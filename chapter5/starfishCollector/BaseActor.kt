@@ -317,6 +317,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
 
         fun setWorldBounds(width: Float, height: Float) { worldBounds = Rectangle(0f, 0f, width, height) }
         fun setWorldBounds(ba: BaseActor) = setWorldBounds(ba.width, ba.height)
+        fun getWorldBounds() = worldBounds
 
         fun getList(stage: Stage, className: String): ArrayList<BaseActor> {
             var list: ArrayList<BaseActor> = ArrayList()

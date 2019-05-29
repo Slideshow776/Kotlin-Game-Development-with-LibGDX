@@ -1,6 +1,7 @@
 package chapter5
 
 import chapter5.starfishCollector.BaseGame
+import chapter5.starfishCollector.StoryScreen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.scenes.scene2d.Event
@@ -52,7 +53,7 @@ class MenuScreen: BaseScreen() {
 
     override fun keyDown(keyCode: Int) : Boolean {
         if (Gdx.input.isKeyPressed(Keys.ENTER))
-            BaseGame.setActiveScreen(LevelScreen())
+            BaseGame.setActiveScreen(StoryScreen())
         if (Gdx.input.isKeyPressed(Keys.ESCAPE))
             Gdx.app.exit()
         return false
@@ -60,7 +61,7 @@ class MenuScreen: BaseScreen() {
 
     override fun update(dt: Float) {
         if (Gdx.input.isKeyPressed(Keys.S)) {
-            BaseGame.setActiveScreen(LevelScreen())
+            BaseGame.setActiveScreen(StoryScreen())
         }
     }
 }

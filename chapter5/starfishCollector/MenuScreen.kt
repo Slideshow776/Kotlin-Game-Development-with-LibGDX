@@ -31,7 +31,7 @@ class MenuScreen: BaseScreen() {
         startButton.addListener { e: Event ->
             val ie = e as InputEvent
             if (ie.type == Type.touchDown)
-                BaseGame.setActiveScreen(LevelScreen())
+                BaseGame.setActiveScreen(StoryScreen())
             false
         }
 
@@ -60,8 +60,8 @@ class MenuScreen: BaseScreen() {
     }
 
     override fun update(dt: Float) {
-        if (Gdx.input.isKeyPressed(Keys.S)) {
+        /*if (Gdx.input.isKeyPressed(Keys.S)) {
             BaseGame.setActiveScreen(StoryScreen())
-        }
+        }*/
     }
 }

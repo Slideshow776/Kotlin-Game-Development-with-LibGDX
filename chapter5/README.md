@@ -151,6 +151,11 @@ To determine if two actors/entities are _close_ to each other the following algo
 
 Note: Scaling happens from the center of the actor if a specific detection distance is required this needs to be multiplied by two.
 
+## Creating Cutscenes
+To create cutscenes you need a _SceneSegment_ class which binds an actor to an action and a _Scene_ class to handle the list of SceneSegments which also automatically plays the next SceneSegment. 
+
+In addition, in this chapter, two new Action classes (_SetTextAction_ and _SceneActions_) have been defined to give more custom needed actions.
+
 ## New Imports
 
 **import com.badlogic.gdx.graphics.g2d.BitmapFont** - Renders bitmap fonts. The font consists of 2 files: an image file or TextureRegion containing the glyphs and a file in the AngleCode BMFont text format that describes where each glyph is on the image.

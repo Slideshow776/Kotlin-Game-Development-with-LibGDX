@@ -46,23 +46,13 @@ class StoryScreen: BaseScreen() {
         scene.addSegment(SceneSegment(turtle, SceneActions.moveToScreenCenter(2f)))
         scene.addSegment(SceneSegment(dialogBox, Actions.show()))
 
-        scene.addSegment(
-            SceneSegment(
-                dialogBox,
-                SceneActions.setText("I want to be the very best... Starfish Collector!")
-            )
-        )
+        scene.addSegment(SceneSegment(dialogBox, SceneActions.setText("I want to be the very best... Starfish Collector!")))
 
         scene.addSegment(SceneSegment(continueKey, Actions.show()))
         scene.addSegment(SceneSegment(background, SceneActions.pause()))
         scene.addSegment(SceneSegment(continueKey, Actions.hide()))
 
-        scene.addSegment(
-            SceneSegment(
-                dialogBox,
-                SceneActions.setText("I've got to collect them all!")
-            )
-        )
+        scene.addSegment(SceneSegment(dialogBox,SceneActions.setText("I've got to collect them all!")))
 
         scene.addSegment(SceneSegment(continueKey, Actions.show()))
         scene.addSegment(SceneSegment(background, SceneActions.pause()))
@@ -73,11 +63,13 @@ class StoryScreen: BaseScreen() {
         scene.addSegment(SceneSegment(background, Actions.fadeOut(1f)))
 
         scene.start()
+        println("a")
     }
 
     override fun update(dt: Float) {
-        if (scene.isSceneFinished)
+        if (scene.isSceneFinished) {
             BaseGame.setActiveScreen(LevelScreen())
+        }
     }
 
     override fun keyDown(keyCode: Int): Boolean {

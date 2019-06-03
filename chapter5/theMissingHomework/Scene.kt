@@ -1,6 +1,6 @@
 package chapter5.theMissingHomework
 
-import SceneSegment
+import chapter5.theMissingHomework.SceneSegment
 import com.badlogic.gdx.scenes.scene2d.Actor
 import java.util.ArrayList
 

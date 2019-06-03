@@ -1,6 +1,6 @@
 package chapter5.theMissingHomework
 
-import chapter5.BaseScreen
+import chapter5.theMissingHomework.BaseScreen
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
@@ -46,7 +46,7 @@ abstract class BaseGame : Game() {
 
     override fun create() {
         // prepare for multiple classes/stages to receive discrete input
-        var im = InputMultiplexer()
+        val im = InputMultiplexer()
         Gdx.input.inputProcessor = im
 
         val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("assets/OpenSans.ttf"))

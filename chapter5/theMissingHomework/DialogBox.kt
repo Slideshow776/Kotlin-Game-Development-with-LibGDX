@@ -1,6 +1,6 @@
 package chapter5.theMissingHomework
 
-import chapter5.BaseActor
+import chapter5.theMissingHomework.BaseActor
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label

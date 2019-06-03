@@ -1,9 +1,9 @@
 package chapter5.theMissingHomework
 
-import chapter5.HomeworkGame
+import chapter5.theMissingHomework.HomeworkGame
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 
-object LauncherHomework {
+object Launcher {
     @JvmStatic
     fun main(args: Array<String>) {
         val game = HomeworkGame()

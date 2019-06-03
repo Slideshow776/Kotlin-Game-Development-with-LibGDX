@@ -1,6 +1,7 @@
 package chapter5.starfishCollector
 
 import com.badlogic.gdx.scenes.scene2d.Action
+import chapter5.starfishCollector.DialogBox
 
 class SetTextAction(protected val textToDisplay: String) : Action() {
 

@@ -1,6 +1,6 @@
 package chapter5.starfishCollector
 
-import chapter5.BaseScreen
+import chapter5.starfishCollector.BaseScreen
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer

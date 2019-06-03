@@ -1,12 +1,12 @@
 package chapter5.starfishCollector
 
-import chapter5.BaseActor
-import chapter5.BaseScreen
+import chapter5.starfishCollector.BaseActor
+import chapter5.starfishCollector.BaseScreen
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import SceneSegment
-import chapter5.LevelScreen
+import chapter5.starfishCollector.SceneSegment
+import chapter5.starfishCollector.LevelScreen
 
 class StoryScreen: BaseScreen() {
     lateinit var scene: Scene

@@ -1,4 +1,4 @@
-package chapter5
+package chapter5.starfishCollector
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer

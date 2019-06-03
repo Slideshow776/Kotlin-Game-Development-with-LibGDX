@@ -1,6 +1,6 @@
 package chapter5.starfishCollector
 
-import chapter5.BaseActor
+import chapter5.starfishCollector.BaseActor
 import com.badlogic.gdx.scenes.scene2d.Stage
 
 class Sign(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {

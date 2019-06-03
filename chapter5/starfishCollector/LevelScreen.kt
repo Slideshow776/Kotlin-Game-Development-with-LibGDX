@@ -1,4 +1,4 @@
-package chapter5
+package chapter5.starfishCollector
 
 import chapter5.starfishCollector.BaseGame
 import chapter5.starfishCollector.DialogBox

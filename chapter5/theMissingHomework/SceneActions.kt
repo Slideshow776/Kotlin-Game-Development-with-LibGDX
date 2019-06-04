@@ -1,6 +1,8 @@
 package chapter5.theMissingHomework
 
 import chapter5.theMissingHomework.BaseActor
+import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
@@ -14,5 +16,7 @@ class SceneActions : Actions() {
         fun moveToScreenCenter(duration: Float) = Actions.moveToAligned(BaseActor.getWorldBounds().width / 2, 0f,  Align.bottom, duration)
         fun moveToOutsideLeft(duration: Float) = Actions.moveToAligned(0f, 0f, Align.bottomRight, duration)
         fun moveToOutsideRight(duration: Float) = Actions.moveToAligned(BaseActor.getWorldBounds().width, 0f, Align.bottomLeft, duration)
+        fun setAnimation(a: Animation<TextureRegion>) = SetAnimationAction(a)
+        fun typeWriter(s: String) = TypewriterAction(s)
     }
 }

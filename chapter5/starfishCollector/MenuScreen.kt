@@ -30,8 +30,9 @@ class MenuScreen: BaseScreen() {
         uiStage.addActor(startButton)*/
         startButton.addListener { e: Event ->
             val ie = e as InputEvent
-            if (ie.type == Type.touchDown)
+            if (ie.type == Type.touchDown) {
                 BaseGame.setActiveScreen(StoryScreen())
+            }
             false
         }
 

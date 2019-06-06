@@ -2,12 +2,13 @@ package chapter5.theMissingHomework
 
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 class Background(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
-    var hallway: Animation<*>
-    var classroom: Animation<*>
-    var scienceLab: Animation<*>
-    var library: Animation<*>
+    var hallway: Animation<TextureRegion>
+    var classroom: Animation<TextureRegion>
+    var scienceLab: Animation<TextureRegion>
+    var library: Animation<TextureRegion>
 
     init {
         hallway = loadTexture("assets/bg-hallway.jpg")

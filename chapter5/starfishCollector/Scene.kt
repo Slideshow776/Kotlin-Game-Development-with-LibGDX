@@ -1,6 +1,5 @@
 package chapter5.starfishCollector
 
-import chapter5.starfishCollector.SceneSegment
 import com.badlogic.gdx.scenes.scene2d.Actor
 import java.util.ArrayList
 

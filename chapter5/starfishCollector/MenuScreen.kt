@@ -1,7 +1,5 @@
 package chapter5.starfishCollector
 
-import chapter5.starfishCollector.BaseGame
-import chapter5.starfishCollector.StoryScreen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.scenes.scene2d.Event

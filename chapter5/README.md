@@ -1,5 +1,20 @@
 # Text and User Interfaces
 
+This chapter teaches how to use labels, image and text-based buttons. A custom bitmap font was created, lambda expression were introduced, as well as using tables. Lastly we added logic to display dialog boxes and creating cutscenes.
+
+This chapter contains two games; StarfishCollector and The Missing Homework
+
+## Starfish Collector
+As suggested by the book the following features were added:
+* A pause button
+* Count down timer to end the game
+* Two cutscenes displaying the respective game ending conditions
+
+![StarfishCollector](https://user-images.githubusercontent.com/4059636/59086522-4447b200-8902-11e9-9501-fc6dcfb2c068.png)
+
+## The Missing Homework
+TODO
+
 ## Displaying Text
 A text may be displayed using a label. Labels are initialized with a String and a LabelStyle object.
 It is best to initialize this often used asset in the Game object as a public static variable.

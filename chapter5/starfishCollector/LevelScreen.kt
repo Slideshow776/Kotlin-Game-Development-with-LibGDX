@@ -137,12 +137,20 @@ class LevelScreen: BaseScreen() {
                 youWinMessage.setOpacity(0f)
                 youWinMessage.addAction(Actions.delay(1f))
                 youWinMessage.addAction(Actions.after(Actions.fadeIn(1f)))
+                youWinMessage.addAction(Actions.delay(5f))
+                youWinMessage.addAction(
+                    Actions.after(
+                        Actions.run {
+                            BaseGame.setActiveScreen( StoryScreen2() )
+                        }
+                    )
+                )
             }
 
             starfishLabel.setText("Starfish left: " + BaseActor.count(mainStage, Starfish::class.java.canonicalName))
 
             timeCount += dt
-            if (timeCount >= 1f) {
+            if (timeCount >= 1f && !win) {
                 timeCount = 0f
                 time -= 1
             }
@@ -150,7 +158,7 @@ class LevelScreen: BaseScreen() {
             if(time >= 0)
                 timeLabel.setText("Time: $time")
 
-            if (time <= 0) {
+            if (time <= 0 && !win) {
                 win = false
                 val gameOver = BaseActor(0f, 0f, uiStage)
                 gameOver.loadTexture("assets/game-over.png")
@@ -162,7 +170,7 @@ class LevelScreen: BaseScreen() {
                 gameOver.addAction(
                     Actions.after(
                         Actions.run {
-                            BaseGame.setActiveScreen( MenuScreen() )
+                            BaseGame.setActiveScreen( StoryScreen3() )
                         }
                     )
                 )

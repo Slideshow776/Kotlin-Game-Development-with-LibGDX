@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
-class StoryScreen: BaseScreen() {
+class StoryScreen3: BaseScreen() {
     lateinit var scene: Scene
     lateinit var continueKey: BaseActor
 
@@ -39,23 +39,24 @@ class StoryScreen: BaseScreen() {
         mainStage.addActor(scene)
 
         scene.addSegment(SceneSegment(background, Actions.fadeIn(1f)))
+        scene.addSegment(SceneSegment(turtle, SceneActions.moveToOutsideRight(0f)))
         scene.addSegment(SceneSegment(turtle, SceneActions.moveToScreenCenter(2f)))
         scene.addSegment(SceneSegment(dialogBox, Actions.show()))
 
-        scene.addSegment(SceneSegment(dialogBox, SceneActions.setText("I want to be the very best... Starfish Collector!")))
+        scene.addSegment(SceneSegment(dialogBox, SceneActions.setText("I didn't make it!")))
 
         scene.addSegment(SceneSegment(continueKey, Actions.show()))
         scene.addSegment(SceneSegment(background, SceneActions.pause()))
         scene.addSegment(SceneSegment(continueKey, Actions.hide()))
 
-        scene.addSegment(SceneSegment(dialogBox,SceneActions.setText("I've got to collect them all!")))
+        scene.addSegment(SceneSegment(dialogBox,SceneActions.setText("Now I'm going home...")))
 
         scene.addSegment(SceneSegment(continueKey, Actions.show()))
         scene.addSegment(SceneSegment(background, SceneActions.pause()))
         scene.addSegment(SceneSegment(continueKey, Actions.hide()))
 
         scene.addSegment(SceneSegment(dialogBox, Actions.hide()))
-        scene.addSegment(SceneSegment(turtle, SceneActions.moveToOutsideRight(1f)))
+        scene.addSegment(SceneSegment(turtle, SceneActions.moveToOutsideLeft(1f)))
         scene.addSegment(SceneSegment(background, Actions.fadeOut(1f)))
 
         scene.start()
@@ -63,7 +64,7 @@ class StoryScreen: BaseScreen() {
 
     override fun update(dt: Float) {
         if (scene.isSceneFinished) {
-            BaseGame.setActiveScreen(LevelScreen())
+            BaseGame.setActiveScreen(MenuScreen())
         }
     }
 

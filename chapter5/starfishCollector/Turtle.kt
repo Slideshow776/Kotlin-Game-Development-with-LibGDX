@@ -6,6 +6,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 
 class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+
+    var pause = false
+
     init {
         val fileNames: Array<String> = Array()
         fileNames.add("assets/turtle-1.png")
@@ -26,15 +29,16 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     override fun act(dt: Float) {
         super.act(dt)
 
-        if (Gdx.input.isKeyPressed(Keys.W))
-            accelerateAtAngle(90f)
-        if (Gdx.input.isKeyPressed(Keys.A))
-            accelerateAtAngle(180f)
-        if (Gdx.input.isKeyPressed(Keys.S))
-            accelerateAtAngle(270f)
-        if (Gdx.input.isKeyPressed(Keys.D))
-            accelerateAtAngle(0f)
-
+        if (!pause) {
+            if (Gdx.input.isKeyPressed(Keys.W))
+                accelerateAtAngle(90f)
+            if (Gdx.input.isKeyPressed(Keys.A))
+                accelerateAtAngle(180f)
+            if (Gdx.input.isKeyPressed(Keys.S))
+                accelerateAtAngle(270f)
+            if (Gdx.input.isKeyPressed(Keys.D))
+                accelerateAtAngle(0f)
+        }
         applyPhysics(dt)
 
         setAnimationPaused(!isMoving())

@@ -210,7 +210,7 @@ class StoryScreen : BaseScreen() {
 
         scene.addSegment(SceneSegment(theEnd, Actions.fadeIn(4f)))
 
-        scene.addSegment(SceneSegment(background, Actions.delay(10f)))
+        scene.addSegment(SceneSegment(background, Actions.delay(5f)))
         scene.addSegment(SceneSegment(background, Actions.run { MenuScreen() }))
 
         scene.start()

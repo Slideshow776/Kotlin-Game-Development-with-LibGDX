@@ -63,7 +63,6 @@ class StoryScreen: BaseScreen() {
         scene.addSegment(SceneSegment(background, Actions.fadeOut(1f)))
 
         scene.start()
-        println("a")
     }
 
     override fun update(dt: Float) {

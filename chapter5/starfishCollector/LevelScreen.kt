@@ -1,8 +1,5 @@
 package chapter5.starfishCollector
 
-import chapter5.starfishCollector.BaseGame
-import chapter5.starfishCollector.DialogBox
-import chapter5.starfishCollector.Sign
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.graphics.Color
@@ -15,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputEvent.Type
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
+
+
 
 class LevelScreen: BaseScreen() {
 
@@ -22,6 +22,12 @@ class LevelScreen: BaseScreen() {
     private var win: Boolean = false
     private lateinit var starfishLabel: Label
     private lateinit var dialogBox: DialogBox
+
+    private lateinit var timeLabel: Label
+    private var time = 30
+    private var timeCount = 0f
+
+    private var pause = false
 
     override fun initialize() {
         val ocean = BaseActor(0f, 0f, mainStage)
@@ -48,6 +54,9 @@ class LevelScreen: BaseScreen() {
         /*starfishLabel.setPosition(20f, 520f)
         uiStage.addActor(starfishLabel)*/
 
+        timeLabel = Label("Time: ", BaseGame.labelStyle)
+        timeLabel.color = Color.CYAN
+
         val buttonStyle = ButtonStyle()
 
         val buttonTex = Texture(Gdx.files.internal("assets/undo.png"))
@@ -66,9 +75,23 @@ class LevelScreen: BaseScreen() {
             false
         }
 
+        val buttonStyle2 = ButtonStyle()
+        buttonStyle2.up = TextureRegionDrawable(TextureRegion(Texture("assets/pause.png")))
+        val pauseButton = Button(buttonStyle2)
+        pauseButton.color = Color.CYAN
+        pauseButton.addListener { e: Event ->
+            if(e is InputEvent && e.type == Type.touchDown) {
+                pause = !pause
+                turtle.pause = pause
+            }
+            false
+        }
+
         uiTable.pad(10f)
         uiTable.add(starfishLabel).top()
         uiTable.add().expandX().expandY()
+        uiTable.add(timeLabel).top()
+        uiTable.add(pauseButton).top()
         uiTable.add(restartButton).top()
 
         val sign1 = Sign(20f, 400f, mainStage)
@@ -90,49 +113,81 @@ class LevelScreen: BaseScreen() {
     }
 
     override fun update(dt: Float) {
-        for (rockActor: BaseActor in BaseActor.getList(mainStage, Rock::class.java.canonicalName)) {
-            turtle.preventOverlap(rockActor)
-        }
-
-        for ( starfishActor: BaseActor in BaseActor.getList(mainStage, Starfish::class.java.canonicalName)) {
-            val starfish = starfishActor as Starfish
-            if (turtle.overlaps(starfish) && !starfish.isCollected()) {
-                starfish.collect()
-
-                val whirl = Whirlpool(0f, 0f, mainStage)
-                whirl.centerAtActor(starfish)
-                whirl.setOpacity(.25f)
-            }
-        }
-
-        if(BaseActor.count(mainStage, Starfish::class.java.canonicalName) == 0 && !win) {
-            win = true
-            val youWinMessage = BaseActor(0f, 0f, uiStage)
-            youWinMessage.loadTexture("assets/you-win.png")
-            youWinMessage.centerAtPosition(400f, 300f)
-            youWinMessage.setOpacity(0f)
-            youWinMessage.addAction(Actions.delay(1f))
-            youWinMessage.addAction(Actions.after(Actions.fadeIn(1f)))
-        }
-
-        starfishLabel.setText("Starfish left: " + BaseActor.count(mainStage, Starfish::class.java.canonicalName))
-
-        for ( signActor: BaseActor in BaseActor.getList(mainStage, Sign::class.java.canonicalName)) {
-            val sign = signActor as Sign
-            turtle.preventOverlap(sign)
-            val nearBy = turtle.isWithinDistance(4f, sign)
-
-            if (nearBy && !sign.isViewing()) {
-                dialogBox.setText(sign.getText())
-                dialogBox.isVisible = true
-                sign.setViewing(true)
+        if (!pause) {
+            for (rockActor: BaseActor in BaseActor.getList(mainStage, Rock::class.java.canonicalName)) {
+                turtle.preventOverlap(rockActor)
             }
 
-            if (sign.isViewing() && !nearBy) {
-                dialogBox.setText(" ")
-                dialogBox.isVisible = false
-                sign.setViewing(false)
+            for (starfishActor: BaseActor in BaseActor.getList(mainStage, Starfish::class.java.canonicalName)) {
+                val starfish = starfishActor as Starfish
+                if (turtle.overlaps(starfish) && !starfish.isCollected()) {
+                    starfish.collect()
+
+                    val whirl = Whirlpool(0f, 0f, mainStage)
+                    whirl.centerAtActor(starfish)
+                    whirl.setOpacity(.25f)
+                }
             }
+
+            if (BaseActor.count(mainStage, Starfish::class.java.canonicalName) == 0 && !win && time >= 0f) {
+                win = true
+                val youWinMessage = BaseActor(0f, 0f, uiStage)
+                youWinMessage.loadTexture("assets/you-win.png")
+                youWinMessage.centerAtPosition(400f, 300f)
+                youWinMessage.setOpacity(0f)
+                youWinMessage.addAction(Actions.delay(1f))
+                youWinMessage.addAction(Actions.after(Actions.fadeIn(1f)))
+            }
+
+            starfishLabel.setText("Starfish left: " + BaseActor.count(mainStage, Starfish::class.java.canonicalName))
+
+            timeCount += dt
+            if (timeCount >= 1f) {
+                timeCount = 0f
+                time -= 1
+            }
+
+            if(time >= 0)
+                timeLabel.setText("Time: $time")
+
+            if (time <= 0) {
+                win = false
+                val gameOver = BaseActor(0f, 0f, uiStage)
+                gameOver.loadTexture("assets/game-over.png")
+                gameOver.centerAtPosition(400f, 300f)
+                gameOver.setOpacity(0f)
+                gameOver.addAction(Actions.delay(1f))
+                gameOver.addAction(Actions.after(Actions.fadeIn(1f)))
+                gameOver.addAction(Actions.delay(5f))
+                gameOver.addAction(
+                    Actions.after(
+                        Actions.run {
+                            BaseGame.setActiveScreen( MenuScreen() )
+                        }
+                    )
+                )
+            }
+
+            for (signActor: BaseActor in BaseActor.getList(mainStage, Sign::class.java.canonicalName)) {
+                val sign = signActor as Sign
+                turtle.preventOverlap(sign)
+                val nearBy = turtle.isWithinDistance(4f, sign)
+
+                if (nearBy && !sign.isViewing()) {
+                    dialogBox.setText(sign.getText())
+                    dialogBox.isVisible = true
+                    sign.setViewing(true)
+                }
+
+                if (sign.isViewing() && !nearBy) {
+                    dialogBox.setText(" ")
+                    dialogBox.isVisible = false
+                    sign.setViewing(false)
+                }
+            }
+        }
+        else {
+            turtle.pause = true
         }
     }
 }

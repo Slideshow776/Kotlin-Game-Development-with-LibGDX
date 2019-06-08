@@ -13,7 +13,14 @@ As suggested by the book the following features were added:
 ![StarfishCollector](https://user-images.githubusercontent.com/4059636/59086522-4447b200-8902-11e9-9501-fc6dcfb2c068.png)
 
 ## The Missing Homework
-TODO
+As suggested by the book the following features were added:
+* Extra goals to complete the game: Kelsoe needs to find a key first.
+
+Extra features by me:
+* Added new texture: Kelsoe gets embarrased when he finds the key.
+* Moved dialogbox to the bottom of the screen with `table.bottom()`
+
+![TheMissingHomework](https://user-images.githubusercontent.com/4059636/59142632-648a7600-89c1-11e9-84a6-95910823802e.png)
 
 ## Displaying Text
 A text may be displayed using a label. Labels are initialized with a String and a LabelStyle object.
@@ -180,3 +187,40 @@ In addition, in this chapter, two new Action classes (_SetTextAction_ and _Scene
 **import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontGenerator** - Generates BitmapFont and BitmapFontData instances from TrueType, OTF, and other FreeType supported fonts.
 
 **import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontGenerator.FreeTypeFontParameter**
+
+
+**import com.badlogic.gdx.scenes.scene2s.ui.Label** - A text label, with optional word wrapping.
+The preferred size of the label is determined by the actual text bounds, unless word wrap is enabled.
+
+**import com.badlogic.gdx.scenes.scene2d.ui.Button** - A button is a Table with a checked state and additional style fields for pressed, unpressed, and checked. Each time a button is clicked, the checked state is toggled. Being a table, a button can contain any other actors.
+
+The button's padding is set to the background drawable's padding when the background changes, overwriting any padding set manually. Padding can still be set on the button's table cells.
+ChangeListener.ChangeEvent is fired when the button is clicked. Cancelling the event will restore the checked button state to what is was previously.
+
+The preferred size of the button is determined by the background and the button contents.
+
+**import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle** - The style for a button
+
+**import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable** - Drawable for a TextureRegion.
+
+**import com.badlogic.gdx.scenes.scene2d.Event** - The base class for all events.
+
+**import com.badlogic.gdx.scenes.scene2d.InputEvent** - Event for actor input: touch, mouse, keyboard, and scroll.
+
+**import com.badlogic.gdx.scenes.scene2d.InputEvent.Type** - Types of low-level input events supported by scene2d.
+
+**import com.badlogic.gdx.scenes.scene2d.ui.TextButton** - A button with a child Label to display text.
+
+**import com.badlogic.gdx.scenes.scene2d.ui.TextButtonStyle** - The style for a text button.
+
+**import com.badlogic.gdx.graphics.g2d.NinePatch** - A 3x3 grid of texture regions. Any of the regions may be omitted. Padding may be set as a hint on how to inset content on top of the ninepatch (by default the eight "edge" textures of the nine-patch define the padding). When drawn the eight "edge" patches will not be scaled, only the interior patch will be scaled.
+
+**import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable** - Drawable for a NinePatch.
+The drawable sizes are set when the ninepatch is set, but they are separate values. Eg, Drawable.getLeftWidth() could be set to more than NinePatch.getLeftWidth() in order to provide more space on the left than actually exists in the ninepatch.
+
+The min size is set to the ninepatch total size by default. It could be set to the left+right and top+bottom, excluding the middle size, to allow the drawable to be sized down as small as possible.
+
+**import com.badlogic.gdx.scenes.scene2d.ui.Table** - A group that sizes and positions children using table constraints. By default, Actor.getTouchable() is Touchable.childrenOnly.
+The preferred and minimum sizes are that of the children when laid out in columns and rows.
+
+**import com.badlogic.gdx.utils.Align** - Provides bit flag constants for alignment.

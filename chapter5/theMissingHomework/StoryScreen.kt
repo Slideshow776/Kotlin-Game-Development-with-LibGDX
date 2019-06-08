@@ -1,8 +1,6 @@
 package chapter5.theMissingHomework
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
-import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
@@ -21,6 +19,8 @@ class StoryScreen : BaseScreen() {
     lateinit var continueKey: BaseActor
     lateinit var buttonTable: Table
     lateinit var theEnd: BaseActor
+
+    var haveKey = false
 
     override fun initialize() {
         background = Background(0f, 0f, mainStage)
@@ -50,6 +50,7 @@ class StoryScreen : BaseScreen() {
         uiTable.add(buttonTable)
         uiTable.row()
         uiTable.add(dialogBox)
+        uiTable.bottom()
 
         theEnd = BaseActor(0f, 0f, mainStage)
         theEnd.loadTexture("assets/the-end.png")
@@ -148,6 +149,7 @@ class StoryScreen : BaseScreen() {
         scene.addSegment(SceneSegment(kelsoe, SceneActions.setAnimation(kelsoe.sad)))
         addTextSequence("My homework isn't here, though")
         scene.addSegment(SceneSegment(kelsoe, SceneActions.setAnimation(kelsoe.normal)))
+        addTextSequence("Wait... this key is mine!")
         addTextSequence("Where should I go?")
 
         scene.addSegment(SceneSegment(buttonTable, Actions.show()))
@@ -179,9 +181,38 @@ class StoryScreen : BaseScreen() {
             false
         }
 
+        val takeKeyButton = TextButton("Take key", BaseGame.textButtonStyle)
+        takeKeyButton.addListener {e: Event ->
+            if (e is InputEvent && e.type == Type.touchDown) {
+                scene.addSegment(SceneSegment(buttonTable, Actions.hide()))
+
+                addTextSequence("I'm so forgetful.")
+                scene.addSegment(SceneSegment(kelsoe, SceneActions.setAnimation(kelsoe.sad)))
+                scene.addSegment(SceneSegment(background, Actions.delay(.5f)))
+                scene.addSegment(SceneSegment(kelsoe, SceneActions.setAnimation(kelsoe.embarrased)))
+                scene.addSegment(SceneSegment(background, Actions.delay(1f)))
+
+                scene.addSegment((SceneSegment(kelsoe, SceneActions.setAnimation(kelsoe.lookLeft))))
+                scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToScreenLeft(2f)))
+                scene.addSegment(SceneSegment(kelsoe, SceneActions.setAnimation(kelsoe.normal)))
+                addTextSequence("I got the key.")
+                scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToScreenCenter(.5f)))
+                addTextSequence("Where should I go?")
+
+                scene.addSegment(SceneSegment(buttonTable, Actions.show()))
+                haveKey = true
+                buttonTable.removeActor(takeKeyButton)
+            }
+            false
+        }
+
         buttonTable.clearChildren()
         buttonTable.add(classroomButton)
         buttonTable.row()
+        if (!haveKey) {
+            buttonTable.add(takeKeyButton)
+            buttonTable.row()
+        }
         buttonTable.add(libraryButton)
 
         scene.start()
@@ -204,14 +235,55 @@ class StoryScreen : BaseScreen() {
         scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToScreenRight(2f)))
         scene.addSegment(SceneSegment(kelsoe, SceneActions.setAnimation(kelsoe.normal)))
         addTextSequence("Aha! Here it is!")
-        scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToScreenCenter(.5f)))
-        addTextSequence("Thanks for helping me find it!")
-        scene.addSegment(SceneSegment(dialogBox, Actions.hide()))
 
-        scene.addSegment(SceneSegment(theEnd, Actions.fadeIn(4f)))
+        if (haveKey) {
+            addTextSequence("It's locked, thankfully I have my key.")
+            scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToScreenCenter(.5f)))
+            addTextSequence("Thanks for helping me find it!")
+            scene.addSegment(SceneSegment(dialogBox, Actions.hide()))
 
-        scene.addSegment(SceneSegment(background, Actions.delay(5f)))
-        scene.addSegment(SceneSegment(background, Actions.run { MenuScreen() }))
+            scene.addSegment(SceneSegment(theEnd, Actions.fadeIn(4f)))
+            scene.addSegment(SceneSegment(background, Actions.delay(5f)))
+            scene.addSegment(SceneSegment(background, Actions.run { BaseGame.setActiveScreen(MenuScreen()) }))
+        } else {
+            addTextSequence("It's locked!")
+            addTextSequence("I need to get my key, where could it be?")
+            scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToScreenCenter(.5f)))
+            addTextSequence("Where should I go next?")
+
+            scene.addSegment(SceneSegment(buttonTable, Actions.show()))
+            // Set up options
+            val scienceLabButton = TextButton("Look in the Science Lab", BaseGame.textButtonStyle)
+            scienceLabButton.addListener { e: Event ->
+                if (e is InputEvent && e.type == Type.touchDown) {
+                    scene.addSegment(SceneSegment(buttonTable, Actions.hide()))
+                    addTextSequence("That's a great idea. I'll check the science lab.")
+                    scene.addSegment(SceneSegment(dialogBox, Actions.hide()))
+                    scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToOutsideLeft(1f)))
+                    scene.addSegment(SceneSegment(background, Actions.fadeOut(1f)))
+                    scene.addSegment(SceneSegment(background, Actions.run { scienceLab() }))
+                }
+                false
+            }
+
+            val classroomButton = TextButton("Look in the Classroom", BaseGame.textButtonStyle)
+            classroomButton.addListener { e: Event ->
+                if (e is InputEvent && e.type == Type.touchDown) {
+                    scene.addSegment(SceneSegment(buttonTable, Actions.hide()))
+                    addTextSequence("That's a great idea. Maybe I left it in the Classroom.")
+                    scene.addSegment(SceneSegment(dialogBox, Actions.hide()))
+                    scene.addSegment(SceneSegment(kelsoe, SceneActions.moveToOutsideLeft(1f)))
+                    scene.addSegment(SceneSegment(background, Actions.fadeOut(1f)))
+                    scene.addSegment(SceneSegment(background, Actions.run { classroom() }))
+                }
+                false
+            }
+
+            buttonTable.clearChildren()
+            buttonTable.add(scienceLabButton)
+            buttonTable.row()
+            buttonTable.add(classroomButton)
+        }
 
         scene.start()
     }

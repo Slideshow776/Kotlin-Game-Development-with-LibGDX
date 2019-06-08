@@ -1,9 +1,7 @@
 package chapter5.theMissingHomework
 
-import chapter5.theMissingHomework.BaseActor
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
 

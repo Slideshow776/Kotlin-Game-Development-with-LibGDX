@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputEvent.Type
+import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.audio.Music
 
 class LevelScreen: BaseScreen() {
 
@@ -25,6 +27,11 @@ class LevelScreen: BaseScreen() {
     private var timeCount = 0f
 
     private var pause = false
+
+    private var audioVolume: Float = 1f
+    private lateinit var waterDrop: Sound
+    private lateinit var instrumental: Music
+    private lateinit var oceanSurf: Music
 
     override fun initialize() {
         val ocean = BaseActor(0f, 0f, mainStage)
@@ -66,9 +73,10 @@ class LevelScreen: BaseScreen() {
         uiStage.addActor(restartButton);*/
 
         restartButton.addListener { e: Event ->
-            val ie = e as InputEvent
-            if (ie.type == Type.touchDown)
+            if(isTouchDownEvent(e)) {
+                dispose()
                 BaseGame.setActiveScreen(LevelScreen())
+            }
             false
         }
 
@@ -77,9 +85,22 @@ class LevelScreen: BaseScreen() {
         val pauseButton = Button(buttonStyle2)
         pauseButton.color = Color.CYAN
         pauseButton.addListener { e: Event ->
-            if(e is InputEvent && e.type == Type.touchDown) {
+            if(isTouchDownEvent(e)) {
                 pause = !pause
                 turtle.pause = pause
+            }
+            false
+        }
+
+        val buttonStyle3 = ButtonStyle()
+        buttonStyle3.up = TextureRegionDrawable(TextureRegion((Texture("assets/audio.png"))))
+        val muteButton = Button(buttonStyle3)
+        muteButton.color = Color.CYAN
+        muteButton.addListener { e: Event ->
+            if(isTouchDownEvent(e)) {
+                audioVolume = 1 - audioVolume
+                instrumental.volume = audioVolume
+                oceanSurf.volume = audioVolume
             }
             false
         }
@@ -89,6 +110,7 @@ class LevelScreen: BaseScreen() {
         uiTable.add().expandX().expandY()
         uiTable.add(timeLabel).top()
         uiTable.add(pauseButton).top()
+        uiTable.add(muteButton).top()
         uiTable.add(restartButton).top()
 
         val sign1 = Sign(20f, 400f, mainStage)
@@ -106,7 +128,19 @@ class LevelScreen: BaseScreen() {
         dialogBox.isVisible = false
 
         uiTable.row()
-        uiTable.add(dialogBox).colspan(3)
+        uiTable.add(dialogBox).colspan(6)
+
+        waterDrop = Gdx.audio.newSound((Gdx.files.internal("assets/Water_Drop.ogg")))
+        instrumental = Gdx.audio.newMusic((Gdx.files.internal("assets/Master_of_the_Feast.ogg")))
+        oceanSurf = Gdx.audio.newMusic((Gdx.files.internal("assets/Ocean_Waves.ogg")))
+
+        audioVolume = 1f
+        instrumental.isLooping = true
+        instrumental.volume = audioVolume
+        instrumental.play()
+        oceanSurf.isLooping = true
+        oceanSurf.volume = audioVolume
+        oceanSurf.play()
     }
 
     override fun update(dt: Float) {
@@ -123,6 +157,8 @@ class LevelScreen: BaseScreen() {
                     val whirl = Whirlpool(0f, 0f, mainStage)
                     whirl.centerAtActor(starfish)
                     whirl.setOpacity(.25f)
+
+                    waterDrop.play()
                 }
             }
 
@@ -138,6 +174,7 @@ class LevelScreen: BaseScreen() {
                 youWinMessage.addAction(
                     Actions.after(
                         Actions.run {
+                            dispose()
                             BaseGame.setActiveScreen( StoryScreen2() )
                         }
                     )
@@ -167,6 +204,7 @@ class LevelScreen: BaseScreen() {
                 gameOver.addAction(
                     Actions.after(
                         Actions.run {
+                            dispose()
                             BaseGame.setActiveScreen( StoryScreen3() )
                         }
                     )
@@ -195,4 +233,10 @@ class LevelScreen: BaseScreen() {
             turtle.pause = true
         }
     }
+
+    override fun dispose() {
+        instrumental.dispose()
+        oceanSurf.dispose()
+    }
+
 }

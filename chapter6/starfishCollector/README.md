@@ -1,5 +1,5 @@
 # Audio
-This chapter teaches hw to add sounds and music to a game.
+This chapter teaches how to add sounds and music to a game.
 
 ![image](https://user-images.githubusercontent.com/4059636/59179995-08138c00-8b64-11e9-9ade-a9f2d0389682.png)
 
@@ -29,7 +29,7 @@ Calling the play() or play(float) method will return a long which is an id to th
 
 Note: any values provided will not be clamped, it is the developer's responsibility to do so.
 
-**import com.badlogic.gdx.Music** - A Music instance represents a streamed audio file. The interface supports pausing, resuming and so on. When you are done with using the Music instance you have to dispose it via the dispose() method.
+**import com.badlogic.gdx.Music** - A Music instance represents a streamed audio file. The interface supports pausing, resuming and so on. When you are done using the Music instance you have to dispose it via the dispose() method.
 
 Music instances are created via Audio.newMusic(FileHandle).
 

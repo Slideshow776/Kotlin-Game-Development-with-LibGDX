@@ -1,8 +1,13 @@
 # Audio
 This chapter teaches how to add sounds and music to a game.
 
+## Starfish Collector
+Audio and music was added, as well as a mute button.
+
 ![image](https://user-images.githubusercontent.com/4059636/59179995-08138c00-8b64-11e9-9ade-a9f2d0389682.png)
 
+## Rythm Tapper
+Rythm tapper requires JavaFX, the .jar libraries are found in the /libs folder.
 
 ## Sounds
 Suitable for small audio files played at discrete events, no larger than 1MB.

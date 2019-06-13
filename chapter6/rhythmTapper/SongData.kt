@@ -1,4 +1,4 @@
-package chapter6.rythmTapper
+package chapter6.rhythmTapper
 
 import java.util.ArrayList
 import com.badlogic.gdx.files.FileHandle

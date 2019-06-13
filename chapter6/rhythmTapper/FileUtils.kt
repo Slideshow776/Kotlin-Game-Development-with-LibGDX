@@ -1,4 +1,4 @@
-package chapter6.rythmTapper
+package chapter6.rhythmTapper
 
 import javafx.embed.swing.JFXPanel
 import javafx.application.Platform

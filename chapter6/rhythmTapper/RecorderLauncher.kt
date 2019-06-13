@@ -1,4 +1,4 @@
-package chapter6.rythmTapper
+package chapter6.rhythmTapper
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 

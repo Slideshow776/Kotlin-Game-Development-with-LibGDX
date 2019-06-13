@@ -1,11 +1,11 @@
-package chapter6.rythmTapper
+package chapter6.rhythmTapper
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import java.util.ArrayList
 import java.util.Collections
 
-class RythmScreen: BaseScreen() {
+class RhythmScreen: BaseScreen() {
     private lateinit var keyList: ArrayList<String>
     private lateinit var colorList: ArrayList<Color>
     private lateinit var targetList: ArrayList<TargetBox>

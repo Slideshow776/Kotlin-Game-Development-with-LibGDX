@@ -1,11 +1,11 @@
-package chapter6.rythmTapper
+package chapter6.rhythmTapper
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 
-object RythmLauncher {
+object RhythmLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
-        val myGame = RythmGame()
+        val myGame = RhythmGame()
         val launcher = LwjglApplication(myGame, "Recorder", 800, 600)
     }
 }

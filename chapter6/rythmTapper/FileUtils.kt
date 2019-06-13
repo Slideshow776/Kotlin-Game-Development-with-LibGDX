@@ -1,16 +1,52 @@
 package chapter6.rythmTapper
 
-import javafx.embed.swing.JFXPanel;
-import javafx.application.Platform;
-import javafx.stage.FileChooser;
-import java.io.File;
-import com.badlogic.gdx.files.FileHandle;
+import javafx.embed.swing.JFXPanel
+import javafx.application.Platform
+import javafx.stage.FileChooser
+import java.io.File
+import com.badlogic.gdx.files.FileHandle
 
-class FileUtils {
-    companion object{
-        private var finished: Boolean
-        private var fileHandle: FileHandle
-        private var openDialog = 1
-        private var saveDialog = 2
+object FileUtils {
+    private var finished: Boolean = false
+    private var fileHandle: FileHandle? = null
+    private val openDialog = 1
+    private val saveDialog = 2
+
+    fun showOpenDialog(): FileHandle? {
+        return showDialog(openDialog)
+    }
+
+    fun showSaveDialog(): FileHandle? {
+        return showDialog(saveDialog)
+    }
+
+    private fun showDialog(dialogType: Int): FileHandle? {
+        JFXPanel()
+
+        finished = false
+
+        Platform.runLater {
+            val fileChooser = FileChooser()
+            val file: File?
+
+            if (dialogType == openDialog)
+                file = fileChooser.showOpenDialog(null)
+            else
+            // dialogType == saveDialog
+                file = fileChooser.showSaveDialog(null)
+
+            if (file != null)
+                fileHandle = FileHandle(file)
+            else
+                fileHandle = null
+
+            finished = true
+        }
+
+        while (!finished) {
+            // waits for FileChooser window to close
+        }
+
+        return fileHandle
     }
 }

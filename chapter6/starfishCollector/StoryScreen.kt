@@ -1,12 +1,15 @@
 package chapter6.starfishCollector
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
 class StoryScreen: BaseScreen() {
     lateinit var scene: Scene
     lateinit var continueKey: BaseActor
+    private lateinit var backgroundMusic: Music
 
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
@@ -34,6 +37,10 @@ class StoryScreen: BaseScreen() {
 
         dialogBox.addActor(continueKey)
         continueKey.setPosition(dialogBox.width - continueKey.width, 0f)
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/box-melody-1.mp3"))
+        backgroundMusic.isLooping = true
+        backgroundMusic.play()
 
         scene = Scene()
         mainStage.addActor(scene)
@@ -63,6 +70,7 @@ class StoryScreen: BaseScreen() {
 
     override fun update(dt: Float) {
         if (scene.isSceneFinished) {
+            dispose()
             BaseGame.setActiveScreen(LevelScreen())
         }
     }
@@ -72,5 +80,10 @@ class StoryScreen: BaseScreen() {
             scene.loadNextSegment()
 
         return false
+    }
+
+    override fun dispose() {
+        super.dispose()
+        backgroundMusic.dispose()
     }
 }

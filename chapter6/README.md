@@ -3,11 +3,18 @@ This chapter teaches how to add sounds and music to a game.
 
 ## Starfish Collector
 Audio and music was added, as well as a mute button.
+As suggested by the book the following features were added:
+* A trumpet sound plays when the player wins the game.
+* Background music to the cutscenes.
+* Background music to the menu.
 
 ![image](https://user-images.githubusercontent.com/4059636/59179995-08138c00-8b64-11e9-9ade-a9f2d0389682.png)
 
 ## Rythm Tapper
-Rythm tapper requires JavaFX, the .jar libraries are found in the /libs folder.
+Rythm tapper requires a JavaFX setup in the project.
+
+![rythmTapper](https://user-images.githubusercontent.com/4059636/59593223-d5ccd600-90f1-11e9-9cd9-712fd5e23c02.png)
+
 
 ## Sounds
 Suitable for small audio files played at discrete events, no larger than 1MB.

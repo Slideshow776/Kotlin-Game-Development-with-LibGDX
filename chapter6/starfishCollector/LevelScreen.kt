@@ -10,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.InputEvent.Type
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.audio.Music
 
@@ -30,6 +28,7 @@ class LevelScreen: BaseScreen() {
 
     private var audioVolume: Float = 1f
     private lateinit var waterDrop: Sound
+    private lateinit var trumpet: Sound
     private lateinit var instrumental: Music
     private lateinit var oceanSurf: Music
 
@@ -130,9 +129,10 @@ class LevelScreen: BaseScreen() {
         uiTable.row()
         uiTable.add(dialogBox).colspan(6)
 
-        waterDrop = Gdx.audio.newSound((Gdx.files.internal("assets/Water_Drop.ogg")))
-        instrumental = Gdx.audio.newMusic((Gdx.files.internal("assets/Master_of_the_Feast.ogg")))
-        oceanSurf = Gdx.audio.newMusic((Gdx.files.internal("assets/Ocean_Waves.ogg")))
+        waterDrop = Gdx.audio.newSound(Gdx.files.internal("assets/Water_Drop.ogg"))
+        trumpet = Gdx.audio.newSound(Gdx.files.internal("assets/trumpet.mp3"))
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("assets/Master_of_the_Feast.ogg"))
+        oceanSurf = Gdx.audio.newMusic(Gdx.files.internal("assets/Ocean_Waves.ogg"))
 
         audioVolume = 1f
         instrumental.isLooping = true
@@ -164,6 +164,7 @@ class LevelScreen: BaseScreen() {
 
             if (BaseActor.count(mainStage, Starfish::class.java.canonicalName) == 0 && !win && time >= 0f) {
                 win = true
+                trumpet.play()
                 val youWinMessage = BaseActor(0f, 0f, uiStage)
                 youWinMessage.loadTexture("assets/you-win.png")
                 youWinMessage.centerAtPosition(400f, 300f)
@@ -235,8 +236,11 @@ class LevelScreen: BaseScreen() {
     }
 
     override fun dispose() {
+        super.dispose()
         instrumental.dispose()
         oceanSurf.dispose()
+        trumpet.dispose()
+        waterDrop.dispose()
     }
 
 }

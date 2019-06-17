@@ -12,7 +12,7 @@ As suggested by the book the following features were added:
 ![image](https://user-images.githubusercontent.com/4059636/59179995-08138c00-8b64-11e9-9ade-a9f2d0389682.png)
 
 ## Rythm Tapper
-Rythm tapper requires a JavaFX setup in the project.
+Rhythm tapper requires a JavaFX setup in the project.
 
 As suggested by the book the following features were added:
 * An applause sound effect when the player finishes the game
@@ -20,6 +20,14 @@ As suggested by the book the following features were added:
 * A label that shows the game _percent_ score
 
 ![rythmTapper](https://user-images.githubusercontent.com/4059636/59593223-d5ccd600-90f1-11e9-9cd9-712fd5e23c02.png)
+
+
+## Space Rocks
+As suggested by the book the following features were added:
+* Sound effects
+* Music
+
+![Chapter 4 gameplay](https://user-images.githubusercontent.com/4059636/57120333-ff63b500-6d70-11e9-84cb-241bb2e39472.PNG)
 
 
 ## Sounds
@@ -38,8 +46,11 @@ song.play();
 ```
 
 ## Actions
-parallel: TODO
-sequence: TODO
+Both `Actions.parallel()` and `Actions.sequence()` were used in this project, the table below describes them.
+|  action  |  description  |
+|:-------------:|:----------------|
+|  Parallel  | execute given actions in parallel - all actions at once |
+|  Sequence  | execute given actions in sequence - one after another |
 
 ## New Imports
 

@@ -24,6 +24,10 @@ song.setVolume(1);
 song.play();
 ```
 
+## Actions
+parallel: TODO
+sequence: TODO
+
 ## New Imports
 
 **import com.badlogic.gdx.Sound** - A Sound is a short audio clip that can be played numerous times in parallel. It's completely loaded into memory so only load small audio files. Call the dispose() method when you're done using the Sound.

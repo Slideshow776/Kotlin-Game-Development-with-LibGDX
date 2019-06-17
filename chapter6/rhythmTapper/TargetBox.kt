@@ -2,6 +2,7 @@ package chapter6.rhythmTapper
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 
@@ -16,5 +17,13 @@ class TargetBox(x: Float, y: Float, s: Stage, letter: String, color: Color): Bas
         letterLabel.setAlignment(Align.center)
         letterLabel.color = color
         this.addActor(letterLabel)
+    }
+
+    fun pulse() {
+        val pulse = Actions.sequence(
+            Actions.scaleTo(1.2f, 1.2f, .05f),
+            Actions.scaleTo(1.0f, 1.0f, .05f)
+        )
+        addAction(pulse)
     }
 }

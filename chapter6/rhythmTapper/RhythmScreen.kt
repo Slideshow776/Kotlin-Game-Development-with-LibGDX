@@ -84,6 +84,8 @@ class RhythmScreen: BaseScreen() {
                 score = 0
                 maxScore = 100 * songData!!.keyTimeCount()
                 scoreLabel.setText("Score: $score\nMax: $maxScore")
+
+                message.displayCountdown()
             }
             false
         }
@@ -145,9 +147,16 @@ class RhythmScreen: BaseScreen() {
                     message.setAnimation(message.miss)
                     message.pulseFade()
                     fallingList.remove(fb)
-                    fb.remove() // remove from stage immediately
+                    /*fb.remove() // remove from stage immediately*/
+                    fb.setSpeed(0f)
+                    fb.flashOut()
                 }
             }
+        }
+
+        if (songData!!.isFinished && !gameMusic.isPlaying) {
+            message.displayCongratulations()
+            songData = null
         }
     }
 
@@ -159,6 +168,7 @@ class RhythmScreen: BaseScreen() {
         if (keyList.contains(keyString)) {
             val i = keyList.indexOf(keyString)
             val tb = targetList[i]
+            tb.pulse()
             val fallingList = fallingLists[i]
 
             if (fallingList.size == 0) {
@@ -168,20 +178,26 @@ class RhythmScreen: BaseScreen() {
                 val fb = fallingList[0]
                 val distance = Math.abs(fb.y - tb.y)
 
-                if (distance < 8) {
-                    message.setAnimation(message.perfect)
-                    score += 100
-                } else if (distance < 16) {
-                    message.setAnimation(message.great)
-                    score += 80
-                } else if (distance < 24) {
-                    message.setAnimation(message.good)
-                    score += 50
-                } else if (distance < 32) {
-                    message.setAnimation(message.almost)
-                    score += 20
-                } else {
-                    message.setAnimation(message.miss)
+                when {
+                    distance < 8 -> {
+                        message.setAnimation(message.perfect)
+                        score += 100
+                    }
+                    distance < 16 -> {
+                        message.setAnimation(message.great)
+                        score += 80
+                    }
+                    distance < 24 -> {
+                        message.setAnimation(message.good)
+                        score += 50
+                    }
+                    distance < 32 -> {
+                        message.setAnimation(message.almost)
+                        score += 20
+                    }
+                    else -> {
+                        message.setAnimation(message.miss)
+                    }
                 }
 
                 message.pulseFade()
@@ -189,7 +205,9 @@ class RhythmScreen: BaseScreen() {
 
                 fallingList.remove(fb)
                 fb.setSpeed(0f)
-                fb.remove()
+                /*fb.remove()*/
+                fb.setSpeed(0f)
+                fb.flashOut()
             }
         }
 

@@ -3,14 +3,17 @@ package chapter6.rhythmTapper
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Event
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.Align
 import java.util.ArrayList
 import java.util.Collections
+import kotlin.math.roundToInt
 
 class RhythmScreen: BaseScreen() {
     private lateinit var keyList: ArrayList<String>
@@ -31,6 +34,17 @@ class RhythmScreen: BaseScreen() {
     private var maxScore = 0
     private lateinit var timeLabel: Label
     private var songDuration = 0f
+
+    private lateinit var applause: Sound
+
+    private lateinit var statsLabel: Label
+    private var perfects = 0
+    private var greats = 0
+    private var goods = 0
+    private var almosts = 0
+    private var misses = 0
+
+    private lateinit var scorePercentLabel: Label
 
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
@@ -97,12 +111,36 @@ class RhythmScreen: BaseScreen() {
         message = Message(0f, 0f, uiStage)
         message.setOpacity(0f)
 
+        statsLabel = Label(
+            "Perfect: $perfects\n" +
+                    "Great: $greats\n" +
+                    "Good: $goods\n" +
+                    "Almost: $almosts\n" +
+                    "Miss: $misses"
+            , BaseGame.labelStyle
+        )
+        statsLabel.setAlignment(Align.center)
+        statsLabel.color = Color.PURPLE
+        statsLabel.isVisible = false
+
+        scorePercentLabel = Label("Score: 0%", BaseGame.labelStyle)
+        scorePercentLabel.color = Color.RED
+        scorePercentLabel.isVisible = false
+
+        /*uiTable.debug()*/
+        uiTable.top()
         uiTable.pad(10f)
         uiTable.add(startButton).width(200f).left()
         uiTable.add(timeLabel).width(150f)
         uiTable.add(scoreLabel).width(200f).right()
         uiTable.row()
-        uiTable.add(message).colspan(3).expandX().expandY()
+        uiTable.add(message).colspan(3).expandX().fillY()
+        uiTable.row()
+        uiTable.add(statsLabel).colspan(3).expandX().fillY()
+        uiTable.row()
+        uiTable.add(scorePercentLabel).colspan(3).expandX().fillY()
+
+        applause = Gdx.audio.newSound(Gdx.files.internal("assets/applause7.wav"))
     }
 
     override fun update(dt: Float) {
@@ -156,7 +194,26 @@ class RhythmScreen: BaseScreen() {
 
         if (songData!!.isFinished && !gameMusic.isPlaying) {
             message.displayCongratulations()
+            applause.play()
             songData = null
+
+            statsLabel.isVisible = true
+            statsLabel.addAction(Actions.fadeOut(0f))
+            statsLabel.addAction(Actions.fadeIn(2f))
+            statsLabel.setText(
+                "Perfect: $perfects\n" +
+                        "Great: $greats\n" +
+                        "Good: $goods\n" +
+                        "Almost: $almosts\n" +
+                        "Miss: $misses"
+            )
+
+            scorePercentLabel.isVisible = true
+            scorePercentLabel.addAction(Actions.fadeOut(0f))
+            scorePercentLabel.addAction(Actions.fadeIn(3f))
+            scorePercentLabel.setText(
+                "Score: ${((score.toFloat()/maxScore.toFloat())*100).roundToInt()}%"
+            )
         }
     }
 
@@ -182,21 +239,26 @@ class RhythmScreen: BaseScreen() {
                     distance < 8 -> {
                         message.setAnimation(message.perfect)
                         score += 100
+                        perfects += 1
                     }
                     distance < 16 -> {
                         message.setAnimation(message.great)
                         score += 80
+                        greats += 1
                     }
                     distance < 24 -> {
                         message.setAnimation(message.good)
                         score += 50
+                        goods +=1
                     }
                     distance < 32 -> {
                         message.setAnimation(message.almost)
                         score += 20
+                        almosts += 1
                     }
                     else -> {
                         message.setAnimation(message.miss)
+                        misses += 1
                     }
                 }
 

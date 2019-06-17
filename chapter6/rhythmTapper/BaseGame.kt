@@ -49,7 +49,7 @@ abstract class BaseGame : Game() {
 
         val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("assets/OpenSans.ttf"))
         val fontParameters = FreeTypeFontParameter()
-        fontParameters.size = 48
+        fontParameters.size = 32
         fontParameters.color = Color.WHITE
         fontParameters.borderWidth = 2f
         fontParameters.borderColor = Color.BLACK

@@ -47,6 +47,7 @@ song.play();
 
 ## Actions
 Both `Actions.parallel()` and `Actions.sequence()` were used in this project, the table below describes them.
+
 |  action  |  description  |
 |:-------------:|:----------------|
 |  Parallel  | execute given actions in parallel - all actions at once |

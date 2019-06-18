@@ -1,6 +1,9 @@
 package chapter6.spaceRocks
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -17,8 +20,18 @@ class LevelScreen : BaseScreen() {
 
     private var gameOver = false
 
+    private lateinit var music: Music
+    private lateinit var winSound: Sound
+    private lateinit var explosionSound: Sound
+    private lateinit var shieldSound: Sound
+    private lateinit var gameOverSound: Sound
+    private lateinit var warpSound: Sound
+    private lateinit var ufoSound: Sound
+    private lateinit var shootSound: Sound
+    private lateinit var shieldHitSound: Sound
+
     override fun initialize() {
-        var space = BaseActor(0f, 0f, mainStage)
+        val space = BaseActor(0f, 0f, mainStage)
         space.loadTexture("assets/space.png")
         space.setSize(800f, 600f)
 
@@ -33,21 +46,36 @@ class LevelScreen : BaseScreen() {
         Rock(200f, 100f, mainStage, 1.5f, 5f)
         /*Rock(200f, 300f, mainStage, 1.5f, 5f)
         Rock(200f, 500f, mainStage, 1.5f, 5f)*/
+
+        winSound = Gdx.audio.newSound(Gdx.files.internal("assets/congratulations.wav"))
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("assets/explosion.wav"))
+        shieldSound = Gdx.audio.newSound(Gdx.files.internal("assets/shield.wav"))
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("assets/game-over.wav"))
+        warpSound = Gdx.audio.newSound(Gdx.files.internal("assets/warp.wav"))
+        ufoSound = Gdx.audio.newSound(Gdx.files.internal("assets/ufo.wav"))
+        shootSound = Gdx.audio.newSound(Gdx.files.internal("assets/shoot.wav"))
+        shieldHitSound = Gdx.audio.newSound(Gdx.files.internal("assets/shieldHit.wav"))
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("assets/epic-retro-synth-music.wav"))
+        music.isLooping = true
+        music.volume = .75f
+        music.play()
     }
 
     override fun update(dt: Float) {
         for (rockActor: BaseActor in BaseActor.getList(mainStage, Rock::class.java.canonicalName)) {
             if (rockActor.overlaps(spaceship)) {
                 if (spaceship.shieldPower <= 0) {
-                    var boom = Explosion(0f, 0f, mainStage)
+                    val boom = Explosion(0f, 0f, mainStage)
                     boom.centerAtActor(spaceship)
                     spaceship.remove()
                     spaceship.setPosition(-1000f, -1000f)
+                    explosionSound.play()
 
                     gameOver(false)
                 } else {
                     spaceship.shieldPower -=34
-                    var boom = Explosion(0f, 0f, mainStage)
+                    val boom = Explosion(0f, 0f, mainStage)
                     boom.centerAtActor(rockActor)
 
                     if (rockActor.scaleX >= 1.5f * Constants.scale)
@@ -55,11 +83,13 @@ class LevelScreen : BaseScreen() {
                     else if (rockActor.scaleX >= 1f * Constants.scale)
                         spawnRocks(rockActor, .5f, 200f)
                     rockActor.remove()
+                    explosionSound.play()
+                    shieldHitSound.play()
                 }
             }
             for (laserActor: BaseActor in BaseActor.getList(mainStage, Laser::class.java.canonicalName)) {
                 if (laserActor.overlaps(rockActor)) {
-                    var boom = Explosion(0f, 0f, mainStage)
+                    val boom = Explosion(0f, 0f, mainStage)
                     boom.centerAtActor(rockActor)
                     laserActor.remove()
 
@@ -68,16 +98,18 @@ class LevelScreen : BaseScreen() {
                     else if (rockActor.scaleX >= 1f * Constants.scale)
                         spawnRocks(rockActor, .5f, 200f)
                     rockActor.remove()
+                    explosionSound.play()
                 }
             }
         }
 
         for (ufoActor: BaseActor in BaseActor.getList(mainStage, Ufo::class.java.canonicalName)) {
             if (!gameOver && ufoActor.overlaps(spaceship)) {
-                var boom = Explosion(0f, 0f, mainStage)
+                val boom = Explosion(0f, 0f, mainStage)
                 boom.centerAtActor(spaceship)
                 spaceship.remove()
                 spaceship.setPosition(-1000f, -1000f)
+                explosionSound.play()
 
                 gameOver(false)
             }
@@ -86,6 +118,7 @@ class LevelScreen : BaseScreen() {
         for (powerUpActor: BaseActor in BaseActor.getList(mainStage, PowerUp::class.java.canonicalName)) {
             if (powerUpActor.overlaps(spaceship)) {
                 spaceship.shieldPower = 100
+                shieldSound.play()
                 powerUpActor.remove()
             }
         }
@@ -113,10 +146,14 @@ class LevelScreen : BaseScreen() {
 
     // Override default InputProcessor method
     override fun keyDown(keycode: Int): Boolean {
-        if (keycode == Keys.X)
+        if (keycode == Keys.X) {
             spaceship.warp()
-        if (keycode == Keys.SPACE)
+            warpSound.play()
+        }
+        if (keycode == Keys.SPACE) {
             spaceship.shoot()
+            shootSound.play()
+        }
         return false
     }
 
@@ -135,6 +172,7 @@ class LevelScreen : BaseScreen() {
         val randomX = MathUtils.cos(randomAngle)*810f + 400f
         val randomY = MathUtils.sin(randomAngle)*610f + 300f
         Ufo(randomX, randomY, mainStage)
+        ufoSound.play()
     }
 
     private fun spawnPowerUp() {
@@ -144,21 +182,25 @@ class LevelScreen : BaseScreen() {
     }
 
     private fun gameOver(win: Boolean) {
-        if (win) {
-            var messageWin = BaseActor(0f, 0f, uiStage)
-            messageWin.loadTexture("assets/message-win.png")
-            messageWin.centerAtPosition(400f, 300f)
-            messageWin.setOpacity(0f)
-            messageWin.addAction(Actions.fadeIn(1f))
-            gameOver = true
-        }
-        else {
-            var messageLose = BaseActor(0f, 0f, uiStage)
-            messageLose.loadTexture("assets/message-lose.png")
-            messageLose.centerAtPosition(400f, 300f)
-            messageLose.setOpacity(0f)
-            messageLose.addAction(Actions.fadeIn(1f))
-            gameOver = true
+        when (win) {
+            true -> {
+                val messageWin = BaseActor(0f, 0f, uiStage)
+                messageWin.loadTexture("assets/message-win.png")
+                messageWin.centerAtPosition(400f, 300f)
+                messageWin.setOpacity(0f)
+                messageWin.addAction(Actions.fadeIn(1f))
+                gameOver = true
+                winSound.play()
+            }
+            false -> {
+                val messageLose = BaseActor(0f, 0f, uiStage)
+                messageLose.loadTexture("assets/message-lose.png")
+                messageLose.centerAtPosition(400f, 300f)
+                messageLose.setOpacity(0f)
+                messageLose.addAction(Actions.fadeIn(1f))
+                gameOver = true
+                gameOverSound.play()
+            }
         }
     }
 }

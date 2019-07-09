@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 
 class LevelScreen : BaseScreen() {
@@ -23,6 +24,9 @@ class LevelScreen : BaseScreen() {
     private lateinit var itemAppearSound: Sound
     private lateinit var itemCollectSound: Sound
     private lateinit var backgroundMusic: Music
+
+    private var paddleStop = false
+    private var paddleTimer = 0f
 
     override fun initialize() {
         // background
@@ -87,7 +91,7 @@ class LevelScreen : BaseScreen() {
 
     override fun update(dt: Float) {
         val mouseX = Gdx.input.x
-        paddle.x = mouseX - paddle.width / 2
+        if (!paddleStop) paddle.x = mouseX - paddle.width / 2
         paddle.boundToWorld()
 
         if ( ball.isPaused() ) {
@@ -164,11 +168,20 @@ class LevelScreen : BaseScreen() {
                     realItem.getType() == Item.Type.PADDLE_SHRINK -> paddle.width = paddle.width * .8f
                     realItem.getType() == Item.Type.BALL_SPEED_UP -> ball.setSpeed(ball.getSpeed() * 1.5f)
                     realItem.getType() == Item.Type.BALL_SPEED_DOWN -> ball.setSpeed(ball.getSpeed() * .9f)
+                    realItem.getType() == Item.Type.PADDLE_STOP -> paddleStop = true
                 }
 
                 paddle.setBoundaryRectangle()
                 item.remove()
                 itemCollectSound.play()
+            }
+        }
+
+        if (paddleStop) {
+            paddleTimer += dt
+            if (paddleTimer > 1) {
+                paddleStop = false
+                paddleTimer = 0f
             }
         }
     }

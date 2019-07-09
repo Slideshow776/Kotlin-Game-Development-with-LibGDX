@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
 class Item(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     enum class Type {
-        PADDLE_EXPAND, PADDLE_SHRINK,
-        BALL_SPEED_UP, BALL_SPEED_DOWN
+        PADDLE_EXPAND, PADDLE_SHRINK, BALL_SPEED_UP, BALL_SPEED_DOWN,
+        PADDLE_STOP
     };
 
     private lateinit var type: Type
@@ -34,6 +34,7 @@ class Item(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             Type.PADDLE_SHRINK -> loadTexture("assets/items/paddle-shrink.png")
             Type.BALL_SPEED_UP -> loadTexture("assets/items/ball-speed-up.png")
             Type.BALL_SPEED_DOWN -> loadTexture("assets/items/ball-speed-down.png")
+            Type.PADDLE_STOP -> loadTexture("assets/items/paddle-stop.png")
             else -> loadTexture("assets/items/item-blank.png")
         }
     }

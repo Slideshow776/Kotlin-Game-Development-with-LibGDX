@@ -105,6 +105,9 @@ class LevelScreen : BaseScreen() {
         for (brick: BaseActor in BaseActor.getList(mainStage, Brick::class.java.canonicalName)) {
             if (ball.overlaps(brick)) {
                 ball.bounceOff(brick)
+                val explosion = Explosion(brick.x, brick.y, mainStage)
+                explosion.height = brick.height
+                explosion.centerAtActor(brick)
                 brick.remove()
                 score += 100
                 scoreLabel.setText(("Score: $score"))

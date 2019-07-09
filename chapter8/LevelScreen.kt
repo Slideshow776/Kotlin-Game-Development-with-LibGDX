@@ -1,6 +1,8 @@
 package chapter8
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -8,11 +10,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 class LevelScreen : BaseScreen() {
     private lateinit var paddle: Paddle
     private lateinit var ball: Ball
+
     private var score = 0
     private var balls = 3
     private lateinit var scoreLabel: Label
     private lateinit var ballsLabel: Label
     private lateinit var messageLabel: Label
+
+    private lateinit var bounceSound: Sound
+    private lateinit var brickBumpSound: Sound
+    private lateinit var wallBumpSound: Sound
+    private lateinit var itemAppearSound: Sound
+    private lateinit var itemCollectSound: Sound
+    private lateinit var backgroundMusic: Music
 
     override fun initialize() {
         // background
@@ -62,6 +72,17 @@ class LevelScreen : BaseScreen() {
         uiTable.add(ballsLabel)
         uiTable.row()
         uiTable.add(messageLabel).colspan(3).expandY()
+
+        bounceSound = Gdx.audio.newSound((Gdx.files.internal(("assets/boing.wav"))))
+        brickBumpSound = Gdx.audio.newSound((Gdx.files.internal(("assets/bump.wav"))))
+        wallBumpSound = Gdx.audio.newSound((Gdx.files.internal(("assets/bump-low.wav"))))
+        itemAppearSound = Gdx.audio.newSound((Gdx.files.internal(("assets/swoosh.wav"))))
+        itemCollectSound = Gdx.audio.newSound((Gdx.files.internal(("assets/pop.wav"))))
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(("assets/Rollin-at-5.mp3")))
+        backgroundMusic.isLooping = true
+        backgroundMusic.volume = .5f
+        backgroundMusic.play()
     }
 
     override fun update(dt: Float) {
@@ -77,6 +98,7 @@ class LevelScreen : BaseScreen() {
         for (wall: BaseActor in BaseActor.getList(mainStage, Wall::class.java.canonicalName)) {
             if (ball.overlaps(wall)) {
                 ball.bounceOff((wall))
+                wallBumpSound.play()
             }
         }
 
@@ -91,7 +113,10 @@ class LevelScreen : BaseScreen() {
                 if (MathUtils.random(0, 100) < spawnProbability) {
                     val i = Item(0f, 0f, mainStage)
                     i.centerAtActor(brick)
+                    itemAppearSound.play()
                 }
+
+                brickBumpSound.play()
             }
         }
 
@@ -100,6 +125,7 @@ class LevelScreen : BaseScreen() {
             val paddlePercentHit = (ballCenterX - paddle.x) / paddle.width
             val bounceAngle = MathUtils.lerp(150f, 30f, paddlePercentHit)
             ball.setMotionAngle(bounceAngle)
+            bounceSound.play()
         }
 
         if (BaseActor.count(mainStage, Brick::class.java.canonicalName) == 0) {
@@ -139,6 +165,7 @@ class LevelScreen : BaseScreen() {
 
                 paddle.setBoundaryRectangle()
                 item.remove()
+                itemCollectSound.play()
             }
         }
     }

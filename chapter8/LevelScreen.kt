@@ -170,6 +170,8 @@ class LevelScreen : BaseScreen() {
                     realItem.getType() == Item.Type.BALL_SPEED_DOWN -> ball.setSpeed(ball.getSpeed() * .9f)
                     realItem.getType() == Item.Type.PADDLE_STOP -> paddleStop = true
                     realItem.getType() == Item.Type.BRICK_DESTROY -> destroyRandomBrick()
+                    realItem.getType() == Item.Type.BALL_LARGE -> scaleBall(1.2f)
+                    realItem.getType() == Item.Type.BALL_SMALL -> scaleBall(.8f)
                 }
 
                 paddle.setBoundaryRectangle()
@@ -202,5 +204,11 @@ class LevelScreen : BaseScreen() {
         }
         val randomBrickToDestroy = MathUtils.random(0, brickList.size-1)
         brickList[randomBrickToDestroy].remove()
+    }
+
+    private fun scaleBall(scale: Float) {
+        ball.width *= scale
+        ball.height *= scale
+        ball.setBoundaryRectangle()
     }
 }

@@ -1,6 +1,7 @@
 package chapter8
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.MathUtils
 
 class LevelScreen : BaseScreen() {
     private lateinit var paddle: Paddle
@@ -48,10 +49,29 @@ class LevelScreen : BaseScreen() {
         paddle.x = mouseX - paddle.width / 2
         paddle.boundToWorld()
 
-        if ( ball.isPaused() )
-        {
+        if ( ball.isPaused() ) {
             ball.x = paddle.x + paddle.width / 2 - ball.width / 2
             ball.y = paddle.y + paddle.height / 2 + ball.height / 2
+        }
+
+        for (wall: BaseActor in BaseActor.getList(mainStage, Wall::class.java.canonicalName)) {
+            if (ball.overlaps(wall)) {
+                ball.bounceOff((wall))
+            }
+        }
+
+        for (brick: BaseActor in BaseActor.getList(mainStage, Brick::class.java.canonicalName)) {
+            if (ball.overlaps(brick)) {
+                ball.bounceOff(brick)
+                brick.remove()
+            }
+        }
+
+        if (ball.overlaps(paddle)) {
+            val ballCenterX = ball.x + ball.width / 2
+            val paddlePercentHit = (ballCenterX - paddle.x) / paddle.width
+            val bounceAngle = MathUtils.lerp(150f, 30f, paddlePercentHit)
+            ball.setMotionAngle(bounceAngle)
         }
     }
 

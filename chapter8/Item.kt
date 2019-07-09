@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 class Item(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     enum class Type {
         PADDLE_EXPAND, PADDLE_SHRINK, BALL_SPEED_UP, BALL_SPEED_DOWN,
-        PADDLE_STOP, BRICK_DESTROY, BALL_LARGE, BALL_SMALL
+        PADDLE_STOP, BRICK_DESTROY, BALL_LARGE, BALL_SMALL, BALL_EXTRA,
+        BONUS_POINTS
     };
 
     private lateinit var type: Type
@@ -38,6 +39,8 @@ class Item(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             Type.BRICK_DESTROY -> loadTexture("assets/items/brick-destroy.png")
             Type.BALL_LARGE -> loadTexture("assets/items/ball-large.png")
             Type.BALL_SMALL -> loadTexture("assets/items/ball-small.png")
+            Type.BALL_EXTRA -> loadTexture("assets/items/ball-extra.png")
+            Type.BONUS_POINTS -> loadTexture("assets/items/bonus-points.png")
             else -> loadTexture("assets/items/item-blank.png")
         }
     }

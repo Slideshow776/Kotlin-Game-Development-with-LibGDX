@@ -65,6 +65,8 @@ class LevelScreen : BaseScreen() {
         ball = Ball(0f, 0f, mainStage)
 
         // game
+        balls = 3
+        println("balls: $balls")
         scoreLabel = Label("Score: $score", BaseGame.labelStyle)
         ballsLabel = Label("Balls: $balls", BaseGame.labelStyle)
         messageLabel = Label("Click to start", BaseGame.labelStyle)
@@ -146,7 +148,7 @@ class LevelScreen : BaseScreen() {
 
             if (balls > 0) {
                 balls -= 1
-                ballsLabel.setText("Balls: " + balls)
+                ballsLabel.setText("Balls: $balls")
                 ball = Ball(0f, 0f, mainStage)
 
                 messageLabel.setText("Click to start")
@@ -172,6 +174,8 @@ class LevelScreen : BaseScreen() {
                     realItem.getType() == Item.Type.BRICK_DESTROY -> destroyRandomBrick()
                     realItem.getType() == Item.Type.BALL_LARGE -> scaleBall(1.2f)
                     realItem.getType() == Item.Type.BALL_SMALL -> scaleBall(.8f)
+                    realItem.getType() == Item.Type.BALL_EXTRA -> extraBall()
+                    realItem.getType() == Item.Type.BONUS_POINTS -> bonusPoints()
                 }
 
                 paddle.setBoundaryRectangle()
@@ -210,5 +214,15 @@ class LevelScreen : BaseScreen() {
         ball.width *= scale
         ball.height *= scale
         ball.setBoundaryRectangle()
+    }
+
+    private fun extraBall() {
+        balls += 1
+        ballsLabel.setText("Balls: $balls")
+    }
+
+    private fun bonusPoints() {
+        score += 1000
+        scoreLabel.setText("Score: $score")
     }
 }

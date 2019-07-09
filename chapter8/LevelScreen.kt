@@ -4,17 +4,23 @@ import com.badlogic.gdx.Gdx
 
 class LevelScreen : BaseScreen() {
     private lateinit var paddle: Paddle
+    private lateinit var ball: Ball
+
     override fun initialize() {
+        // background
         val background = BaseActor(0f, 0f, mainStage)
         background.loadTexture("assets/space.png")
         BaseActor.setWorldBounds(background)
 
+        // paddle
         paddle = Paddle(320f, 32f, mainStage)
 
+        // walls
         Wall(0f, 0f, mainStage, 20f, 600f) // left wall
         Wall(780f, 0f, mainStage, 20f, 600f) // right wall
         Wall(0f, 550f, mainStage, 800f, 50f) // top wall
 
+        // bricks
         val tempBrick = Brick(0f, 0f, mainStage)
         val brickWidth = tempBrick.width
         val brickHeight = tempBrick.height
@@ -32,11 +38,27 @@ class LevelScreen : BaseScreen() {
                 Brick(x, y, mainStage)
             }
         }
+
+        // ball
+        ball = Ball(0f, 0f, mainStage)
     }
 
     override fun update(dt: Float) {
         val mouseX = Gdx.input.x
-        paddle.x = mouseX - paddle.width/2
+        paddle.x = mouseX - paddle.width / 2
         paddle.boundToWorld()
+
+        if ( ball.isPaused() )
+        {
+            ball.x = paddle.x + paddle.width / 2 - ball.width / 2
+            ball.y = paddle.y + paddle.height / 2 + ball.height / 2
+        }
+    }
+
+    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        if (ball.isPaused()) {
+            ball.setPaused(false)
+        }
+        return false
     }
 }

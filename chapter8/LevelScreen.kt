@@ -86,6 +86,12 @@ class LevelScreen : BaseScreen() {
                 brick.remove()
                 score += 100
                 scoreLabel.setText(("Score: $score"))
+
+                val spawnProbability = 10
+                if (MathUtils.random(0, 100) < spawnProbability) {
+                    val i = Item(0f, 0f, mainStage)
+                    i.centerAtActor(brick)
+                }
             }
         }
 
@@ -117,6 +123,22 @@ class LevelScreen : BaseScreen() {
                 messageLabel.setText("Game Over")
                 messageLabel.color = Color.RED
                 messageLabel.isVisible = true
+            }
+        }
+
+        for (item: BaseActor in BaseActor.getList(mainStage, Item::class.java.canonicalName)) {
+            if (paddle.overlaps(item)) {
+                val realItem = item as Item
+
+                when {
+                    realItem.getType() == Item.Type.PADDLE_EXPAND -> paddle.width = paddle.width * 1.25f
+                    realItem.getType() == Item.Type.PADDLE_SHRINK -> paddle.width = paddle.width * .8f
+                    realItem.getType() == Item.Type.BALL_SPEED_UP -> ball.setSpeed(ball.getSpeed() * 1.5f)
+                    realItem.getType() == Item.Type.BALL_SPEED_DOWN -> ball.setSpeed(ball.getSpeed() * .9f)
+                }
+
+                paddle.setBoundaryRectangle()
+                item.remove()
             }
         }
     }

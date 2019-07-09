@@ -10,11 +10,15 @@ class LevelScreen : BaseScreen() {
         BaseActor.setWorldBounds(background)
 
         paddle = Paddle(320f, 32f, mainStage)
-        paddle.boundToWorld()
+
+        Wall(0f, 0f, mainStage, 20f, 600f) // left wall
+        Wall(780f, 0f, mainStage, 20f, 600f) // right wall
+        Wall(0f, 550f, mainStage, 800f, 50f) // top wall
     }
 
     override fun update(dt: Float) {
         val mouseX = Gdx.input.x
         paddle.x = mouseX - paddle.width/2
+        paddle.boundToWorld()
     }
 }

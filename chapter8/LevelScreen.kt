@@ -169,6 +169,7 @@ class LevelScreen : BaseScreen() {
                     realItem.getType() == Item.Type.BALL_SPEED_UP -> ball.setSpeed(ball.getSpeed() * 1.5f)
                     realItem.getType() == Item.Type.BALL_SPEED_DOWN -> ball.setSpeed(ball.getSpeed() * .9f)
                     realItem.getType() == Item.Type.PADDLE_STOP -> paddleStop = true
+                    realItem.getType() == Item.Type.BRICK_DESTROY -> destroyRandomBrick()
                 }
 
                 paddle.setBoundaryRectangle()
@@ -192,5 +193,14 @@ class LevelScreen : BaseScreen() {
             messageLabel.isVisible = false
         }
         return false
+    }
+
+    private fun destroyRandomBrick() {
+        val brickList = ArrayList<Brick>()
+        for (brick: BaseActor in BaseActor.getList(mainStage, Brick::class.java.canonicalName)) {
+            brickList.add(brick as Brick)
+        }
+        val randomBrickToDestroy = MathUtils.random(0, brickList.size-1)
+        brickList[randomBrickToDestroy].remove()
     }
 }

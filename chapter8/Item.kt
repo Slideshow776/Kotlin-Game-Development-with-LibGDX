@@ -7,13 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 class Item(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     enum class Type {
         PADDLE_EXPAND, PADDLE_SHRINK, BALL_SPEED_UP, BALL_SPEED_DOWN,
-        PADDLE_STOP
+        PADDLE_STOP, BRICK_DESTROY
     };
 
     private lateinit var type: Type
 
     init {
-        setRandomType()
+        setType(Type.BRICK_DESTROY)
+        /*setRandomType()*/
 
         setSpeed(100f)
         setMotionAngle(270f)
@@ -35,6 +36,7 @@ class Item(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             Type.BALL_SPEED_UP -> loadTexture("assets/items/ball-speed-up.png")
             Type.BALL_SPEED_DOWN -> loadTexture("assets/items/ball-speed-down.png")
             Type.PADDLE_STOP -> loadTexture("assets/items/paddle-stop.png")
+            Type.BRICK_DESTROY -> loadTexture("assets/items/brick-destroy.png")
             else -> loadTexture("assets/items/item-blank.png")
         }
     }

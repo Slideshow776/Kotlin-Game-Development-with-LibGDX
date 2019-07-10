@@ -14,6 +14,7 @@ class LevelScreen : BaseScreen() {
 
     private var score = 0
     private var balls = 3
+    private var gameOver = false
     private lateinit var scoreLabel: Label
     private lateinit var ballsLabel: Label
     private lateinit var messageLabel: Label
@@ -23,6 +24,10 @@ class LevelScreen : BaseScreen() {
     private lateinit var wallBumpSound: Sound
     private lateinit var itemAppearSound: Sound
     private lateinit var itemCollectSound: Sound
+    private lateinit var gameOverSound: Sound
+    private lateinit var gameWin: Sound
+    private lateinit var ballLost: Sound
+
     private lateinit var backgroundMusic: Music
 
     private var paddleStop = false
@@ -87,6 +92,9 @@ class LevelScreen : BaseScreen() {
         wallBumpSound = Gdx.audio.newSound((Gdx.files.internal(("assets/bump-low.wav"))))
         itemAppearSound = Gdx.audio.newSound((Gdx.files.internal(("assets/swoosh.wav"))))
         itemCollectSound = Gdx.audio.newSound((Gdx.files.internal(("assets/pop.wav"))))
+        gameOverSound = Gdx.audio.newSound((Gdx.files.internal(("assets/382310__myfox14__game-over-arcade.wav"))))
+        gameWin = Gdx.audio.newSound((Gdx.files.internal(("assets/391539__mativve__electro-win-sound.wav"))))
+        ballLost = Gdx.audio.newSound((Gdx.files.internal(("assets/159408__noirenex__life-lost-game-over.wav"))))
 
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(("assets/Rollin-at-5.mp3")))
         backgroundMusic.isLooping = true
@@ -140,10 +148,12 @@ class LevelScreen : BaseScreen() {
             bounceSound.play()
         }
 
-        if (BaseActor.count(mainStage, Brick::class.java.canonicalName) == 0) {
+        if (BaseActor.count(mainStage, Brick::class.java.canonicalName) == 0 && !gameOver) {
             messageLabel.setText("You win!")
             messageLabel.color = Color.LIME
             messageLabel.isVisible = true
+            gameWin.play()
+            gameOver = true
         }
 
         if (ball.y < -50 && BaseActor.count(mainStage, Brick::class.java.canonicalName) > 0) {
@@ -157,10 +167,13 @@ class LevelScreen : BaseScreen() {
                 messageLabel.setText("Click to start")
                 messageLabel.color = Color.CYAN
                 messageLabel.isVisible = true
-            } else {
+                ballLost.play()
+            } else if(!gameOver){
                 messageLabel.setText("Game Over")
                 messageLabel.color = Color.RED
                 messageLabel.isVisible = true
+                gameOverSound.play()
+                gameOver = true
             }
         }
 

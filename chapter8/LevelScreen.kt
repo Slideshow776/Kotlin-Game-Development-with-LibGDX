@@ -5,12 +5,12 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 
 class LevelScreen : BaseScreen() {
     private lateinit var paddle: Paddle
     private lateinit var ball: Ball
+    private lateinit var solid: Solid
 
     private var score = 0
     private var balls = 3
@@ -63,6 +63,9 @@ class LevelScreen : BaseScreen() {
 
         // ball
         ball = Ball(0f, 0f, mainStage)
+
+        // solid
+        solid = Solid(400f, 300f, mainStage)
 
         // game
         balls = 3
@@ -189,6 +192,19 @@ class LevelScreen : BaseScreen() {
             if (paddleTimer > 1) {
                 paddleStop = false
                 paddleTimer = 0f
+            }
+        }
+
+        for (solid: BaseActor in BaseActor.getList(mainStage, Solid::class.java.canonicalName)) {
+            if (ball.overlaps(solid)) {
+                ball.bounceOff(solid)
+                brickBumpSound.play()
+
+                val r = MathUtils.random()
+                val g = MathUtils.random()
+                val b = MathUtils.random()
+                val randomColor = Color(r, g, b, 1f)
+                solid.color = randomColor
             }
         }
     }

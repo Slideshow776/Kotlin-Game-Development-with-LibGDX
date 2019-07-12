@@ -105,12 +105,18 @@ class LevelScreen : BaseScreen() {
                     plane.remove()
                     gameOver = true
                     gameOverMessage.isVisible = true
+                    for (enemy1: BaseActor in BaseActor.getList(mainStage, Enemy::class.java.canonicalName)) {
+                        enemy1 as Enemy
+                        enemy1.stopMusic()
+                    }
                 }
             }
 
             if (enemy.x + enemy.width < 0) {
                 score++
                 scoreLabel.setText("$score")
+                enemy as Enemy
+                enemy.stopMusic()
                 enemy.remove()
             }
         }

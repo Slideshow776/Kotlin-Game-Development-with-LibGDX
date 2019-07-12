@@ -95,14 +95,17 @@ class LevelScreen : BaseScreen() {
 
         for (enemy: BaseActor in BaseActor.getList(mainStage, Enemy::class.java.canonicalName)) {
             if (plane.overlaps(enemy)) {
-                val explosion = Explosion(0f, 0f, mainStage)
-                explosion.centerAtActor(plane)
-                explosion.setScale(3f)
-                explosionSound.play()
-                backgroundMusic.stop()
-                plane.remove()
-                gameOver = true
-                gameOverMessage.isVisible = true
+                plane.hit()
+                if (plane.getHealth() <= 0) {
+                    val explosion = Explosion(0f, 0f, mainStage)
+                    explosion.centerAtActor(plane)
+                    explosion.setScale(3f)
+                    explosionSound.play()
+                    backgroundMusic.stop()
+                    plane.remove()
+                    gameOver = true
+                    gameOverMessage.isVisible = true
+                }
             }
 
             if (enemy.x + enemy.width < 0) {

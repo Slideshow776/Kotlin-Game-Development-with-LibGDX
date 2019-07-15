@@ -82,5 +82,7 @@ class Plane(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     fun boost() {
         setSpeed(300f)
         setMotionAngle(90f)
+        val exhaust = Exhaust(0f, 0f, this.stage)
+        exhaust.centerAtPosition(x+20, y+20)
     }
 }

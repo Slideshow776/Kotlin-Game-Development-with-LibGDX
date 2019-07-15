@@ -104,6 +104,7 @@ class LevelScreen : BaseScreen() {
                     backgroundMusic.stop()
                     plane.remove()
                     gameOver = true
+                    BaseGame.writeHighScore(score)
                     gameOverMessage.isVisible = true
                     for (enemy1: BaseActor in BaseActor.getList(mainStage, Enemy::class.java.canonicalName)) {
                         enemy1 as Enemy

@@ -32,6 +32,7 @@ abstract class BaseGame : Game() {
 
         var labelStyle: LabelStyle? = null
         var textButtonStyle: TextButtonStyle? = null
+        var highscore: Int? = null
 
         /**
          * Used to switch screens while game is running.
@@ -40,6 +41,18 @@ abstract class BaseGame : Game() {
         fun setActiveScreen(s: LevelScreen) {
             game?.setScreen(s)
         }
+
+        fun writeHighScore(highScore: Int) {
+            val file = Gdx.files.local("assets/highscore.txt")
+            if (highscore == null || highscore!! < highScore) {
+                file.writeString(highScore.toString(), false)
+            }
+        }
+
+        private fun readFromFile(): Int {
+            val file = Gdx.files.internal("assets/highscore.txt")
+            return file.readString().toInt()
+        }
     }
 
     override fun create() {
@@ -47,6 +60,9 @@ abstract class BaseGame : Game() {
         val im = InputMultiplexer()
         Gdx.input.inputProcessor = im
 
+        // assets
+
+        // fonts
         val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("assets/OpenSans.ttf"))
         val fontParameters = FreeTypeFontParameter()
         fontParameters.size = 24
@@ -63,11 +79,19 @@ abstract class BaseGame : Game() {
         labelStyle!!.font = customFont
         /*labelStyle!!.font = BitmapFont(Gdx.files.internal("assets/cooper.fnt"))*/
 
+        // buttons
         textButtonStyle = TextButtonStyle()
         val buttonTex = Texture(Gdx.files.internal("assets/button.png"))
         val buttonPatch = NinePatch(buttonTex, 24, 24, 24, 24)
         textButtonStyle!!.up = NinePatchDrawable(buttonPatch)
         textButtonStyle!!.font = customFont
         textButtonStyle!!.fontColor = Color.PINK
+
+        // file
+        try {
+            highscore = readFromFile()
+        } catch (e: Exception) {
+            writeHighScore(0)
+        }
     }
 }

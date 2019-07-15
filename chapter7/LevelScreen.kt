@@ -121,13 +121,13 @@ class LevelScreen : BaseScreen() {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Keys.SPACE)) { // continuous
+        if (Gdx.input.isKeyPressed(Keys.SPACE) && !gameOver) { // continuous
             plane.boost()
         }
     }
 
     /*override fun keyDown(keycode: Int): Boolean { // discrete
-        if (keycode == Keys.SPACE) {
+        if (keycode == Keys.SPACE && !gameOver) {
             plane.boost()
         }
 

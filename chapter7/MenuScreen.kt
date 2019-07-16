@@ -20,7 +20,14 @@ class MenuScreen: BaseScreen() {
     private lateinit var startButton: TextButton
     private lateinit var exitButton: TextButton
 
+    private lateinit var overlay: BaseActor
+
     override fun initialize() {
+        overlay = BaseActor(0f, 0f, uiStage)
+        overlay.loadTexture("assets/overlay.png")
+        overlay.width = 800f
+        overlay.height = 600f
+
         sky0 = Sky(0f, 0f, mainStage)
         sky1 = Sky(800f, 0f, mainStage)
         ground0 = Ground(0f, 0f, mainStage)
@@ -36,7 +43,7 @@ class MenuScreen: BaseScreen() {
         startButton.addListener {e: Event ->
             if (isTouchDownEvent(e)) {
                 fadeOutAndDisable(.5f)
-                sky0.addAction(Actions.after(Actions.run { BaseGame.setActiveScreen(LevelScreen()) }))
+                overlay.addAction(Actions.after(Actions.run { BaseGame.setActiveScreen(LevelScreen()) }))
             }
             false
         }
@@ -44,7 +51,7 @@ class MenuScreen: BaseScreen() {
         exitButton.addListener {e: Event ->
             if (isTouchDownEvent(e)) {
                 fadeOutAndDisable(.5f)
-                sky0.addAction(Actions.after(Actions.run { Gdx.app.exit() }))
+                overlay.addAction(Actions.after(Actions.run { Gdx.app.exit() }))
             }
             false
         }
@@ -62,32 +69,18 @@ class MenuScreen: BaseScreen() {
         fadeIn(.5f)
     }
 
-    override fun update(dt: Float) {
-
-    }
+    override fun update(dt: Float) {}
 
     private fun fadeOutAndDisable(duration: Float) {
         startButton.isDisabled = true
         exitButton.isDisabled = true
 
-        sky0.addAction(Actions.fadeOut(duration))
-        sky1.addAction(Actions.fadeOut(duration))
-        ground0.addAction(Actions.fadeOut(duration))
-        ground1.addAction(Actions.fadeOut(duration))
-        titleLabel.addAction(Actions.fadeOut(duration))
-        highscoreLabel.addAction(Actions.fadeOut(duration))
-        startButton.addAction(Actions.fadeOut(duration))
-        exitButton.addAction(Actions.fadeOut(duration))
+        overlay.isVisible = true
+        overlay.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
     }
 
     private fun fadeIn(duration: Float) {
-        sky0.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
-        sky1.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
-        ground0.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
-        ground1.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
-        titleLabel.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
-        highscoreLabel.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
-        startButton.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
-        exitButton.addAction(Actions.sequence(Actions.fadeOut(0f), Actions.fadeIn(duration)))
+        overlay.addAction(Actions.fadeOut(duration))
+        overlay.addAction(Actions.after(Actions.run { overlay.isVisible = false }))
     }
 }

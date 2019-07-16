@@ -60,20 +60,20 @@ class Plane(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     fun hit(): Int {
         if (!invincible) {
-            if (health > 1)
+            if (health > 1) {
                 explosionSound.play()
+                addAction(Actions.sequence(
+                    Actions.color(Color.RED, .125f),
+                    Actions.color(Color.WHITE, .125f),
+                    Actions.color(Color.RED, .125f),
+                    Actions.color(Color.WHITE, .125f),
+                    Actions.color(Color.RED, .125f),
+                    Actions.color(Color.WHITE, .125f)
+                ))
+            }
             health--
             invincible = true
         }
-
-        addAction(Actions.sequence(
-            Actions.color(Color.RED, .125f),
-            Actions.color(Color.WHITE, .125f),
-            Actions.color(Color.RED, .125f),
-            Actions.color(Color.WHITE, .125f),
-            Actions.color(Color.RED, .125f),
-            Actions.color(Color.WHITE, .125f)
-        ))
         return health
     }
 

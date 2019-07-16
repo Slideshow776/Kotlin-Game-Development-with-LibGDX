@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.InputProcessor
+import com.badlogic.gdx.scenes.scene2d.Event
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type
 
 abstract class BaseScreen : Screen, InputProcessor {
     protected var mainStage: Stage
@@ -76,4 +79,10 @@ abstract class BaseScreen : Screen, InputProcessor {
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean { return false }
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean { return false }
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean { return false }
+
+
+    // Custom type checker
+    fun isTouchDownEvent(e: Event): Boolean {
+        return e is InputEvent && e.type == Type.touchDown
+    }
 }

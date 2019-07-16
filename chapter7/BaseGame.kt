@@ -38,7 +38,7 @@ abstract class BaseGame : Game() {
          * Used to switch screens while game is running.
          * Method is static to simplify usage.
          */
-        fun setActiveScreen(s: LevelScreen) {
+        fun setActiveScreen(s: BaseScreen) {
             game?.setScreen(s)
         }
 
@@ -65,7 +65,7 @@ abstract class BaseGame : Game() {
         // fonts
         val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("assets/OpenSans.ttf"))
         val fontParameters = FreeTypeFontParameter()
-        fontParameters.size = 24
+        fontParameters.size = 36
         fontParameters.color = Color.WHITE
         fontParameters.borderWidth = 2f
         fontParameters.borderColor = Color.BLACK

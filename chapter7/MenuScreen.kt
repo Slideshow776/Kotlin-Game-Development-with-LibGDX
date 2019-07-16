@@ -28,10 +28,22 @@ class MenuScreen: BaseScreen() {
         overlay.width = 800f
         overlay.height = 600f
 
+        /*
         sky0 = Sky(0f, 0f, mainStage)
         sky1 = Sky(800f, 0f, mainStage)
         ground0 = Ground(0f, 0f, mainStage)
         ground1 = Ground(800f, 0f, mainStage)
+        */
+        Parallax(800f, 0f, mainStage, "assets/clouds0.png", 10f)
+        Parallax(0f, 0f, mainStage, "assets/clouds0.png", 10f)
+        Parallax(800f, 0f, mainStage, "assets/clouds1.png", 25f)
+        Parallax(0f, 0f, mainStage, "assets/clouds1.png", 25f)
+        Parallax(800f, 0f, mainStage, "assets/mountains0.png", 35f)
+        Parallax(0f, 0f, mainStage, "assets/mountains0.png", 35f)
+        Parallax(800f, 0f, mainStage, "assets/mountains1.png", 45f)
+        Parallax(0f, 0f, mainStage, "assets/mountains1.png", 45f)
+        Ground(0f, 0f, mainStage)
+        Ground(800f, 0f, mainStage)
 
         titleLabel = Label("Plane Dodger", chapter7.BaseGame.labelStyle)
         titleLabel.setFontScale(1.2f)

@@ -33,8 +33,21 @@ class LevelScreen : BaseScreen() {
     private lateinit var restartButton: TextButton
 
     override fun initialize() {
+        /*
         Sky(0f, 0f, mainStage)
         Sky(800f, 0f, mainStage)
+        Ground(0f, 0f, mainStage)
+        Ground(800f, 0f, mainStage)
+        */
+
+        Parallax(800f, 0f, mainStage, "assets/clouds0.png", 10f)
+        Parallax(0f, 0f, mainStage, "assets/clouds0.png", 10f)
+        Parallax(800f, 0f, mainStage, "assets/clouds1.png", 25f)
+        Parallax(0f, 0f, mainStage, "assets/clouds1.png", 25f)
+        Parallax(800f, 0f, mainStage, "assets/mountains0.png", 35f)
+        Parallax(0f, 0f, mainStage, "assets/mountains0.png", 35f)
+        Parallax(800f, 0f, mainStage, "assets/mountains1.png", 45f)
+        Parallax(0f, 0f, mainStage, "assets/mountains1.png", 45f)
         Ground(0f, 0f, mainStage)
         Ground(800f, 0f, mainStage)
 

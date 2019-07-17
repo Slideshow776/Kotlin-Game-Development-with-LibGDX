@@ -45,6 +45,7 @@ abstract class BaseGame : Game() {
         fun writeHighScore(highScore: Int) {
             val file = Gdx.files.local("assets/highscore.txt")
             if (highscore == null || highscore!! < highScore) {
+                highscore = highScore
                 file.writeString(highScore.toString(), false)
             }
         }

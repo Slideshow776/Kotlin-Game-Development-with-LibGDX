@@ -39,7 +39,7 @@ To save memory it is important that the texture asset is not _loaded_ twice, but
 >-- <cite>[wikipedia.org](https://en.m.wikipedia.org/wiki/Parallax_scrolling)</cite>
 
 ![The Whispered World](https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/The_Whispered_World_parallax_scrolling_sample_1.jpg/750px-The_Whispered_World_parallax_scrolling_sample_1.jpg)
->"A side view of the layers used for parallax scrolling in the Whispered World" >-- <cite>[wikipedia.org](https://en.m.wikipedia.org/wiki/Parallax_scrolling)</cite>
+>"A side view of the layers used for parallax scrolling in The Whispered World" >-- <cite>[wikipedia.org](https://en.m.wikipedia.org/wiki/Parallax_scrolling)</cite>
 
 As a bonus feature, a Parallax class was created and implemented, the game now has 4 layers of background, which quickly adds depth to the world. Some consideration should be used for the color schemes such that the background will remain a background and not become too noisy
 

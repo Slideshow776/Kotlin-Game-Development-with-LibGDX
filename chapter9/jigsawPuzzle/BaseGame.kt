@@ -32,6 +32,7 @@ abstract class BaseGame : Game() {
 
         var labelStyle: LabelStyle? = null
         var textButtonStyle: TextButtonStyle? = null
+        var highscore: Int? = null
 
         /**
          * Used to switch screens while game is running.
@@ -39,6 +40,19 @@ abstract class BaseGame : Game() {
          */
         fun setActiveScreen(s: BaseScreen) {
             game?.setScreen(s)
+        }
+
+        fun writeHighScore(highScore: Int) {
+            val file = Gdx.files.local("assets/highscore.txt")
+            if (highscore == null || highscore!! > highScore) {
+                highscore = highScore
+                file.writeString(highScore.toString(), false)
+            }
+        }
+
+        private fun readFromFile(): Int {
+            val file = Gdx.files.internal("assets/highscore.txt")
+            return file.readString().toInt()
         }
     }
 
@@ -69,5 +83,12 @@ abstract class BaseGame : Game() {
         textButtonStyle!!.up = NinePatchDrawable(buttonPatch)
         textButtonStyle!!.font = customFont
         textButtonStyle!!.fontColor = Color.PINK
+
+        // file
+        try {
+            highscore = readFromFile()
+        } catch (e: Exception) {
+            writeHighScore(0)
+        }
     }
 }

@@ -8,10 +8,12 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.utils.compression.lzma.Base
 
 class LevelScreen : BaseScreen() {
     private var messageLabel: Label? = null
     private lateinit var timeLabel: Label
+    private lateinit var highscoreLabel: Label
 
     private var time = 0f
 
@@ -61,11 +63,16 @@ class LevelScreen : BaseScreen() {
         timeLabel = Label("Time: $time", BaseGame.labelStyle)
         timeLabel.color = Color.CORAL
 
+        highscoreLabel = Label("Best: ${BaseGame.highscore}", BaseGame.labelStyle)
+        highscoreLabel.color = Color.ORANGE
+
         messageLabel = Label("...", BaseGame.labelStyle)
         messageLabel!!.color = Color.CYAN
         messageLabel!!.isVisible = false
 
-        uiTable.add(timeLabel).pad(10f)
+        uiTable.add(timeLabel).padTop(10f)
+        uiTable.row()
+        uiTable.add(highscoreLabel)
         uiTable.row().expandY()
         uiTable.add(messageLabel).bottom().pad(50f)
 
@@ -77,6 +84,7 @@ class LevelScreen : BaseScreen() {
 
     override fun update(dt: Float) {
         timeLabel.setText("Time: ${MathUtils.floor(time)}")
+        highscoreLabel.setText("Best: ${BaseGame.highscore}")
 
         // check to see if pieces are in correct positions
         var solved = true
@@ -90,6 +98,8 @@ class LevelScreen : BaseScreen() {
         if (solved) {
             messageLabel!!.setText("You win!")
             messageLabel!!.isVisible = true
+
+            BaseGame.writeHighScore(MathUtils.floor(time))
         } else {
             messageLabel!!.setText("...")
             messageLabel!!.isVisible = false

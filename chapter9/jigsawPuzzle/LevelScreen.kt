@@ -1,6 +1,7 @@
 package chapter9.jigsawPuzzle
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.Color
 
 class LevelScreen : BaseScreen() {
     private var messageLabel: Label? = null
+    private lateinit var backgroundMusic: Music
 
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
@@ -56,6 +58,11 @@ class LevelScreen : BaseScreen() {
         messageLabel!!.color = Color.CYAN
         uiTable.add(messageLabel).expandX().expandY().bottom().pad(50f)
         messageLabel!!.isVisible = false
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/backgroundMusic.wav"))
+        backgroundMusic.volume = .25f
+        backgroundMusic.isLooping = true
+        backgroundMusic.play()
     }
 
     override fun update(dt: Float) {

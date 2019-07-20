@@ -8,7 +8,10 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.utils.compression.lzma.Base
+import com.badlogic.gdx.scenes.scene2d.Event
+import com.badlogic.gdx.scenes.scene2d.ui.Button
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
 class LevelScreen : BaseScreen() {
     private var messageLabel: Label? = null
@@ -17,14 +20,14 @@ class LevelScreen : BaseScreen() {
 
     private var time = 0f
 
-    private lateinit var backgroundMusic: Music
+    private lateinit var restartButton: Button
 
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
         background.loadTexture("assets/background.jpg")
 
-        val numberRows = 4
-        val numberCols = 4
+        val numberRows = MathUtils.random(3, 5)
+        val numberCols = MathUtils.random(3, 5)
 
         val texture = Texture(Gdx.files.internal("assets/sun.jpg"), true)
         val imageWidth = texture.width
@@ -70,16 +73,28 @@ class LevelScreen : BaseScreen() {
         messageLabel!!.color = Color.CYAN
         messageLabel!!.isVisible = false
 
+        val buttonStyle = Button.ButtonStyle()
+        buttonStyle.up = TextureRegionDrawable(
+            TextureRegion(
+                Texture(Gdx.files.internal("assets/undo.png"))
+            )
+        )
+        restartButton = Button(buttonStyle)
+        restartButton.color = Color.CYAN
+        restartButton.addListener { e: Event ->
+            if (isTouchDownEvent(e))
+                BaseGame.setActiveScreen(LevelScreen())
+            false
+        }
+        restartButton.isVisible = false
+
         uiTable.add(timeLabel).padTop(10f)
         uiTable.row()
         uiTable.add(highscoreLabel)
         uiTable.row().expandY()
         uiTable.add(messageLabel).bottom().pad(50f)
-
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/backgroundMusic.wav"))
-        backgroundMusic.volume = .25f
-        backgroundMusic.isLooping = true
-        backgroundMusic.play()
+        uiTable.row()
+        uiTable.add(restartButton).padBottom(10f)
     }
 
     override fun update(dt: Float) {
@@ -98,11 +113,13 @@ class LevelScreen : BaseScreen() {
         if (solved) {
             messageLabel!!.setText("You win!")
             messageLabel!!.isVisible = true
+            restartButton.isVisible = true
 
             BaseGame.writeHighScore(MathUtils.floor(time))
         } else {
             messageLabel!!.setText("...")
             messageLabel!!.isVisible = false
+            restartButton.isVisible = false
             time += dt
         }
     }

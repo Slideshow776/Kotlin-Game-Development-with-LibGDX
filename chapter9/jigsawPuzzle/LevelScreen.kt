@@ -11,6 +11,10 @@ import com.badlogic.gdx.graphics.Color
 
 class LevelScreen : BaseScreen() {
     private var messageLabel: Label? = null
+    private lateinit var timeLabel: Label
+
+    private var time = 0f
+
     private lateinit var backgroundMusic: Music
 
     override fun initialize() {
@@ -54,10 +58,16 @@ class LevelScreen : BaseScreen() {
             }
         }
 
+        timeLabel = Label("Time: $time", BaseGame.labelStyle)
+        timeLabel.color = Color.CORAL
+
         messageLabel = Label("...", BaseGame.labelStyle)
         messageLabel!!.color = Color.CYAN
-        uiTable.add(messageLabel).expandX().expandY().bottom().pad(50f)
         messageLabel!!.isVisible = false
+
+        uiTable.add(timeLabel).pad(10f)
+        uiTable.row().expandY()
+        uiTable.add(messageLabel).bottom().pad(50f)
 
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/backgroundMusic.wav"))
         backgroundMusic.volume = .25f
@@ -66,6 +76,8 @@ class LevelScreen : BaseScreen() {
     }
 
     override fun update(dt: Float) {
+        timeLabel.setText("Time: ${MathUtils.floor(time)}")
+
         // check to see if pieces are in correct positions
         var solved = true
         for (actor in BaseActor.getList(mainStage, PuzzlePiece::class.java.canonicalName)) {
@@ -81,6 +93,7 @@ class LevelScreen : BaseScreen() {
         } else {
             messageLabel!!.setText("...")
             messageLabel!!.isVisible = false
+            time += dt
         }
     }
 }

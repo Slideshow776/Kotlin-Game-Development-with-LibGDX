@@ -1,12 +1,16 @@
 package chapter9.jigsawPuzzle
 
 import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
+import com.badlogic.gdx.utils.TimeUtils
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 /*
 * Enables drag-and-drop functionality
@@ -20,22 +24,19 @@ open class DragAndDropActor(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     private var startPositionX: Float = 0f
     private var startPositionY: Float = 0f
     var isDraggable: Boolean = false
-
     var dropTarget: DropTargetActor? = null
+
+    private var lastTapTime: Long = 0
+    private var tapCountInterval = (0.4f * 1000000000L).toLong()
 
     init {
         self = this
         isDraggable = true
 
         addListener(
-            object : InputListener() {
-                override fun touchDown(
-                    event: InputEvent?,
-                    eventOffsetX: Float,
-                    eventOffsetY: Float,
-                    pointer: Int,
-                    button: Int
-                ): Boolean {
+            object : ClickListener() {
+                override fun touchDown(event: InputEvent?, eventOffsetX: Float, eventOffsetY: Float,
+                                       pointer: Int, button: Int): Boolean {
                     if (!self.isDraggable)
                         return false
 
@@ -53,19 +54,28 @@ open class DragAndDropActor(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
                 }
 
                 override fun touchDragged(event: InputEvent?, eventOffsetX: Float, eventOffsetY: Float, pointer: Int) {
-                    val deltaX = eventOffsetX - self.grabOffsetX
-                    val deltaY = eventOffsetY - self.grabOffsetY
+                    val cos = cos(self.rotation * MathUtils.degreesToRadians)
+                    val sin = sin(self.rotation * MathUtils.degreesToRadians)
+
+                    val tox = (eventOffsetX - self.grabOffsetX)
+                    val toy = (eventOffsetY - self.grabOffsetY)
+
+                    var deltaX = 0f
+                    var deltaY = 0f
+
+                    if (abs(cos) == 1f) {
+                        deltaX = tox * cos
+                        deltaY = toy * cos
+                    } else {
+                        deltaX = toy * -sin
+                        deltaY = tox * sin
+                    }
 
                     self.moveBy(deltaX, deltaY)
                 }
 
-                override fun touchUp(
-                    event: InputEvent?,
-                    eventOffsetX: Float,
-                    eventOffsetY: Float,
-                    pointer: Int,
-                    button: Int
-                ) {
+                override fun touchUp(event: InputEvent?, eventOffsetX: Float, eventOffsetY: Float,
+                                     pointer: Int, button: Int) {
                     self.dropTarget = null
 
                     var closestDistance = java.lang.Float.MAX_VALUE
@@ -85,6 +95,15 @@ open class DragAndDropActor(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
                     self.addAction(Actions.scaleTo(1.00f, 1.00f, 0.25f))
                     self.onDrop()
+
+                    // double tap
+                    val time = TimeUtils.nanoTime()
+                    if (time - lastTapTime > tapCountInterval)
+                        tapCount = 0
+                    tapCount++
+                    lastTapTime = time
+                    if( tapCount == 2) // double click detected
+                        doubleTap()
                 }
             }
         )
@@ -94,6 +113,7 @@ open class DragAndDropActor(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     open fun onDragStart() {}
     open fun onDrop() {}
+    open fun doubleTap() {}
 
     fun moveToActor(other: BaseActor) {
         val x = other.x + (other.width - this.width) / 2

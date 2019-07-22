@@ -54,25 +54,25 @@ if( tapCount == 2) // double click detected
 Apparently, when rotating an actor it's whole coordinate system is rotated with it, meaning that the x-axis becomes the y-axis and vice versa on 90 and 270-degree rotations. The algorithm below is a solution that works.
 ```
 override fun touchDragged(event: InputEvent?, eventOffsetX: Float, eventOffsetY: Float, pointer: Int) {
-                    val cos = cos(self.rotation * MathUtils.degreesToRadians)
-                    val sin = sin(self.rotation * MathUtils.degreesToRadians)
+    val cos = cos(self.rotation * MathUtils.degreesToRadians)
+    val sin = sin(self.rotation * MathUtils.degreesToRadians)
 
-                    val tox = (eventOffsetX - self.grabOffsetX)
-                    val toy = (eventOffsetY - self.grabOffsetY)
+    val tox = (eventOffsetX - self.grabOffsetX)
+    val toy = (eventOffsetY - self.grabOffsetY)
 
-                    var deltaX = 0f
-                    var deltaY = 0f
+    var deltaX = 0f
+    var deltaY = 0f
 
-                    if (abs(cos) == 1f) {
-                        deltaX = tox * cos
-                        deltaY = toy * cos
-                    } else {
-                        deltaX = toy * -sin
-                        deltaY = tox * sin
-                    }
+    if (abs(cos) == 1f) {
+        deltaX = tox * cos
+        deltaY = toy * cos
+    } else {
+        deltaX = toy * -sin
+        deltaY = tox * sin
+    }
 
-                    self.moveBy(deltaX, deltaY)
-                }
+    self.moveBy(deltaX, deltaY)
+}
 ```
 
 

@@ -35,7 +35,7 @@ As suggested by the book the following features have been added:
 Bonus features:
 * A restart button
 * Random number of pieces
-* A screen transition which slides ff to the left
+* A screen transition which slides to the left
 * Puzzle pieces bounce in animation
 
 ![Jigsaw Puzzle Game](https://user-images.githubusercontent.com/4059636/61556273-ad722780-aa61-11e9-81b5-5d2c5ecb1e5e.png)
@@ -99,4 +99,13 @@ addAction(Actions.sequence(
 ```
 
 ## 52 Card Pickup
+As suggested by the book the following features have been added:
+* Added sounds and background music
+* Added a label which displays current time spent
+* Added a label which displays best overall highscore
+
+Bonus features:
+* A restart button
+* A screen transition which slides to the left
+
 ![52 Card Pickup](https://user-images.githubusercontent.com/4059636/61574574-dd511780-aac1-11e9-8d19-87b44ddfe8f5.png)

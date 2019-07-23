@@ -1,7 +1,9 @@
 package chapter9.cardPickup52
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 
 class LevelScreen : BaseScreen() {
@@ -39,6 +41,15 @@ class LevelScreen : BaseScreen() {
                 card.moveToActor(pile)
                 pile.addCard(card)
                 card.isDraggable = false
+            } else {
+                // animation
+                val randomDelay = MathUtils.random(0f, 1f)
+                card.addAction(
+                    Actions.sequence(
+                        Actions.moveBy(0f, 620f, 0f),
+                        Actions.delay(randomDelay),
+                        Actions.moveTo(card.x, card.y, 2f, Interpolation.bounceOut)
+                    ))
             }
         }
 
@@ -46,6 +57,8 @@ class LevelScreen : BaseScreen() {
         messageLabel.color = Color.CYAN
         uiTable.add(messageLabel).expandX().expandY().bottom().pad(50f)
         messageLabel.isVisible = false
+
+        ScreenTransition(0f, 0f, uiStage)
     }
 
     override fun update(dt: Float) {

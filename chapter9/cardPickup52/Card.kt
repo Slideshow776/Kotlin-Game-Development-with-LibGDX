@@ -30,6 +30,7 @@ class Card(x: Float, y: Float, s: Stage) : DragAndDropActor(x, y, s) {
             if (this.rankValue == topCard.rankValue + 1 && this.suitValue == topCard.suitValue) {
                 moveToActor(pile)
                 pile.addCard(this)
+                isDraggable = false
             } else {
                 // avoid blocking view of pile when incorrect.
                 moveToStart()

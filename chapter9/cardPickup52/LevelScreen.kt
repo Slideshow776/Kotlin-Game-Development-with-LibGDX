@@ -1,5 +1,7 @@
 package chapter9.cardPickup52
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
@@ -9,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 class LevelScreen : BaseScreen() {
     private lateinit var pileList: ArrayList<Pile>
     private lateinit var messageLabel: Label
+
+    private var playOnce: Boolean = true
+    private lateinit var trumpetSound: Sound
 
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
@@ -59,6 +64,7 @@ class LevelScreen : BaseScreen() {
         messageLabel.isVisible = false
 
         ScreenTransition(0f, 0f, uiStage)
+        trumpetSound = Gdx.audio.newSound(Gdx.files.internal("assets/trumpet.mp3"))
     }
 
     override fun update(dt: Float) {
@@ -72,6 +78,10 @@ class LevelScreen : BaseScreen() {
         if (complete) {
             messageLabel.setText("You win")
             messageLabel.isVisible = true
+            if (playOnce) {
+                playOnce = false
+                trumpetSound.play()
+            }
         }
     }
 }

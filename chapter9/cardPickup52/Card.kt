@@ -1,5 +1,6 @@
 package chapter9.cardPickup52
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
 
 class Card(x: Float, y: Float, s: Stage) : DragAndDropActor(x, y, s) {
@@ -13,13 +14,23 @@ class Card(x: Float, y: Float, s: Stage) : DragAndDropActor(x, y, s) {
     val suitName: String
         get() = suitNames[suitValue]
 
+    private val clickClickSound = Gdx.audio.newSound(Gdx.files.internal("assets/click-click.wav"))
+    private val lowWhooshSound = Gdx.audio.newSound(Gdx.files.internal("assets/low-whoosh.wav"))
+    private val whooshSound = Gdx.audio.newSound(Gdx.files.internal("assets/whoosh.wav"))
+    private val tingSound = Gdx.audio.newSound(Gdx.files.internal("assets/ting.wav"))
+
     fun setRankSuitValues(r: Int, s: Int) {
         rankValue = r
         suitValue = s
-        val imageFileName = ("assets/card" + suitName + rankName + ".png")
+        val imageFileName = "assets/card$suitName$rankName.png"
         loadTexture(imageFileName)
         setSize(80f, 100f)
         setBoundaryRectangle()
+    }
+
+    override fun onDragStart() {
+        super.onDragStart()
+        clickClickSound.play()
     }
 
     override fun onDrop() {
@@ -31,10 +42,14 @@ class Card(x: Float, y: Float, s: Stage) : DragAndDropActor(x, y, s) {
                 moveToActor(pile)
                 pile.addCard(this)
                 isDraggable = false
+                tingSound.play(.05f)
             } else {
                 // avoid blocking view of pile when incorrect.
+                lowWhooshSound.play()
                 moveToStart()
             }
+        } else {
+            whooshSound.play()
         }
     }
 

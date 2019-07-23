@@ -21,6 +21,9 @@ class LevelScreen : BaseScreen() {
     private lateinit var trumpetSound: Sound
     private lateinit var restartButton: Button
 
+    private lateinit var timeLabel: Label
+    private var time = 0f
+
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
         background.loadTexture("assets/felt.jpg")
@@ -81,16 +84,23 @@ class LevelScreen : BaseScreen() {
 
         messageLabel = Label("...", BaseGame.labelStyle)
         messageLabel.color = Color.CYAN
+        messageLabel.isVisible = false
+
+        timeLabel = Label("Time: $time", BaseGame.labelStyle)
+        timeLabel.color = Color.CORAL
+
+        uiTable.add(timeLabel).left().pad(10f)
+        uiTable.row()
         uiTable.add(messageLabel).expandX().expandY().bottom().pad(50f)
         uiTable.row()
         uiTable.add(restartButton).padBottom(10f)
-        messageLabel.isVisible = false
 
         ScreenTransition(0f, 0f, uiStage)
         trumpetSound = Gdx.audio.newSound(Gdx.files.internal("assets/trumpet.mp3"))
     }
 
     override fun update(dt: Float) {
+        timeLabel.setText("Time: ${MathUtils.floor(time)}")
         var complete = true
         for (pile: Pile in pileList) {
             if (pile.getSize() < 13) {
@@ -106,6 +116,8 @@ class LevelScreen : BaseScreen() {
                 playOnce = false
                 trumpetSound.play()
             }
+        } else {
+            time += dt
         }
     }
 }

@@ -7,7 +7,9 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.scenes.scene2d.Event
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
@@ -85,6 +87,8 @@ class LevelScreen : BaseScreen() {
             false
         }
         restartButton.isVisible = false
+
+        ScreenTransition(0f, 0f, uiStage)
 
         uiTable.add(timeLabel).padTop(10f)
         uiTable.row()

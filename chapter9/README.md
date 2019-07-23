@@ -22,6 +22,7 @@ Code in `DragAndDropActor`:
 ```
 addAction(Actions.moveTo(x, y, .5f, Interpolation.pow3));
 ```
+
 Read more about interpolation on LibGDX's [wiki page](https://github.com/libgdx/libgdx/wiki/Interpolation).
 
 ## Jigsaw Puzzle Game
@@ -34,6 +35,8 @@ As suggested by the book the following features have been added:
 Bonus features:
 * A restart button
 * Random number of pieces
+* A screen transition which slides ff to the left
+* Puzzle pieces bounce in animation
 
 ![Jigsaw Puzzle Game](https://user-images.githubusercontent.com/4059636/61556273-ad722780-aa61-11e9-81b5-5d2c5ecb1e5e.png)
 
@@ -75,6 +78,25 @@ override fun touchDragged(event: InputEvent?, eventOffsetX: Float, eventOffsetY:
 }
 ```
 
+### Interpolation examples
+#### Screen transition
+```
+addAction(
+    Actions.sequence(
+    Actions.moveBy(-800f, 0f, .75f, Interpolation.sine),
+    Actions.removeActor()
+))
+```
+
+#### Puzzle piece bounce in animation
+```
+val randomDelay = MathUtils.random(0f, 1f)
+addAction(Actions.sequence(
+    Actions.moveBy(0f, 620f, 0f),
+    Actions.delay(randomDelay),
+    Actions.moveTo(x, y, 2f, Interpolation.bounceOut)
+))
+```
 
 ## 52 Card Pickup
 ![52 Card Pickup](https://user-images.githubusercontent.com/4059636/61574574-dd511780-aac1-11e9-8d19-87b44ddfe8f5.png)

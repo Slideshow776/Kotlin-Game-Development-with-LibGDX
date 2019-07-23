@@ -3,10 +3,15 @@ package chapter9.cardPickup52
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
 class LevelScreen : BaseScreen() {
     private lateinit var pileList: ArrayList<Pile>
@@ -14,6 +19,7 @@ class LevelScreen : BaseScreen() {
 
     private var playOnce: Boolean = true
     private lateinit var trumpetSound: Sound
+    private lateinit var restartButton: Button
 
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
@@ -58,9 +64,26 @@ class LevelScreen : BaseScreen() {
             }
         }
 
+        val buttonStyle = Button.ButtonStyle()
+        buttonStyle.up = TextureRegionDrawable(
+            TextureRegion(
+                Texture(Gdx.files.internal("assets/undo.png"))
+            )
+        )
+        restartButton = Button(buttonStyle)
+        restartButton.color = Color.CYAN
+        restartButton.addListener { e: Event ->
+            if (isTouchDownEvent(e))
+                BaseGame.setActiveScreen(LevelScreen())
+            false
+        }
+        restartButton.isVisible = false
+
         messageLabel = Label("...", BaseGame.labelStyle)
         messageLabel.color = Color.CYAN
         uiTable.add(messageLabel).expandX().expandY().bottom().pad(50f)
+        uiTable.row()
+        uiTable.add(restartButton).padBottom(10f)
         messageLabel.isVisible = false
 
         ScreenTransition(0f, 0f, uiStage)
@@ -78,6 +101,7 @@ class LevelScreen : BaseScreen() {
         if (complete) {
             messageLabel.setText("You win")
             messageLabel.isVisible = true
+            restartButton.isVisible = true
             if (playOnce) {
                 playOnce = false
                 trumpetSound.play()

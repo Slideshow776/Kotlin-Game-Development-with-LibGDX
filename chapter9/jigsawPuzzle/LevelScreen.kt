@@ -116,7 +116,6 @@ class LevelScreen : BaseScreen() {
             messageLabel!!.setText("You win!")
             messageLabel!!.isVisible = true
             restartButton.isVisible = true
-
             BaseGame.writeHighScore(MathUtils.floor(time))
         } else {
             messageLabel!!.setText("...")

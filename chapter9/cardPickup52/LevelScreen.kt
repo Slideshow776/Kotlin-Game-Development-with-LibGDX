@@ -24,6 +24,8 @@ class LevelScreen : BaseScreen() {
     private lateinit var timeLabel: Label
     private var time = 0f
 
+    private lateinit var highscoreLabel: Label
+
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
         background.loadTexture("assets/felt.jpg")
@@ -89,7 +91,12 @@ class LevelScreen : BaseScreen() {
         timeLabel = Label("Time: $time", BaseGame.labelStyle)
         timeLabel.color = Color.CORAL
 
+        highscoreLabel = Label("Best: ${BaseGame.highscore}", BaseGame.labelStyle)
+        highscoreLabel.color = Color.ORANGE
+
         uiTable.add(timeLabel).left().pad(10f)
+        uiTable.row()
+        uiTable.add(highscoreLabel).left().pad(10f)
         uiTable.row()
         uiTable.add(messageLabel).expandX().expandY().bottom().pad(50f)
         uiTable.row()
@@ -101,6 +108,7 @@ class LevelScreen : BaseScreen() {
 
     override fun update(dt: Float) {
         timeLabel.setText("Time: ${MathUtils.floor(time)}")
+        highscoreLabel.setText("Best: ${BaseGame.highscore}")
         var complete = true
         for (pile: Pile in pileList) {
             if (pile.getSize() < 13) {
@@ -112,6 +120,7 @@ class LevelScreen : BaseScreen() {
             messageLabel.setText("You win")
             messageLabel.isVisible = true
             restartButton.isVisible = true
+            BaseGame.writeHighScore(MathUtils.floor(time))
             if (playOnce) {
                 playOnce = false
                 trumpetSound.play()

@@ -1,6 +1,7 @@
 package chapter9.jigsawPuzzle
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -30,6 +31,14 @@ class PuzzlePiece(x: Float, y: Float, s: Stage) : DragAndDropActor(x, y, s) {
 
     init {
         setRandomRotation()
+
+        // animation
+        val randomDelay = MathUtils.random(0f, 1f)
+        addAction(Actions.sequence(
+            Actions.moveBy(0f, 620f, 0f),
+            Actions.delay(randomDelay),
+            Actions.moveTo(x, y, 2f, Interpolation.bounceOut)
+        ))
     }
 
     fun clearPuzzleArea() { puzzleArea = null }

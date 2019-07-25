@@ -107,6 +107,7 @@ As suggested by the book the following features have been added:
 Bonus features:
 * A restart button
 * A screen transition which slides to the left
+* Cards bounce-in animation
 
 ![52 Card Pickup](https://user-images.githubusercontent.com/4059636/61574574-dd511780-aac1-11e9-8d19-87b44# Drag-and-Drop Games
 This chapter teaches how to add drag-and-drop functionality to your games. Clicking on an object, holding it, and dragging it across the screen until released.

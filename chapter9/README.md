@@ -54,7 +54,7 @@ if( tapCount == 2) // double click detected
 ```
 
 ### Rotation
-Apparently, when rotating an actor it's whole coordinate system is rotated with it, meaning that the x-axis becomes the y-axis and vice versa on 90 and 270-degree rotations. The algorithm below is a solution that works.
+When rotating an actor it's whole coordinate system is rotated with it, meaning that the x-axis becomes the y-axis and vice versa on 90 and 270-degree rotations. The algorithm below is a solution that works.
 ```
 override fun touchDragged(event: InputEvent?, eventOffsetX: Float, eventOffsetY: Float, pointer: Int) {
     val cos = cos(self.rotation * MathUtils.degreesToRadians)
@@ -116,4 +116,4 @@ As suggested by the book the game "Crazy Eights" was added.
 
 ![Crazy Eights](https://user-images.githubusercontent.com/4059636/61846390-37c5eb80-aea7-11e9-867f-b2172ee553ba.png)
 
-To win all cards from the hand must be placed  upon the pile in the middle. Card placed must match the color or value, eights can be layed down anytime.
+To win, all cards from the hand must be placed upon the pile in the middle. The card placed must match the color or value, eights can be laid down anytime.

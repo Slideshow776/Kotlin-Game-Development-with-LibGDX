@@ -12,6 +12,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.maps.MapProperties
+import java.util.ArrayList
+
+
 
 class TilemapActor(filename: String, theStage: Stage): Actor() {
     companion object {
@@ -20,22 +24,22 @@ class TilemapActor(filename: String, theStage: Stage): Actor() {
         val windowHeight = 600f
     }
 
-    private lateinit var tiledMap: TiledMap
-    private lateinit var tiledCamera: OrthographicCamera
-    private lateinit var tiledMapRenderer: OrthoCachedTiledMapRenderer
+    private var tiledMap: TiledMap
+    private var tiledCamera: OrthographicCamera
+    private var tiledMapRenderer: OrthoCachedTiledMapRenderer
 
     init {
         // set up tile map, renderer, and camera
         tiledMap = TmxMapLoader().load(filename)
 
-        val tileWidth = tiledMap.properties.get("tilewidth") as Float
-        val tileHeight = tiledMap.properties.get("tileheight") as Float
+        val tileWidth = tiledMap.properties.get("tilewidth") as Int
+        val tileHeight = tiledMap.properties.get("tileheight") as Int
         val numTilesHorizontal = tiledMap.properties.get("width") as Int
         val numTilesVertical = tiledMap.properties.get("height") as Int
         val mapWidth = tileWidth * numTilesHorizontal
         val mapHeight = tileHeight * numTilesVertical
 
-        BaseActor.setWorldBounds(mapWidth, mapHeight)
+        BaseActor.setWorldBounds(mapWidth.toFloat(), mapHeight.toFloat())
 
         tiledMapRenderer = OrthoCachedTiledMapRenderer(tiledMap)
         tiledMapRenderer.setBlending(true)
@@ -43,6 +47,8 @@ class TilemapActor(filename: String, theStage: Stage): Actor() {
         tiledCamera = OrthographicCamera()
         tiledCamera.setToOrtho(false, windowWidth, windowHeight)
         tiledCamera.update()
+
+        theStage.addActor(this)
     }
 
     override fun act(dt: Float) {
@@ -65,16 +71,15 @@ class TilemapActor(filename: String, theStage: Stage): Actor() {
         batch.begin()
     }
 
-    fun getRectangleList(propertyName: String):ArrayList<MapObject> {
+    fun getRectangleList(propertyName: String): ArrayList<MapObject> {
         val list = ArrayList<MapObject>()
-        for (layer: MapLayer in tiledMap.layers) {
-            for (obj: MapObject in layer.objects) {
-                if (obj !is RectangleMapObject) {
+        for (layer in tiledMap.layers) {
+            for (obj in layer.objects) {
+                if (obj !is RectangleMapObject)
                     continue
-                }
 
-                val props = obj.properties
-                if (props.containsKey("name") && props.get("name").equals(propertyName))
+                val props = obj.getProperties()
+                if (props.containsKey("name") && props.get("name") == propertyName)
                     list.add(obj)
             }
         }

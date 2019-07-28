@@ -12,6 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.maps.MapProperties
+import com.badlogic.gdx.maps.MapObject
+
+
 
 class LevelScreen: BaseScreen() {
 
@@ -33,6 +37,7 @@ class LevelScreen: BaseScreen() {
     private lateinit var oceanSurf: Music
 
     override fun initialize() {
+        /*
         val ocean = BaseActor(0f, 0f, mainStage)
         ocean.loadTexture("assets/water-border.jpg")
         ocean.setSize(1200f, 900f)
@@ -49,6 +54,29 @@ class LevelScreen: BaseScreen() {
         Rock(4500f, 200f, mainStage)
 
         turtle = Turtle(20f, 20f, mainStage)
+        */
+
+        val tma = TilemapActor("assets/map.tmx", mainStage)
+
+        for (obj in tma.getTileList("Rock")) {
+            val props = obj.properties
+            Rock(props.get("x") as Float, props.get("y") as Float, mainStage)
+        }
+
+        for (obj in tma.getTileList("Starfish")) {
+            val props = obj.properties
+            Starfish(props.get("x") as Float, props.get("y") as Float, mainStage)
+        }
+
+        for (obj in tma.getTileList("Sign")) {
+            val props = obj.properties
+            val s = Sign(props.get("x") as Float, props.get("y") as Float, mainStage)
+            s.setText(props.get("message") as String)
+        }
+
+        val startPoint = tma.getRectangleList("start")[0]
+        val props = startPoint.properties
+        turtle = Turtle(props.get("x") as Float, props.get("y") as Float, mainStage)
 
         // User interface code
 
@@ -112,11 +140,13 @@ class LevelScreen: BaseScreen() {
         uiTable.add(muteButton).top()
         uiTable.add(restartButton).top()
 
+        /*
         val sign1 = Sign(20f, 400f, mainStage)
         sign1.setText("West Starfish Bay")
 
         val sign2 = Sign(600f, 300f, mainStage)
         sign2.setText("East Starfish Bay")
+        */
 
         dialogBox = DialogBox(0f, 0f, mainStage)
         dialogBox.setBackgroundColor(Color.TAN)

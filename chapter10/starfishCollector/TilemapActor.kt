@@ -99,7 +99,7 @@ class TilemapActor(filename: String, theStage: Stage): Actor() {
                 // Default MapProperties are stored within associated Tile object
                 // Instance-specific overrides are stored in MapObject
 
-                val tmtmo = obj as TiledMapTileMapObject
+                val tmtmo:TiledMapTileMapObject = obj
                 val t = tmtmo.tile
                 val defaultProps = t.properties
 

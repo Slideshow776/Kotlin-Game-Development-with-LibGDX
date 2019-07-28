@@ -4,7 +4,7 @@
   <image source="wall-square.png" trans="ff00ff" width="32" height="32"/>
   <tile id="0">
    <properties>
-    <property name="wall" value=""/>
+    <property name="name" value="wall"/>
    </properties>
   </tile>
  </tileset>

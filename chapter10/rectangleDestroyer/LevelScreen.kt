@@ -34,6 +34,44 @@ class LevelScreen : BaseScreen() {
     private var paddleTimer = 0f
 
     override fun initialize() {
+        val tma = TilemapActor("assets/map.tmx", mainStage)
+
+        for (obj in tma.getTileList("wall")) {
+            val props = obj.properties
+            Wall(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                props.get("width") as Float,
+                props.get("height") as Float,
+                mainStage
+            )
+        }
+
+        for (obj in tma.getTileList("brick")) {
+            val props = obj.properties
+            val b = Brick(props.get("x") as Float, props.get("y") as Float, mainStage)
+            b.setSize(props.get("width") as Float, props.get("height") as Float)
+            b.setBoundaryRectangle()
+
+            when(props.get("color")) {
+                "red" -> b.color = Color.RED
+                "orange" -> b.color = Color.ORANGE
+                "yellow" -> b.color = Color.YELLOW
+                "green" -> b.color = Color.GREEN
+                "blue" -> b.color = Color.BLUE
+                "purple" -> b.color = Color.PURPLE
+                "white" -> b.color = Color.WHITE
+                "gray" -> b.color = Color.GRAY
+                "pink" -> b.color = Color.PINK
+                else -> println("LevelScreen: Error => Could not set color ${props.get("color")} for brick!")
+            }
+        }
+
+        val startPoint = tma.getRectangleList("start")[0]
+        val props = startPoint.properties
+        paddle = Paddle(props.get("x") as Float, props.get("y") as Float, mainStage)
+
+        /*
         // background
         val background = BaseActor(0f, 0f, mainStage)
         background.loadTexture("assets/space.png")
@@ -65,12 +103,17 @@ class LevelScreen : BaseScreen() {
                 Brick(x, y, mainStage)
             }
         }
+        */
 
         // ball
         ball = Ball(0f, 0f, mainStage)
 
         // solid
-        solid = Solid(400f, 300f, mainStage)
+        val solidStartPoint = tma.getRectangleList("solid")[0]
+        val solidProps = solidStartPoint.properties
+        solid = Solid(solidProps.get("x") as Float, solidProps.get("y") as Float, mainStage)
+
+        // solid = Solid(400f, 300f, mainStage)
 
         // game
         balls = 3

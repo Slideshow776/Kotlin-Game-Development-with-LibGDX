@@ -1,8 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="8">
+ <tileset firstgid="1" name="platform-tileset" tilewidth="32" tileheight="32" tilecount="18" columns="6">
+  <image source="platform-tileset.png" trans="ff00ff" width="192" height="96"/>
+ </tileset>
+ <tileset firstgid="19" name="object-tileset" tilewidth="32" tileheight="32" tilecount="7" columns="7">
+  <image source="object-tileset.png" trans="ff00ff" width="224" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="name" value="coin"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="name" value="flag"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="name" value="timer"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="name" value="springboard"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="name" value="platform"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="color" value="red"/>
+    <property name="name" value="key"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="color" value="red"/>
+    <property name="name" value="lock"/>
+   </properties>
+  </tile>
+ </tileset>
+ <imagelayer id="2" name="Image Layer 1">
+  <image source="background.png" width="1600" height="640"/>
+ </imagelayer>
  <layer id="1" name="Tile Layer 1" width="50" height="20">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20MH6AAAACAtwEPoAAB
+   eJztk4kKgzAMQDvdqMduN53//6NLoUIISQuzWid58Ohlm6RUYxRFUeI8wGfuJHYMd7+dd+24qfgwc0vXo8gMgltl7tt8Jz5vKdb4z3PTmf+p8wieEpwzIreIZeYasAXPfkxzz1FL6N1YZIhYHdUPeWEuqH8De7J+DXxrGR13JsaU98u3I4pVIR3TveF4OB96/gEswJL0Cz+W5NbLyB5pn5QDzUead229E7+ayQaV
   </data>
  </layer>
+ <objectgroup id="3" name="Object Layer 1">
+  <object id="1" x="0" y="576" width="1600" height="64">
+   <properties>
+    <property name="name" value="solid"/>
+   </properties>
+  </object>
+  <object id="2" x="320" y="448" width="64" height="32">
+   <properties>
+    <property name="name" value="solid"/>
+   </properties>
+  </object>
+  <object id="3" x="512" y="544" width="160" height="32">
+   <properties>
+    <property name="name" value="solid"/>
+   </properties>
+  </object>
+  <object id="4" x="544" y="512" width="96" height="32">
+   <properties>
+    <property name="name" value="solid"/>
+   </properties>
+  </object>
+  <object id="5" x="576" y="480" width="32" height="32">
+   <properties>
+    <property name="name" value="solid"/>
+   </properties>
+  </object>
+  <object id="7" x="64" y="512" width="32" height="32">
+   <properties>
+    <property name="name" value="start"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

@@ -23,8 +23,8 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
     private var elapsedTime: Float = 0F
     private var animationPaused: Boolean = false
 
-    protected var velocityVec: Vector2 = Vector2(0f, 0f)
-    private var accelerationVec: Vector2 = Vector2(0f, 0f)
+    var velocityVec: Vector2 = Vector2(0f, 0f)
+    protected var accelerationVec: Vector2 = Vector2(0f, 0f)
     private var acceleration: Float = 0f
     private var maxSpeed: Float = 1000f
     private var deceleration: Float = 0f

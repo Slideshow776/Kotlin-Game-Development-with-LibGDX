@@ -9,7 +9,7 @@ class LevelScreen : BaseScreen() {
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
 
-        for (obj in tma.getRectangleList("Solid")) {
+        for (obj in tma.getRectangleList("solid")) {
             val props = obj.properties
             Solid(
                 props.get("x") as Float,

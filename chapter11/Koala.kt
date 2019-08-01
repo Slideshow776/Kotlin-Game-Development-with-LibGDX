@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import kotlin.math.abs
 
+
+
 class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
     private lateinit var stand: Animation<TextureRegion>
     private lateinit var walk: Animation<TextureRegion>
@@ -35,7 +37,8 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
         walk = loadAnimationFromFiles(walkFileNames, .2f, true)
 
         jump = loadTexture("assets/koala/jump.png")
-        setBoundaryPolygon(6)
+        setBoundaryPolygon(8)
+
         belowSensor = BaseActor(0f, 0f, s)
         belowSensor.loadTexture("assets/white.png")
         belowSensor.setSize(this.width - 8f, 8f)
@@ -46,20 +49,16 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
     override fun act(dt: Float) {
         super.act(dt)
 
-        if (Gdx.input.isKeyPressed(Keys.LEFT))
+        if (Gdx.input.isKeyPressed(Keys.A))
             accelerationVec.add(-walkAcceleration, 0f)
 
-        if (Gdx.input.isKeyPressed(Keys.RIGHT))
+        if (Gdx.input.isKeyPressed(Keys.D))
             accelerationVec.add(walkAcceleration, 0f)
 
-        accelerationVec.add(0f, -gravity)
-
-        velocityVec.add(accelerationVec.x * dt, accelerationVec.y * dt)
-
-        if (!Gdx.input.isKeyPressed(Keys.RIGHT) && !Gdx.input.isKeyPressed(Keys.LEFT)) {
+        if (!Gdx.input.isKeyPressed(Keys.D) && !Gdx.input.isKeyPressed(Keys.A)) {
             val decelerationAmount = walkDeceleration * dt
 
-            var walkDirection = 0f
+            val walkDirection: Float
 
             if (velocityVec.x > 0)
                 walkDirection = 1f
@@ -67,37 +66,43 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
                 walkDirection = -1f
 
             var walkSpeed = abs(velocityVec.x)
+            walkSpeed -= decelerationAmount
 
             if (walkSpeed < 0)
                 walkSpeed = 0f
             velocityVec.x = walkSpeed * walkDirection
-
-            velocityVec.x = MathUtils.clamp(velocityVec.x, -maxHorizontalSpeed, maxHorizontalSpeed)
-            velocityVec.y = MathUtils.clamp(velocityVec.y, -maxVerticalSpeed, maxVerticalSpeed)
-
-            moveBy(velocityVec.x * dt, velocityVec.y * dt)
-            accelerationVec.set(0f, 0f)
-            belowSensor.setPosition(x + 4f, y - 8f)
-
-            alignCamera()
-            boundToWorld()
-
-            if (this.isOnSolid()) {
-                belowSensor.color = Color.GREEN
-                if (velocityVec.x == 0f)
-                    setAnimation(stand)
-                else
-                    setAnimation(walk)
-            } else {
-                belowSensor.color = Color.GREEN
-                setAnimation(jump)
-            }
-
-            if (velocityVec.x > 0) // face right
-                setScale(1f)
-            if (velocityVec.x < 0) // face left
-                setScale(-1f)
         }
+
+        accelerationVec.add(0f, -gravity)
+
+        velocityVec.add(accelerationVec.x * dt, accelerationVec.y * dt)
+
+        velocityVec.x = MathUtils.clamp(velocityVec.x, -maxHorizontalSpeed, maxHorizontalSpeed)
+
+        moveBy(velocityVec.x * dt, velocityVec.y * dt)
+
+        accelerationVec.set(0f, 0f)
+
+        belowSensor.setPosition(x + 4, y - 8)
+
+        if (this.isOnSolid()) {
+            belowSensor.color = Color.GREEN
+            if (velocityVec.x == 0f)
+                setAnimation(stand)
+            else
+                setAnimation(walk)
+        } else {
+            belowSensor.color = Color.RED
+            setAnimation(jump)
+        }
+
+        if (velocityVec.x > 0) // face right
+            scaleX = 1f
+        if (velocityVec.x < 0) // face left
+            scaleX = -1f
+
+        alignCamera()
+        boundToWorld()
     }
 
     fun belowOverlaps(actor: BaseActor): Boolean { return belowSensor.overlaps(actor) }

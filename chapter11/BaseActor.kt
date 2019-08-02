@@ -271,6 +271,19 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         val viewport = this.stage.viewport
 
         // center camera on actor
+        
+        /*
+        TODO: Try this?
+        https://www.youtube.com/watch?v=M6KAYk9Xup4
+        a + (b - a) * lerp
+        b = target
+        a = current camera position
+        
+        val position = camera.position
+        position.x = camera.position.x + (originX - camera.position.x) * .1f
+        position.y = camera.position.y + (originY - camera.position.y) * .1f
+        camera.position.set(position)
+        */
         camera.position.set(x + originX, y + originY, 0f)
 
         // bind camera to layout

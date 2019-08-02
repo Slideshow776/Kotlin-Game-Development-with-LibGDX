@@ -11,7 +11,7 @@ class LevelScreen : BaseScreen() {
 
     private var gameOver = false
     private var coins = 0
-    private var time = 60f
+    private var time = 10f
     private lateinit var coinLabel: Label
     private lateinit var keyTable: Table
     private lateinit var timeLabel: Label
@@ -43,6 +43,11 @@ class LevelScreen : BaseScreen() {
         for (obj in tma.getTileList("coin")) {
             val props = obj.properties
             Coin(props.get("x") as Float, props.get("y") as Float, mainStage)
+        }
+
+        for (obj in tma.getTileList("timer")) {
+            val props = obj.properties
+            Timer(props.get("x") as Float, props.get("y") as Float, mainStage)
         }
 
         coinLabel = Label("Coins: $coins", BaseGame.labelStyle)
@@ -97,6 +102,24 @@ class LevelScreen : BaseScreen() {
                 coinLabel.setText("Coins: $coins")
                 coin.remove()
             }
+        }
+
+        time -= dt
+        timeLabel.setText("Time: ${time.toInt()}")
+
+        for (timer in BaseActor.getList(mainStage, Timer::class.java.canonicalName)) {
+            if (jack.overlaps(timer)) {
+                time += 20
+                timer.remove()
+            }
+        }
+
+        if (time <= 0) {
+            messageLabel.setText("Time Up - Game Over")
+            messageLabel.color = Color.RED
+            messageLabel.isVisible = true
+            jack.remove()
+            gameOver = true
         }
     }
 

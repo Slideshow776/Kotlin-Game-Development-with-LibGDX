@@ -50,6 +50,13 @@ class LevelScreen : BaseScreen() {
             Timer(props.get("x") as Float, props.get("y") as Float, mainStage)
         }
 
+        for (obj in tma.getTileList("springboard")) {
+            val props = obj.properties
+            Springboard(props.get("x") as Float, props.get("y") as Float, mainStage)
+        }
+
+        jack.toFront() // causes Jack the Koala to appear in front of everything added so far
+
         coinLabel = Label("Coins: $coins", BaseGame.labelStyle)
         coinLabel.color = Color.GOLD
         keyTable = Table()
@@ -120,6 +127,12 @@ class LevelScreen : BaseScreen() {
             messageLabel.isVisible = true
             jack.remove()
             gameOver = true
+        }
+
+        for (springboard in BaseActor.getList(mainStage, Springboard::class.java.canonicalName)) {
+            if (jack.belowOverlaps(springboard) && jack.isFalling()) {
+                jack.spring()
+            }
         }
     }
 

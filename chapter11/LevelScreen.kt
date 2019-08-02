@@ -40,6 +40,11 @@ class LevelScreen : BaseScreen() {
             Flag(props.get("x") as Float, props.get("y") as Float, mainStage)
         }
 
+        for (obj in tma.getTileList("coin")) {
+            val props = obj.properties
+            Coin(props.get("x") as Float, props.get("y") as Float, mainStage)
+        }
+
         coinLabel = Label("Coins: $coins", BaseGame.labelStyle)
         coinLabel.color = Color.GOLD
         keyTable = Table()
@@ -83,6 +88,14 @@ class LevelScreen : BaseScreen() {
                     else
                         jack.velocityVec.y = 0f
                 }
+            }
+        }
+
+        for ( coin in BaseActor.getList(mainStage, Coin::class.java.canonicalName)) {
+            if (jack.overlaps(coin)) {
+                coins++
+                coinLabel.setText("Coins: $coins")
+                coin.remove()
             }
         }
     }

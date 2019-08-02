@@ -1,5 +1,6 @@
 package chapter11
 
+import com.badlogic.gdx.Gdx
 import kotlin.math.abs
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
@@ -11,7 +12,7 @@ class LevelScreen : BaseScreen() {
 
     private var gameOver = false
     private var coins = 0
-    private var time = 10f
+    private var time = 60f
     private lateinit var coinLabel: Label
     private lateinit var keyTable: Table
     private lateinit var timeLabel: Label
@@ -55,6 +56,11 @@ class LevelScreen : BaseScreen() {
             Springboard(props.get("x") as Float, props.get("y") as Float, mainStage)
         }
 
+        for (obj in tma.getTileList("platform")) {
+            val props = obj.properties
+            Platform(props.get("x") as Float, props.get("y") as Float, mainStage)
+        }
+
         jack.toFront() // causes Jack the Koala to appear in front of everything added so far
 
         coinLabel = Label("Coins: $coins", BaseGame.labelStyle)
@@ -89,6 +95,17 @@ class LevelScreen : BaseScreen() {
 
         for (actor in BaseActor.getList(mainStage, Solid::class.java.canonicalName)) {
             val solid = actor as Solid
+
+            if (solid is Platform) {
+                if (jack.isJumping() && jack.overlaps(solid))
+                    solid.enabled = false
+
+                if (jack.isJumping() && !jack.overlaps(solid))
+                    solid.enabled = true
+
+                if (jack.isFalling() && !jack.overlaps(solid) && !jack.belowOverlaps(solid))
+                    solid.enabled = true
+            }
 
             if (jack.overlaps(solid) && solid.enabled) {
                 val offset = jack.preventOverlap(solid)
@@ -137,9 +154,20 @@ class LevelScreen : BaseScreen() {
     }
 
     override fun keyDown(keyCode: Int): Boolean {
+        if (gameOver)
+            return false
+
         if (keyCode == Keys.SPACE) {
-            if (jack.isOnSolid())
+            if (Gdx.input.isKeyPressed(Keys.S)) {
+                for (actor in BaseActor.getList(mainStage, Platform::class.java.canonicalName)) {
+                    val platform = actor as Platform
+                    if (jack.belowOverlaps(platform)) {
+                        platform.enabled = false
+                    }
+                }
+            } else if (jack.isOnSolid()) {
                 jack.jump()
+            }
         }
         return false
     }

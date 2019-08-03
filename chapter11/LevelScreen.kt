@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import kotlin.math.abs
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 
@@ -17,6 +18,7 @@ class LevelScreen : BaseScreen() {
     private lateinit var keyTable: Table
     private lateinit var timeLabel: Label
     private lateinit var messageLabel: Label
+    private lateinit var keyList: ArrayList<Color>
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -61,7 +63,27 @@ class LevelScreen : BaseScreen() {
             Platform(props.get("x") as Float, props.get("y") as Float, mainStage)
         }
 
+        for (obj in tma.getTileList("key")) {
+            val props = obj.properties
+            val key = Key(props.get("x") as Float, props.get("y") as Float, mainStage)
+            when (props.get("color") as String) {
+                "red" -> key.color = Color.RED
+                else -> key.color = Color.WHITE
+            }
+        }
+
+        for (obj in tma.getTileList("lock")) {
+            val props = obj.properties
+            val lock = Lock(props.get("x") as Float, props.get("y") as Float, mainStage)
+            when (props.get("color") as String) {
+                "red" -> lock.color = Color.RED
+                else -> lock.color = Color.WHITE
+            }
+        }
+
         jack.toFront() // causes Jack the Koala to appear in front of everything added so far
+
+        keyList = ArrayList()
 
         coinLabel = Label("Coins: $coins", BaseGame.labelStyle)
         coinLabel.color = Color.GOLD
@@ -107,6 +129,14 @@ class LevelScreen : BaseScreen() {
                     solid.enabled = true
             }
 
+            if (solid is Lock && jack.overlaps(solid)) {
+                if (keyList.contains(solid.color)) {
+                    solid.enabled = false
+                    solid.addAction(Actions.fadeOut(.5f))
+                    solid.addAction(Actions.after(Actions.removeActor()))
+                }
+            }
+
             if (jack.overlaps(solid) && solid.enabled) {
                 val offset = jack.preventOverlap(solid)
 
@@ -149,6 +179,18 @@ class LevelScreen : BaseScreen() {
         for (springboard in BaseActor.getList(mainStage, Springboard::class.java.canonicalName)) {
             if (jack.belowOverlaps(springboard) && jack.isFalling()) {
                 jack.spring()
+            }
+        }
+
+        for (key in BaseActor.getList(mainStage, Key::class.java.canonicalName)) {
+            if (jack.overlaps(key)) {
+                val keyColor = key.color
+                key.remove()
+                val keyIcon = BaseActor(0f, 0f, uiStage)
+                keyIcon.loadTexture("assets/key-icon.png")
+                keyIcon.color = keyColor
+                keyTable.add(keyIcon)
+                keyList.add(keyColor)
             }
         }
     }

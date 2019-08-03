@@ -101,7 +101,7 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
         if (velocityVec.x < 0) // face left
             scaleX = -1f
 
-        alignCamera()
+        alignCamera(lerp=.1f)
         boundToWorld()
     }
 

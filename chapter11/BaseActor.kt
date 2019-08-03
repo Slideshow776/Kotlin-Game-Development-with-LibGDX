@@ -266,25 +266,15 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
             y = worldBounds.height - height
     }
 
-    fun alignCamera() {
+    fun alignCamera(lerp: Float = 1f) {
         val camera = this.stage.camera
         val viewport = this.stage.viewport
 
         // center camera on actor
-        
-        /*
-        TODO: Try this?
-        https://www.youtube.com/watch?v=M6KAYk9Xup4
-        a + (b - a) * lerp
-        b = target
-        a = current camera position
-        
         val position = camera.position
-        position.x = camera.position.x + (originX - camera.position.x) * .1f
-        position.y = camera.position.y + (originY - camera.position.y) * .1f
+        position.x = camera.position.x + (x + originX - camera.position.x) * lerp
+        position.y = camera.position.y + (y + originY - camera.position.y) * lerp
         camera.position.set(position)
-        */
-        camera.position.set(x + originX, y + originY, 0f)
 
         // bind camera to layout
         camera.position.x = MathUtils.clamp(

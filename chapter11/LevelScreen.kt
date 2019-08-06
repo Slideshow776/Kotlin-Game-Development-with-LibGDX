@@ -3,6 +3,7 @@ package chapter11
 import com.badlogic.gdx.Gdx
 import kotlin.math.abs
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -19,6 +20,15 @@ class LevelScreen : BaseScreen() {
     private lateinit var timeLabel: Label
     private lateinit var messageLabel: Label
     private lateinit var keyList: ArrayList<Color>
+
+    private lateinit var coinsSound: Sound
+    private lateinit var jumpSound: Sound
+    private lateinit var lockSound: Sound
+    private lateinit var springboardSound: Sound
+    private lateinit var tickTockSound: Sound
+    private lateinit var timeupSound: Sound
+    private lateinit var winSound: Sound
+    private lateinit var keyCollectSound: Sound
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -99,6 +109,15 @@ class LevelScreen : BaseScreen() {
         uiTable.add(timeLabel)
         uiTable.add().row()
         uiTable.add(messageLabel).colspan(3).expandY()
+
+        coinsSound = Gdx.audio.newSound(Gdx.files.internal("assets/coin.wav"))
+        jumpSound = Gdx.audio.newSound(Gdx.files.internal("assets/jump.wav"))
+        lockSound = Gdx.audio.newSound(Gdx.files.internal("assets/lock.wav"))
+        springboardSound = Gdx.audio.newSound(Gdx.files.internal("assets/springboard.wav"))
+        tickTockSound = Gdx.audio.newSound(Gdx.files.internal("assets/tick-tock.wav"))
+        winSound = Gdx.audio.newSound(Gdx.files.internal("assets/trumpet.mp3"))
+        timeupSound = Gdx.audio.newSound(Gdx.files.internal("assets/timer-ends-time-up.wav"))
+        keyCollectSound = Gdx.audio.newSound(Gdx.files.internal("assets/keyCollect.wav"))
     }
 
     override fun update(dt: Float) {
@@ -110,6 +129,7 @@ class LevelScreen : BaseScreen() {
                 messageLabel.setText("You Win!")
                 messageLabel.color = Color.LIME
                 messageLabel.isVisible = true
+                winSound.play()
                 jack.remove()
                 gameOver = true
             }
@@ -134,6 +154,7 @@ class LevelScreen : BaseScreen() {
                     solid.enabled = false
                     solid.addAction(Actions.fadeOut(.5f))
                     solid.addAction(Actions.after(Actions.removeActor()))
+                    lockSound.play()
                 }
             }
 
@@ -155,6 +176,7 @@ class LevelScreen : BaseScreen() {
                 coins++
                 coinLabel.setText("Coins: $coins")
                 coin.remove()
+                coinsSound.play()
             }
         }
 
@@ -165,6 +187,7 @@ class LevelScreen : BaseScreen() {
             if (jack.overlaps(timer)) {
                 time += 20
                 timer.remove()
+                tickTockSound.play()
             }
         }
 
@@ -173,12 +196,14 @@ class LevelScreen : BaseScreen() {
             messageLabel.color = Color.RED
             messageLabel.isVisible = true
             jack.remove()
+            timeupSound.play()
             gameOver = true
         }
 
         for (springboard in BaseActor.getList(mainStage, Springboard::class.java.canonicalName)) {
             if (jack.belowOverlaps(springboard) && jack.isFalling()) {
                 jack.spring()
+                springboardSound.play()
             }
         }
 
@@ -191,6 +216,7 @@ class LevelScreen : BaseScreen() {
                 keyIcon.color = keyColor
                 keyTable.add(keyIcon)
                 keyList.add(keyColor)
+                keyCollectSound.play()
             }
         }
     }
@@ -209,6 +235,7 @@ class LevelScreen : BaseScreen() {
                 }
             } else if (jack.isOnSolid()) {
                 jack.jump()
+                jumpSound.play(.25f)
             }
         }
         return false

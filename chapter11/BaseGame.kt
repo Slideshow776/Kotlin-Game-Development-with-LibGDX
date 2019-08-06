@@ -74,6 +74,7 @@ abstract class BaseGame : Game() {
 
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/cartoon-game-theme-loop.wav"))
         backgroundMusic!!.isLooping = true
+        backgroundMusic!!.volume = .05f
         backgroundMusic!!.play()
     }
 

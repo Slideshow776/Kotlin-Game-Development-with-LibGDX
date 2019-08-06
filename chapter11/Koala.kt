@@ -2,11 +2,14 @@ package chapter11
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Array
 import kotlin.math.abs
 
@@ -26,6 +29,12 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
     private val jumpSpeed = 450f
     private lateinit var belowSensor: BaseActor
 
+    private var health = 3
+    private var invincible = false
+    private var invincibleTimer = 0f
+
+    private var hurtSound: Sound
+
     init {
         stand = loadTexture("assets/koala/stand.png")
 
@@ -43,7 +52,9 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
         belowSensor.loadTexture("assets/white.png")
         belowSensor.setSize(this.width - 8f, 8f)
         belowSensor.setBoundaryRectangle()
-        belowSensor.isVisible = true
+        belowSensor.isVisible = false
+
+        hurtSound = Gdx.audio.newSound(Gdx.files.internal("assets/hurt.wav"))
     }
 
     override fun act(dt: Float) {
@@ -103,6 +114,13 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
 
         alignCamera(lerp=.1f)
         boundToWorld()
+
+        if (invincible && invincibleTimer < 1.5f) {
+            invincibleTimer += dt
+        } else {
+            invincibleTimer = 0f
+            invincible = false
+        }
     }
 
     fun belowOverlaps(actor: BaseActor): Boolean { return belowSensor.overlaps(actor) }
@@ -120,4 +138,27 @@ class Koala(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
     fun isFalling():Boolean = velocityVec.y < 0f
     fun spring() { velocityVec.y = 1.5f * jumpSpeed }
     fun isJumping() = velocityVec.y > 0f
+
+    fun hit(table: Table, list: ArrayList<BaseActor>): Int {
+        if (!invincible) {
+            if (health > 1) {
+                addAction(
+                    Actions.sequence(
+                        Actions.color(Color.RED, .125f),
+                        Actions.color(Color.WHITE, .125f),
+                        Actions.color(Color.RED, .125f),
+                        Actions.color(Color.WHITE, .125f),
+                        Actions.color(Color.RED, .125f),
+                        Actions.color(Color.WHITE, .125f)
+                    ))
+            }
+            hurtSound.play()
+            table.removeActor(list.removeAt(0))
+            health--
+            invincible = true
+        }
+        return health
+    }
+
+    fun getHealth(): Int { return health }
 }

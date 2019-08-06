@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="39">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="44">
  <tileset firstgid="1" name="platform-tileset" tilewidth="32" tileheight="32" tilecount="18" columns="6">
   <image source="platform-tileset.png" trans="ff00ff" width="192" height="96"/>
  </tileset>
- <tileset firstgid="19" name="object-tileset" tilewidth="32" tileheight="32" tilecount="7" columns="7">
-  <image source="object-tileset.png" trans="ff00ff" width="224" height="32"/>
+ <tileset firstgid="19" name="object-tileset" tilewidth="32" tileheight="32" tilecount="8" columns="8">
+  <image source="object-tileset.png" trans="ff00ff" width="256" height="32"/>
   <tile id="0">
    <properties>
     <property name="name" value="coin"/>
@@ -40,6 +40,11 @@
    <properties>
     <property name="color" value="red"/>
     <property name="name" value="lock"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="name" value="spike"/>
    </properties>
   </tile>
  </tileset>
@@ -113,5 +118,10 @@
   <object id="36" gid="25" x="992" y="512" width="32" height="32"/>
   <object id="37" gid="25" x="992" y="544" width="32" height="32"/>
   <object id="38" gid="25" x="992" y="576" width="32" height="32"/>
+  <object id="39" gid="26" x="736" y="576" width="32" height="32"/>
+  <object id="40" gid="26" x="768" y="576" width="32" height="32"/>
+  <object id="41" gid="26" x="800" y="576" width="32" height="32"/>
+  <object id="42" gid="26" x="448" y="576" width="32" height="32"/>
+  <object id="43" gid="26" x="480" y="576" width="32" height="32"/>
  </objectgroup>
 </map>

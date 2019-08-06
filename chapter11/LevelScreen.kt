@@ -17,6 +17,7 @@ class LevelScreen : BaseScreen() {
     private var time = 60f
     private lateinit var coinLabel: Label
     private lateinit var keyTable: Table
+    private lateinit var heartTable: Table
     private lateinit var timeLabel: Label
     private lateinit var messageLabel: Label
     private lateinit var keyList: ArrayList<Color>
@@ -29,6 +30,8 @@ class LevelScreen : BaseScreen() {
     private lateinit var timeupSound: Sound
     private lateinit var winSound: Sound
     private lateinit var keyCollectSound: Sound
+
+    private lateinit var heartActors: ArrayList<BaseActor>
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -73,6 +76,11 @@ class LevelScreen : BaseScreen() {
             Platform(props.get("x") as Float, props.get("y") as Float, mainStage)
         }
 
+        for (obj in tma.getTileList("spike")) {
+            val props = obj.properties
+            Spike (props.get("x") as Float, props.get("y") as Float, mainStage)
+        }
+
         for (obj in tma.getTileList("key")) {
             val props = obj.properties
             val key = Key(props.get("x") as Float, props.get("y") as Float, mainStage)
@@ -98,6 +106,18 @@ class LevelScreen : BaseScreen() {
         coinLabel = Label("Coins: $coins", BaseGame.labelStyle)
         coinLabel.color = Color.GOLD
         keyTable = Table()
+
+        heartActors = ArrayList()
+        heartTable = Table()
+        for (i in 1..jack.getHealth()) {
+            val heartIcon = BaseActor(0f, 0f, uiStage)
+            heartIcon.loadTexture("assets/heart-icon.png")
+            heartIcon.width = 20f
+            heartIcon.height = 20f
+            heartTable.add(heartIcon)
+            heartActors.add(heartIcon)
+        }
+
         timeLabel = Label("Time: ${time.toInt()}", BaseGame.labelStyle)
         timeLabel.color = Color.LIGHT_GRAY
         messageLabel = Label("Message", BaseGame.labelStyle)
@@ -107,6 +127,8 @@ class LevelScreen : BaseScreen() {
         uiTable.add(coinLabel)
         uiTable.add(keyTable).expandX()
         uiTable.add(timeLabel)
+        uiTable.add().row()
+        uiTable.add(heartTable).left()
         uiTable.add().row()
         uiTable.add(messageLabel).colspan(3).expandY()
 
@@ -217,6 +239,19 @@ class LevelScreen : BaseScreen() {
                 keyTable.add(keyIcon)
                 keyList.add(keyColor)
                 keyCollectSound.play()
+            }
+        }
+
+        for (spike in BaseActor.getList(mainStage, Spike::class.java.canonicalName)) {
+            if (jack.overlaps(spike)) {
+                jack.hit(heartTable, heartActors)
+                if (jack.getHealth() == 0) {
+                    messageLabel.setText("Jack Died - Game Over")
+                    messageLabel.color = Color.RED
+                    messageLabel.isVisible = true
+                    jack.remove()
+                    gameOver = true
+                }
             }
         }
     }

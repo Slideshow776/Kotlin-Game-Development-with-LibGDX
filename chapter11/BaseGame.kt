@@ -3,6 +3,7 @@ package chapter11
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.NinePatch
@@ -32,6 +33,7 @@ abstract class BaseGame : Game() {
 
         var labelStyle: LabelStyle? = null
         var textButtonStyle: TextButtonStyle? = null
+        var backgroundMusic: Music? = null
 
         /**
          * Used to switch screens while game is running.
@@ -69,5 +71,14 @@ abstract class BaseGame : Game() {
         textButtonStyle!!.up = NinePatchDrawable(buttonPatch)
         textButtonStyle!!.font = customFont
         textButtonStyle!!.fontColor = Color.PINK
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/cartoon-game-theme-loop.wav"))
+        backgroundMusic!!.isLooping = true
+        backgroundMusic!!.play()
+    }
+
+    override fun dispose() {
+        super.dispose()
+        backgroundMusic!!.dispose()
     }
 }

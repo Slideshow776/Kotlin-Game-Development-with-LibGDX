@@ -14,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 
 class MenuScreen : BaseScreen() {
-
-    private lateinit var backgroundMusic: Music
     private lateinit var title: Label
 
     override fun initialize() {
@@ -37,7 +35,7 @@ class MenuScreen : BaseScreen() {
             val ie = e as InputEvent
             if (ie.type == Type.touchDown) {
                 dispose()
-                BaseGame.setActiveScreen(LevelScreen())
+                BaseGame.setActiveScreen(InstructionsScreen())
             }
             false
         }
@@ -69,17 +67,13 @@ class MenuScreen : BaseScreen() {
         uiTable.add(startButton)
         uiTable.add(quitButton)
 
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/cartoon-game-theme-loop.wav"))
-        backgroundMusic.isLooping = true
-        backgroundMusic.play()
-
         ScreenTransition(0f, 0f, uiStage)
     }
 
     override fun keyDown(keyCode: Int) : Boolean {
         if (Gdx.input.isKeyPressed(Keys.ENTER)) {
             dispose()
-            BaseGame.setActiveScreen(LevelScreen())
+            BaseGame.setActiveScreen(InstructionsScreen())
         }
         if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
             dispose()
@@ -88,11 +82,5 @@ class MenuScreen : BaseScreen() {
         return false
     }
 
-    override fun update(dt: Float) {
-    }
-
-    override fun dispose() {
-        super.dispose()
-        backgroundMusic.dispose()
-    }
+    override fun update(dt: Float) {}
 }

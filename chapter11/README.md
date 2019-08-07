@@ -83,7 +83,7 @@ camera.position.set(position)
 A few unwanted observations that never got corrected.
 * **Collision Bug:** Sometimes when colliding with an object Jack the Koala slips right through the 
 * **Player Controls:** The player controls are 'heavy' and not too enjoyable, might just need some simple tuning.
-* **Map Bug:** All actors are misaligned in the y direction.
+* **Map Bug:** All actors are misaligned in the y direction, making it so that they float above when they should touch the ground.
 
 ## New Imports
 

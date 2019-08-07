@@ -117,3 +117,7 @@ As suggested by the book the game "Crazy Eights" was added.
 ![Crazy Eights](https://user-images.githubusercontent.com/4059636/61846390-37c5eb80-aea7-11e9-867f-b2172ee553ba.png)
 
 To win, all cards from the hand must be placed upon the pile in the middle. The card placed must match the color or value, eights can be laid down anytime.
+
+## New Imports
+
+No new imports

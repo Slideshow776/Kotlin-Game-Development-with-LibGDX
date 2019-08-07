@@ -26,7 +26,7 @@ The sample algorithm below shows Jack the Koala's three different game states wi
 if (this.isOnSolid()) {
     belowSensor.color = Color.GREEN
     if (velocityVec.x == 0f)
-    setAnimation(stand)
+        setAnimation(stand)
 else
     setAnimation(walk)
 } else {

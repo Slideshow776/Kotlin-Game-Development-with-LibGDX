@@ -71,11 +71,6 @@ abstract class BaseGame : Game() {
         textButtonStyle!!.up = NinePatchDrawable(buttonPatch)
         textButtonStyle!!.font = customFont
         textButtonStyle!!.fontColor = Color.PINK
-
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/cartoon-game-theme-loop.wav"))
-        backgroundMusic!!.isLooping = true
-        backgroundMusic!!.volume = .05f
-        backgroundMusic!!.play()
     }
 
     override fun dispose() {

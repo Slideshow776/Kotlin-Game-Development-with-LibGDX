@@ -24,22 +24,22 @@ Setting up different animation for different actions is simply initialize and us
 The sample algorithm below shows Jack the Koala's three different game states with each of it's own animation.
 ```
 if (this.isOnSolid()) {
- belowSensor.color = Color.GREEN
- if (velocityVec.x == 0f)
- setAnimation(stand)
- else
- setAnimation(walk)
+    belowSensor.color = Color.GREEN
+    if (velocityVec.x == 0f)
+        setAnimation(stand)
+else
+    setAnimation(walk)
 } else {
- belowSensor.color = Color.RED
- setAnimation(jump)
+    belowSensor.color = Color.RED
+    setAnimation(jump)
 }
 ```
 Changing direction of the animation, such that Jack the Koala faces left and right is as easy as setting the scale of x in negative or positive: 
 ``` 
 if (velocityVec.x > 0) // face right
- scaleX = 1f
+    scaleX = 1f
 if (velocityVec.x < 0) // face left
- scaleX = -1f
+    scaleX = -1f
 ```
 
 ## Using actors as 'sensors'
@@ -47,17 +47,17 @@ Determining when Jack the Koala can jump is challenging, this is, however, possi
 
 ```
 fun isOnSolid(): Boolean {
- for (actor in BaseActor.getList(stage, Solid::class.java.canonicalName)) {
- val solid = actor as Solid
- if (belowOverlaps(solid) && solid.enabled)
- return true
- }
- return false
+    for (actor in BaseActor.getList(stage, Solid::class.java.canonicalName)) {
+        val solid = actor as Solid
+        if (belowOverlaps(solid) && solid.enabled)
+            return true
+    }
+    return false
 }
 ```
 ```
 fun belowOverlaps(actor: BaseActor): Boolean {
- return belowSensor.overlaps(actor) 
+    return belowSensor.overlaps(actor) 
 }
 ```
 
@@ -81,8 +81,9 @@ camera.position.set(position)
 
 ## Bugs and Features
 A few unwanted observations that never got corrected.
-* **Collision Bug:** Sometimes when colliding with an object Jack the Koala slips right through the 
+* **Collision Bug:** Sometimes when colliding with an object Jack the Koala slips right through the world.
 * **Player Controls:** The player controls are 'heavy' and not too enjoyable, might just need some simple tuning.
+* **Map Bug:** All actors are misaligned in the y direction, making it so that they float above when they should touch the ground.
 
 ## New Imports
 

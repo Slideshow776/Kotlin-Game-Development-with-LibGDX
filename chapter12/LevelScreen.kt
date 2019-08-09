@@ -29,6 +29,26 @@ class LevelScreen : BaseScreen() {
 
         sword = Sword(0f, 0f, mainStage)
         sword.isVisible = false
+
+        for (obj in tma.getTileList("bush")) {
+            val props = obj.properties
+            Bush(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+        }
+
+        for (obj in tma.getTileList("rock")) {
+            val props = obj.properties
+            Rock(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+        }
+
+        hero.toFront();
     }
 
     override fun update(dt: Float) {
@@ -47,6 +67,13 @@ class LevelScreen : BaseScreen() {
 
         for (solid in BaseActor.getList(mainStage, Solid::class.java.canonicalName)) {
             hero.preventOverlap(solid)
+        }
+
+        if (sword.isVisible) {
+            for (bush in BaseActor.getList(mainStage, Bush::class.java.canonicalName)) {
+                if (sword.overlaps(bush))
+                    bush.remove()
+            }
         }
     }
 

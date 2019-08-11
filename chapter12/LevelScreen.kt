@@ -21,6 +21,8 @@ class LevelScreen : BaseScreen() {
     lateinit var messageLabel: Label
     lateinit var dialogBox: DialogBox
 
+    lateinit var treasure: Treasure
+
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
 
@@ -59,6 +61,26 @@ class LevelScreen : BaseScreen() {
                 mainStage
             )
         }
+
+        for (obj in tma.getTileList("coin")) {
+            val props = obj.properties
+            Coin(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+        }
+
+        for (obj in tma.getTileList("treasure")) {
+            val props = obj.properties
+            treasure = Treasure(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+        }
+
+
 
         hero.toFront();
 
@@ -131,6 +153,31 @@ class LevelScreen : BaseScreen() {
         healthLabel.setText(" x  $health")
         coinLabel.setText(" x  $coins")
         arrowLabel.setText(" x  $arrows")
+
+        for (coin in BaseActor.getList(mainStage, Coin::class.java.canonicalName)) {
+            if (hero.overlaps(coin)) {
+                coin.remove()
+                coins++
+            }
+        }
+
+        if (hero.overlaps(treasure)) {
+            messageLabel.setText("You win!")
+            messageLabel.color = Color.LIME
+            messageLabel.setFontScale(2f)
+            messageLabel.isVisible = true
+            treasure.remove()
+            gameOver = true
+        }
+
+        if (health <= 0) {
+            messageLabel.setText("Game over...")
+            messageLabel.color = Color.RED
+            messageLabel.setFontScale(2f)
+            messageLabel.isVisible = true
+            hero.remove()
+            gameOver = true
+        }
     }
 
     override fun keyDown(keycode: Int): Boolean {

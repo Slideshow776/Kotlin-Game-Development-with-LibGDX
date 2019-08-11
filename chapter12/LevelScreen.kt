@@ -2,12 +2,24 @@ package chapter12
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 
 class LevelScreen : BaseScreen() {
     lateinit var hero: Hero
     lateinit var sword: Sword
+    
+    var health: Int = 3
+    var coins: Int = 5
+    var arrows: Int = 3
+    var gameOver: Boolean = false
+    lateinit var healthLabel: Label
+    lateinit var coinLabel: Label
+    lateinit var arrowLabel: Label
+    lateinit var messageLabel: Label
+    lateinit var dialogBox: DialogBox
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -49,9 +61,49 @@ class LevelScreen : BaseScreen() {
         }
 
         hero.toFront();
+
+        healthLabel = Label(" x ", BaseGame.labelStyle)
+        healthLabel.color = Color.PINK
+        coinLabel = Label(" x ", BaseGame.labelStyle)
+        coinLabel.color = Color.GOLD
+        arrowLabel = Label(" x ", BaseGame.labelStyle)
+        arrowLabel.color = Color.TAN
+        messageLabel = Label("...", BaseGame.labelStyle)
+        messageLabel.isVisible = false
+
+        dialogBox = DialogBox(0f, 0f, uiStage)
+        dialogBox.setBackgroundColor(Color.TAN)
+        dialogBox.setFontColor(Color.BROWN)
+        dialogBox.setDialogSize(600f, 100f)
+        dialogBox.setFontScale(.8f)
+        dialogBox.alignCenter()
+        dialogBox.isVisible = false
+
+        val healthIcon = BaseActor(0f, 0f, uiStage)
+        healthIcon.loadTexture("assets/heart-icon.png")
+        val coinIcon = BaseActor(0f, 0f, uiStage)
+        coinIcon.loadTexture("assets/coin-icon.png")
+        val arrowIcon = BaseActor(0f, 0f, uiStage)
+        arrowIcon.loadTexture("assets/arrow-icon.png")
+
+        uiTable.pad(20f)
+        uiTable.add(healthIcon)
+        uiTable.add(healthLabel)
+        uiTable.add().expandX()
+        uiTable.add(coinIcon)
+        uiTable.add(coinLabel)
+        uiTable.add().expandX()
+        uiTable.add(arrowIcon)
+        uiTable.add(arrowLabel)
+        uiTable.row()
+        uiTable.add(messageLabel).colspan(8).expandX().expandY()
+        uiTable.row()
+        uiTable.add(dialogBox).colspan(8)
     }
 
     override fun update(dt: Float) {
+        if (gameOver)
+            return
 
         if (!sword.isVisible) {
             // hero movement controls
@@ -75,11 +127,19 @@ class LevelScreen : BaseScreen() {
                     bush.remove()
             }
         }
+
+        healthLabel.setText(" x  $health")
+        coinLabel.setText(" x  $coins")
+        arrowLabel.setText(" x  $arrows")
     }
 
     override fun keyDown(keycode: Int): Boolean {
+        if (gameOver)
+            return false
+
         if (keycode == Keys.S)
             swingSword()
+
         return false
     }
 

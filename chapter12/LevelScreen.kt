@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 class LevelScreen : BaseScreen() {
     lateinit var hero: Hero
     lateinit var sword: Sword
-    
+
     var health: Int = 3
     var coins: Int = 5
     var arrows: Int = 3
@@ -80,6 +80,15 @@ class LevelScreen : BaseScreen() {
             )
         }
 
+        for (obj in tma.getTileList("flyer")) {
+            val props = obj.properties
+            Flyer(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+        }
+
 
 
         hero.toFront();
@@ -141,6 +150,13 @@ class LevelScreen : BaseScreen() {
 
         for (solid in BaseActor.getList(mainStage, Solid::class.java.canonicalName)) {
             hero.preventOverlap(solid)
+
+            for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
+                if (flyer.overlaps(solid)) {
+                    flyer.preventOverlap(solid)
+                    flyer.setMotionAngle(flyer.getMotionAngle() + 180f)
+                }
+            }
         }
 
         if (sword.isVisible) {
@@ -148,6 +164,17 @@ class LevelScreen : BaseScreen() {
                 if (sword.overlaps(bush))
                     bush.remove()
             }
+
+            for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
+                if (sword.overlaps(flyer))
+                    flyer.remove()
+                val coin = Coin(0f, 0f, mainStage)
+                coin.centerAtActor(flyer)
+                val smoke = Smoke(0f, 0f, mainStage)
+                smoke.centerAtActor(flyer)
+            }
+
+
         }
 
         healthLabel.setText(" x  $health")
@@ -177,6 +204,19 @@ class LevelScreen : BaseScreen() {
             messageLabel.isVisible = true
             hero.remove()
             gameOver = true
+        }
+
+        for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
+            if (hero.overlaps(flyer)) {
+                hero.preventOverlap(flyer)
+                flyer.setMotionAngle(flyer.getMotionAngle() + 180f)
+                val heroPosition = Vector2(hero.x, hero.y)
+                val flyerPosition = Vector2(flyer.x, flyer.y)
+                val hitVector = heroPosition.sub(flyerPosition)
+                hero.setMotionAngle(hitVector.angle())
+                hero.setSpeed(100f)
+                health--
+            }
         }
     }
 

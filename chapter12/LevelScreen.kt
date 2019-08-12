@@ -166,12 +166,13 @@ class LevelScreen : BaseScreen() {
             }
 
             for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
-                if (sword.overlaps(flyer))
+                if (sword.overlaps(flyer)) {
                     flyer.remove()
-                val coin = Coin(0f, 0f, mainStage)
-                coin.centerAtActor(flyer)
-                val smoke = Smoke(0f, 0f, mainStage)
-                smoke.centerAtActor(flyer)
+                    val coin = Coin(0f, 0f, mainStage)
+                    coin.centerAtActor(flyer)
+                    val smoke = Smoke(0f, 0f, mainStage)
+                    smoke.centerAtActor(flyer)
+                }
             }
 
 
@@ -218,6 +219,28 @@ class LevelScreen : BaseScreen() {
                 health--
             }
         }
+
+        for (arrow in BaseActor.getList(mainStage, Arrow::class.java.canonicalName)) {
+            for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
+                if (arrow.overlaps(flyer)) {
+                    flyer.remove()
+                    arrow.remove()
+                    val coin = Coin(0f, 0f, mainStage)
+                    coin.centerAtActor(flyer)
+                    val smoke = Smoke(0f, 0f, mainStage)
+                    smoke.centerAtActor(flyer)
+                }
+            }
+
+            for (solid in BaseActor.getList(mainStage, Solid::class.java.canonicalName)) {
+                if (arrow.overlaps(solid)) {
+                    arrow.preventOverlap(solid)
+                    arrow.setSpeed(0f)
+                    arrow.addAction(Actions.fadeOut(.5f))
+                    arrow.addAction(Actions.after(Actions.removeActor()))
+                }
+            }
+        }
     }
 
     override fun keyDown(keycode: Int): Boolean {
@@ -227,7 +250,22 @@ class LevelScreen : BaseScreen() {
         if (keycode == Keys.S)
             swingSword()
 
+        if (keycode == Keys.A)
+            shootArrow()
+
         return false
+    }
+
+    fun shootArrow() {
+        if (arrows <= 0)
+            return
+
+        arrows--
+
+        val arrow = Arrow(0f, 0f, mainStage)
+        arrow.centerAtActor(hero)
+        arrow.rotation = hero.facingAngle
+        arrow.setMotionAngle(hero.facingAngle)
     }
 
     fun swingSword() {

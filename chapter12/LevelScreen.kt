@@ -89,7 +89,16 @@ class LevelScreen : BaseScreen() {
             )
         }
 
-
+        for (obj in tma.getTileList("npc")) {
+            val props = obj.properties
+            val s = NPC(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+            s.setID(props.get("id") as String)
+            s.text = props.get("text") as String
+        }
 
         hero.toFront();
 
@@ -239,6 +248,42 @@ class LevelScreen : BaseScreen() {
                     arrow.addAction(Actions.fadeOut(.5f))
                     arrow.addAction(Actions.after(Actions.removeActor()))
                 }
+            }
+        }
+
+        for (npcActor in BaseActor.getList(mainStage, NPC::class.java.canonicalName)) {
+            val npc = npcActor as NPC
+            hero.preventOverlap(npc)
+            val nearby = hero.isWithinDistance(4f, npc)
+
+            if (nearby && !npc.viewing) {
+                // check NPC ID for dynamic text
+                if (npc.getID() == "gatekeeper") {
+                    val flyerCount =
+                        BaseActor.count(mainStage, Flyer::class.java.canonicalName) // TODO: is this working?
+                    var message = "Destroy the Flyers and you can have the treasure. "
+                    when {
+                        flyerCount > 1 -> message += "There are $flyerCount left."
+                        flyerCount == 1 -> message += "There is $flyerCount left."
+                        else -> { // flyerCount == 0
+                            message += "It is yours!"
+                            npc.addAction(Actions.fadeOut(5f))
+                            npc.addAction(Actions.after(Actions.moveBy(-10_000f, -10_000f)))
+                        }
+                    }
+                    dialogBox.setText(message)
+                } else {
+                    dialogBox.setText(npc.text)
+                }
+
+                dialogBox.isVisible = true
+                npc.viewing = true
+            }
+
+            if (npc.viewing && !nearby) {
+                dialogBox.setText(" ")
+                dialogBox.isVisible = false
+                npc.viewing = false
             }
         }
     }

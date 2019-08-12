@@ -204,7 +204,8 @@
   <object id="87" gid="46" x="816.5" y="547.5" width="32" height="32">
    <properties>
     <property name="id" value="shopkeeper"/>
-    <property name="name" value="1 heart for 3 coins! 3 arrows for 4 coins!"/>
+    <property name="name" value="npc"/>
+    <property name="text" value="1 heart for 3 coins! 3 arrows for 4 coins!"/>
    </properties>
   </object>
   <object id="88" gid="47" x="768" y="608" width="32" height="32"/>

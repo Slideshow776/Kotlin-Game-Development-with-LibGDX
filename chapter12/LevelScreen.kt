@@ -12,7 +12,7 @@ class LevelScreen : BaseScreen() {
     lateinit var sword: Sword
 
     var health: Int = 3
-    var coins: Int = 5
+    var coins: Int = 7
     var arrows: Int = 3
     var gameOver: Boolean = false
     lateinit var healthLabel: Label
@@ -22,6 +22,9 @@ class LevelScreen : BaseScreen() {
     lateinit var dialogBox: DialogBox
 
     lateinit var treasure: Treasure
+
+    lateinit var shopHeart: ShopHeart
+    lateinit var shopArrow: ShopArrow
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -98,6 +101,24 @@ class LevelScreen : BaseScreen() {
             )
             s.setID(props.get("id") as String)
             s.text = props.get("text") as String
+        }
+
+        for (obj in tma.getTileList("shopheart")) {
+            val props = obj.properties
+            shopHeart = ShopHeart(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+        }
+
+        for (obj in tma.getTileList("shoparrow")) {
+            val props = obj.properties
+            shopArrow = ShopArrow(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
         }
 
         hero.toFront();
@@ -297,6 +318,18 @@ class LevelScreen : BaseScreen() {
 
         if (keycode == Keys.A)
             shootArrow()
+
+        if (keycode == Keys.B) {
+            if (hero.overlaps(shopHeart) && coins >= 3) {
+                coins -= 3
+                health += 1
+            }
+
+            if (hero.overlaps(shopArrow) && coins >= 4) {
+                coins -= 4
+                arrows += 3
+            }
+        }
 
         return false
     }

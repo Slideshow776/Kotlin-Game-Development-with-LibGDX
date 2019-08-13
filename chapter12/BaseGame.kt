@@ -46,7 +46,7 @@ abstract class BaseGame : Game() {
 
     override fun create() {
         // prepare for multiple classes/stages to receive discrete input
-        var im = InputMultiplexer()
+        val im = InputMultiplexer()
         Gdx.input.inputProcessor = im
 
         val fontGenerator = FreeTypeFontGenerator(Gdx.files.internal("assets/OpenSans.ttf"))
@@ -71,6 +71,11 @@ abstract class BaseGame : Game() {
         textButtonStyle!!.up = NinePatchDrawable(buttonPatch)
         textButtonStyle!!.font = customFont
         textButtonStyle!!.fontColor = Color.PINK
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/adventureBackground.wav"))
+        backgroundMusic!!.isLooping = true
+        backgroundMusic!!.volume = .5f
+        backgroundMusic!!.play()
     }
 
     override fun dispose() {

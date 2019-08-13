@@ -2,6 +2,8 @@ package chapter12
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -25,6 +27,22 @@ class LevelScreen : BaseScreen() {
 
     lateinit var shopHeart: ShopHeart
     lateinit var shopArrow: ShopArrow
+
+    lateinit var npcAudio: Sound
+    lateinit var buyAudio: Sound
+    lateinit var coinPickupAudio: Sound
+    lateinit var enemyDeathAudio: Sound
+    lateinit var gameOverAudio: Sound
+    lateinit var hitHurtAudio: Sound
+    lateinit var playerDeathAudio: Sound
+    lateinit var shootArrowAudio: Sound
+    lateinit var swordSwooshAudio: Sound
+    lateinit var thudAudio: Sound
+    lateinit var bushAudio: Sound
+    lateinit var trumpetTriumphAudio: Sound
+    lateinit var walkInGrassAudio: Music
+
+    var playNpcAudioOnce: Boolean = true
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -160,6 +178,20 @@ class LevelScreen : BaseScreen() {
         uiTable.add(messageLabel).colspan(8).expandX().expandY()
         uiTable.row()
         uiTable.add(dialogBox).colspan(8)
+
+        npcAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/bell.wav"))
+        buyAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/buy.mp3"))
+        coinPickupAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/coinPickup.wav"))
+        enemyDeathAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/enemyDeath.wav"))
+        gameOverAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/gameOver.wav"))
+        hitHurtAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/hitHurt.wav"))
+        playerDeathAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/playerDeath.wav"))
+        shootArrowAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/shootArrow.wav"))
+        swordSwooshAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/swordSwoosh.wav"))
+        thudAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/thud.wav"))
+        bushAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/bush.wav"))
+        trumpetTriumphAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/trumpetTriumph.mp3"))
+        walkInGrassAudio = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/walkGrass.wav"))
     }
 
     override fun update(dt: Float) {
@@ -168,14 +200,30 @@ class LevelScreen : BaseScreen() {
 
         if (!sword.isVisible) {
             // hero movement controls
-            if (Gdx.input.isKeyPressed(Keys.LEFT))
+            if (Gdx.input.isKeyPressed(Keys.LEFT)) {
                 hero.accelerateAtAngle(180f)
-            if (Gdx.input.isKeyPressed(Keys.RIGHT))
+                if (!walkInGrassAudio.isPlaying) {
+                    walkInGrassAudio.play()
+                }
+            }
+            if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
                 hero.accelerateAtAngle(0f)
-            if (Gdx.input.isKeyPressed(Keys.UP))
+                if (!walkInGrassAudio.isPlaying) {
+                    walkInGrassAudio.play()
+                }
+            }
+            if (Gdx.input.isKeyPressed(Keys.UP)) {
+                if (!walkInGrassAudio.isPlaying) {
+                    walkInGrassAudio.play()
+                }
                 hero.accelerateAtAngle(90f)
-            if (Gdx.input.isKeyPressed(Keys.DOWN))
+            }
+            if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+                if (!walkInGrassAudio.isPlaying) {
+                    walkInGrassAudio.play()
+                }
                 hero.accelerateAtAngle(270f)
+            }
         }
 
         for (solid in BaseActor.getList(mainStage, Solid::class.java.canonicalName)) {
@@ -191,8 +239,10 @@ class LevelScreen : BaseScreen() {
 
         if (sword.isVisible) {
             for (bush in BaseActor.getList(mainStage, Bush::class.java.canonicalName)) {
-                if (sword.overlaps(bush))
+                if (sword.overlaps(bush)) {
+                    bushAudio.play()
                     bush.remove()
+                }
             }
 
             for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
@@ -202,6 +252,7 @@ class LevelScreen : BaseScreen() {
                     coin.centerAtActor(flyer)
                     val smoke = Smoke(0f, 0f, mainStage)
                     smoke.centerAtActor(flyer)
+                    enemyDeathAudio.play()
                 }
             }
 
@@ -216,6 +267,7 @@ class LevelScreen : BaseScreen() {
             if (hero.overlaps(coin)) {
                 coin.remove()
                 coins++
+                coinPickupAudio.play()
             }
         }
 
@@ -226,6 +278,7 @@ class LevelScreen : BaseScreen() {
             messageLabel.isVisible = true
             treasure.remove()
             gameOver = true
+            trumpetTriumphAudio.play()
         }
 
         if (health <= 0) {
@@ -235,6 +288,8 @@ class LevelScreen : BaseScreen() {
             messageLabel.isVisible = true
             hero.remove()
             gameOver = true
+            gameOverAudio.play()
+            playerDeathAudio.play()
         }
 
         for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
@@ -247,6 +302,7 @@ class LevelScreen : BaseScreen() {
                 hero.setMotionAngle(hitVector.angle())
                 hero.setSpeed(100f)
                 health--
+                hitHurtAudio.play()
             }
         }
 
@@ -259,6 +315,7 @@ class LevelScreen : BaseScreen() {
                     coin.centerAtActor(flyer)
                     val smoke = Smoke(0f, 0f, mainStage)
                     smoke.centerAtActor(flyer)
+                    hitHurtAudio.play()
                 }
             }
 
@@ -268,6 +325,7 @@ class LevelScreen : BaseScreen() {
                     arrow.setSpeed(0f)
                     arrow.addAction(Actions.fadeOut(.5f))
                     arrow.addAction(Actions.after(Actions.removeActor()))
+                    thudAudio.play()
                 }
             }
         }
@@ -299,12 +357,17 @@ class LevelScreen : BaseScreen() {
 
                 dialogBox.isVisible = true
                 npc.viewing = true
+                if (playNpcAudioOnce) {
+                    npcAudio.play()
+                    playNpcAudioOnce = false
+                }
             }
 
             if (npc.viewing && !nearby) {
                 dialogBox.setText(" ")
                 dialogBox.isVisible = false
                 npc.viewing = false
+                playNpcAudioOnce = true
             }
         }
     }
@@ -323,11 +386,13 @@ class LevelScreen : BaseScreen() {
             if (hero.overlaps(shopHeart) && coins >= 3) {
                 coins -= 3
                 health += 1
+                buyAudio.play()
             }
 
             if (hero.overlaps(shopArrow) && coins >= 4) {
                 coins -= 4
                 arrows += 3
+                buyAudio.play()
             }
         }
 
@@ -344,6 +409,8 @@ class LevelScreen : BaseScreen() {
         arrow.centerAtActor(hero)
         arrow.rotation = hero.facingAngle
         arrow.setMotionAngle(hero.facingAngle)
+
+        shootArrowAudio.play()
     }
 
     fun swingSword() {
@@ -379,5 +446,7 @@ class LevelScreen : BaseScreen() {
             hero.toFront()
         else
             sword.toFront()
+
+        swordSwooshAudio.play()
     }
 }

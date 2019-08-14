@@ -192,6 +192,8 @@ class LevelScreen : BaseScreen() {
         bushAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/bush.wav"))
         trumpetTriumphAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/trumpetTriumph.mp3"))
         walkInGrassAudio = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/walkGrass.wav"))
+
+        ScreenTransition(0f, 0f, uiStage)
     }
 
     override fun update(dt: Float) {
@@ -202,26 +204,18 @@ class LevelScreen : BaseScreen() {
             // hero movement controls
             if (Gdx.input.isKeyPressed(Keys.LEFT)) {
                 hero.accelerateAtAngle(180f)
-                if (!walkInGrassAudio.isPlaying) {
-                    walkInGrassAudio.play()
-                }
+                playConsecutiveAudio(walkInGrassAudio)
             }
             if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
                 hero.accelerateAtAngle(0f)
-                if (!walkInGrassAudio.isPlaying) {
-                    walkInGrassAudio.play()
-                }
+                playConsecutiveAudio(walkInGrassAudio)
             }
             if (Gdx.input.isKeyPressed(Keys.UP)) {
-                if (!walkInGrassAudio.isPlaying) {
-                    walkInGrassAudio.play()
-                }
+                playConsecutiveAudio(walkInGrassAudio)
                 hero.accelerateAtAngle(90f)
             }
             if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-                if (!walkInGrassAudio.isPlaying) {
-                    walkInGrassAudio.play()
-                }
+                playConsecutiveAudio(walkInGrassAudio)
                 hero.accelerateAtAngle(270f)
             }
         }

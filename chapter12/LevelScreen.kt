@@ -16,10 +16,12 @@ class LevelScreen : BaseScreen() {
     var health: Int = 3
     var coins: Int = 7
     var arrows: Int = 3
+    var bombs: Int = 20
     var gameOver: Boolean = false
     lateinit var healthLabel: Label
     lateinit var coinLabel: Label
     lateinit var arrowLabel: Label
+    lateinit var bombLabel: Label
     lateinit var messageLabel: Label
     lateinit var dialogBox: DialogBox
 
@@ -27,6 +29,7 @@ class LevelScreen : BaseScreen() {
 
     lateinit var shopHeart: ShopHeart
     lateinit var shopArrow: ShopArrow
+    lateinit var shopBomb: ShopBomb
 
     lateinit var npcAudio: Sound
     lateinit var buyAudio: Sound
@@ -40,7 +43,9 @@ class LevelScreen : BaseScreen() {
     lateinit var thudAudio: Sound
     lateinit var bushAudio: Sound
     lateinit var trumpetTriumphAudio: Sound
+    lateinit var explosionAudio: Sound
     lateinit var walkInGrassAudio: Music
+    lateinit var fuseAudio: Music
 
     var playNpcAudioOnce: Boolean = true
 
@@ -139,6 +144,15 @@ class LevelScreen : BaseScreen() {
             )
         }
 
+        for (obj in tma.getTileList("shopbomb")) {
+            val props = obj.properties
+            shopBomb = ShopBomb(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage
+            )
+        }
+
         hero.toFront();
 
         healthLabel = Label(" x ", BaseGame.labelStyle)
@@ -147,6 +161,8 @@ class LevelScreen : BaseScreen() {
         coinLabel.color = Color.GOLD
         arrowLabel = Label(" x ", BaseGame.labelStyle)
         arrowLabel.color = Color.TAN
+        bombLabel = Label(" x ", BaseGame.labelStyle)
+        bombLabel.color = Color.TAN
         messageLabel = Label("...", BaseGame.labelStyle)
         messageLabel.isVisible = false
 
@@ -164,6 +180,9 @@ class LevelScreen : BaseScreen() {
         coinIcon.loadTexture("assets/coin-icon.png")
         val arrowIcon = BaseActor(0f, 0f, uiStage)
         arrowIcon.loadTexture("assets/arrow-icon.png")
+        val bombIcon = BaseActor(0f, 0f, uiStage)
+        bombIcon.loadTexture("assets/bomb-icon.png")
+        bombIcon.setSize(32f, 32f)
 
         uiTable.pad(20f)
         uiTable.add(healthIcon)
@@ -174,10 +193,13 @@ class LevelScreen : BaseScreen() {
         uiTable.add().expandX()
         uiTable.add(arrowIcon)
         uiTable.add(arrowLabel)
+        uiTable.add().expandX()
+        uiTable.add(bombIcon)
+        uiTable.add(bombLabel)
         uiTable.row()
-        uiTable.add(messageLabel).colspan(8).expandX().expandY()
+        uiTable.add(messageLabel).colspan(12).expandX().expandY()
         uiTable.row()
-        uiTable.add(dialogBox).colspan(8)
+        uiTable.add(dialogBox).colspan(12)
 
         npcAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/bell.wav"))
         buyAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/buy.mp3"))
@@ -191,7 +213,9 @@ class LevelScreen : BaseScreen() {
         thudAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/thud.wav"))
         bushAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/bush.wav"))
         trumpetTriumphAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/trumpetTriumph.mp3"))
+        explosionAudio = Gdx.audio.newSound(Gdx.files.internal("assets/audio/explosion.wav"))
         walkInGrassAudio = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/walkGrass.wav"))
+        fuseAudio = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/fuse.wav"))
 
         ScreenTransition(0f, 0f, uiStage)
     }
@@ -256,6 +280,7 @@ class LevelScreen : BaseScreen() {
         healthLabel.setText(" x  $health")
         coinLabel.setText(" x  $coins")
         arrowLabel.setText(" x  $arrows")
+        bombLabel.setText(" x  $bombs")
 
         for (coin in BaseActor.getList(mainStage, Coin::class.java.canonicalName)) {
             if (hero.overlaps(coin)) {
@@ -364,6 +389,35 @@ class LevelScreen : BaseScreen() {
                 playNpcAudioOnce = true
             }
         }
+
+        for (bomb in BaseActor.getList(mainStage, Bomb::class.java.canonicalName)) {
+            playConsecutiveAudio(fuseAudio)
+            if (bomb.isAnimationFinished()) {
+                val explosion = Explosion(0f, 0f, mainStage)
+                explosionAudio.play()
+                explosion.centerAtActor(bomb)
+                bomb.remove()
+            }
+        }
+
+        for (explosion in BaseActor.getList(mainStage, Explosion::class.java.canonicalName)) {
+            for (bush in BaseActor.getList(mainStage, Bush::class.java.canonicalName)) {
+                if (explosion.isWithinDistance(4f, bush)) {
+                    bushAudio.play()
+                    bush.remove()
+                }
+            }
+            for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
+                if (explosion.isWithinDistance(4f, flyer)) {
+                    enemyDeathAudio.play()
+                    flyer.remove()
+                }
+            }
+
+            if (explosion.isWithinDistance(4f, hero)) {
+                health = 0
+            }
+        }
     }
 
     override fun keyDown(keycode: Int): Boolean {
@@ -375,6 +429,9 @@ class LevelScreen : BaseScreen() {
 
         if (keycode == Keys.A)
             shootArrow()
+
+        if (keycode == Keys.E)
+            placeBomb()
 
         if (keycode == Keys.B) {
             if (hero.overlaps(shopHeart) && coins >= 3) {
@@ -388,9 +445,25 @@ class LevelScreen : BaseScreen() {
                 arrows += 3
                 buyAudio.play()
             }
+
+            if (hero.overlaps(shopBomb) && coins >= 5) {
+                coins -= 5
+                bombs += 2
+                buyAudio.play()
+            }
         }
 
         return false
+    }
+
+    fun placeBomb() {
+        if (bombs <= 0)
+            return
+
+        bombs--
+
+        val bomb = Bomb(0f, 0f, mainStage)
+        bomb.centerAtActor(hero)
     }
 
     fun shootArrow() {

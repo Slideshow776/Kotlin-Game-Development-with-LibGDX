@@ -1,6 +1,27 @@
-# Adventure Games
+# Adventure Games (WIP)
 
-wip
+## Controls
+* arrows - for movement
+* a - for arrow
+* s - for sword
+* e - for bombs
+* b - for buy
+
+As suggested by the book the following features have been added:
+* Audio
+* A menu
+* Bombs
+* A restart button
+* A new enemy
+
+Bonus features:
+* camera movement
+
+## Bugs
+* when game is over the Flyers keeps on flying and can move through anything.
+
+## New Imports
+No new imports
 
 hero.kt uses https://en.wikipedia.org/wiki/Mipmap
 

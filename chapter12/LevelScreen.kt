@@ -5,9 +5,16 @@ import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Button
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
 class LevelScreen : BaseScreen() {
     lateinit var hero: Hero
@@ -16,7 +23,7 @@ class LevelScreen : BaseScreen() {
     var health: Int = 3
     var coins: Int = 7
     var arrows: Int = 3
-    var bombs: Int = 20
+    var bombs: Int = 2
     var gameOver: Boolean = false
     lateinit var healthLabel: Label
     lateinit var coinLabel: Label
@@ -48,6 +55,9 @@ class LevelScreen : BaseScreen() {
     lateinit var fuseAudio: Music
 
     var playNpcAudioOnce: Boolean = true
+
+    lateinit var restartButton: Button
+    lateinit var gameOverTable: Table
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -164,7 +174,6 @@ class LevelScreen : BaseScreen() {
         bombLabel = Label(" x ", BaseGame.labelStyle)
         bombLabel.color = Color.TAN
         messageLabel = Label("...", BaseGame.labelStyle)
-        messageLabel.isVisible = false
 
         dialogBox = DialogBox(0f, 0f, uiStage)
         dialogBox.setBackgroundColor(Color.TAN)
@@ -184,6 +193,25 @@ class LevelScreen : BaseScreen() {
         bombIcon.loadTexture("assets/bomb-icon.png")
         bombIcon.setSize(32f, 32f)
 
+        val buttonStyle = ButtonStyle()
+        buttonStyle.up = TextureRegionDrawable(TextureRegion(Texture(Gdx.files.internal("assets/undo.png"))))
+        restartButton = Button(buttonStyle)
+        restartButton.color = Color.CYAN
+        restartButton.addListener { e: Event ->
+            if (isTouchDownEvent(e)) {
+                dispose()
+                BaseGame.setActiveScreen(LevelScreen())
+            }
+            false
+        }
+
+        gameOverTable = Table()
+        gameOverTable.isVisible = false
+        gameOverTable.add(messageLabel)
+        gameOverTable.row()
+        gameOverTable.add(restartButton)
+
+        // uiTable.debug = true
         uiTable.pad(20f)
         uiTable.add(healthIcon)
         uiTable.add(healthLabel)
@@ -197,7 +225,7 @@ class LevelScreen : BaseScreen() {
         uiTable.add(bombIcon)
         uiTable.add(bombLabel)
         uiTable.row()
-        uiTable.add(messageLabel).colspan(12).expandX().expandY()
+        uiTable.add(gameOverTable).colspan(12).expandX().expandY()
         uiTable.row()
         uiTable.add(dialogBox).colspan(12)
 
@@ -294,7 +322,7 @@ class LevelScreen : BaseScreen() {
             messageLabel.setText("You win!")
             messageLabel.color = Color.LIME
             messageLabel.setFontScale(2f)
-            messageLabel.isVisible = true
+            gameOverTable.isVisible = true
             treasure.remove()
             gameOver = true
             trumpetTriumphAudio.play()
@@ -304,7 +332,7 @@ class LevelScreen : BaseScreen() {
             messageLabel.setText("Game over...")
             messageLabel.color = Color.RED
             messageLabel.setFontScale(2f)
-            messageLabel.isVisible = true
+            gameOverTable.isVisible = true
             hero.remove()
             gameOver = true
             gameOverAudio.play()

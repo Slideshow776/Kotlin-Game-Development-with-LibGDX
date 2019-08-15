@@ -93,3 +93,12 @@ public static void boundary(Camera camera, float startX, float startY, float wid
 	camera.update();
 }
 ```
+
+public TextureRegion[][] split(int tileWidth,
+                               int tileHeight)
+Helper function to create tiles out of this TextureRegion starting from the top left corner going to the right and ending at the bottom right corner. Only complete tiles will be returned so if the region's width or height are not a multiple of the tile width and height not all of the region will be used. This will not work on texture regions returned form a TextureAtlas that either have whitespace removed or where flipped before the region is split.
+Parameters:
+tileWidth - a tile's width in pixels
+tileHeight - a tile's height in pixels
+Returns:
+a 2D array of TextureRegions indexed by [row][column].

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="115">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="119">
  <tileset firstgid="1" name="adventure-tiles" tilewidth="32" tileheight="32" tilecount="40" columns="10">
   <image source="adventure-tiles.png" width="320" height="128"/>
  </tileset>
- <tileset firstgid="41" name="object-tiles" tilewidth="32" tileheight="32" tilecount="9" columns="9">
-  <image source="object-tiles.png" width="288" height="32"/>
+ <tileset firstgid="41" name="object-tiles" tilewidth="32" tileheight="32" tilecount="10" columns="10">
+  <image source="object-tiles.png" width="320" height="32"/>
   <tile id="0">
    <properties>
     <property name="name" value="bush"/>
@@ -50,6 +50,11 @@
   <tile id="8">
    <properties>
     <property name="name" value="shopbomb"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="name" value="skull"/>
    </properties>
   </tile>
  </tileset>
@@ -239,5 +244,8 @@
   <object id="111" gid="45" x="704" y="320" width="32" height="32"/>
   <object id="112" gid="45" x="928" y="224" width="32" height="32"/>
   <object id="114" gid="49" x="878.667" y="598" width="32" height="32"/>
+  <object id="115" gid="50" x="1045" y="359" width="32" height="32"/>
+  <object id="116" gid="50" x="616" y="201" width="32" height="32"/>
+  <object id="117" gid="50" x="163" y="357" width="32" height="32"/>
  </objectgroup>
 </map>

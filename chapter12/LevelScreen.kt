@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -125,6 +126,16 @@ class LevelScreen : BaseScreen() {
             )
         }
 
+        for (obj in tma.getTileList("skull")) {
+            val props = obj.properties
+            Skull(
+                props.get("x") as Float,
+                props.get("y") as Float,
+                mainStage,
+                hero
+            )
+        }
+
         for (obj in tma.getTileList("npc")) {
             val props = obj.properties
             val s = NPC(
@@ -178,8 +189,8 @@ class LevelScreen : BaseScreen() {
         dialogBox = DialogBox(0f, 0f, uiStage)
         dialogBox.setBackgroundColor(Color.TAN)
         dialogBox.setFontColor(Color.BROWN)
-        dialogBox.setDialogSize(600f, 100f)
-        dialogBox.setFontScale(.8f)
+        dialogBox.setDialogSize(600f, 120f)
+        dialogBox.setFontScale(.7f)
         dialogBox.alignCenter()
         dialogBox.isVisible = false
 
@@ -281,6 +292,13 @@ class LevelScreen : BaseScreen() {
                     flyer.setMotionAngle(flyer.getMotionAngle() + 180f)
                 }
             }
+
+            for (skull in BaseActor.getList(mainStage, Skull::class.java.canonicalName)) {
+                if (skull.overlaps(solid)) {
+                    skull.preventOverlap(solid)
+                    skull.setMotionAngle(skull.getMotionAngle() + 180f)
+                }
+            }
         }
 
         if (sword.isVisible) {
@@ -298,6 +316,17 @@ class LevelScreen : BaseScreen() {
                     coin.centerAtActor(flyer)
                     val smoke = Smoke(0f, 0f, mainStage)
                     smoke.centerAtActor(flyer)
+                    enemyDeathAudio.play()
+                }
+            }
+
+            for (skull in BaseActor.getList(mainStage, Skull::class.java.canonicalName)) {
+                if (sword.overlaps(skull)) {
+                    skull.remove()
+                    val coin = Coin(0f, 0f, mainStage)
+                    coin.centerAtActor(skull)
+                    val smoke = Smoke(0f, 0f, mainStage)
+                    smoke.centerAtActor(skull)
                     enemyDeathAudio.play()
                 }
             }
@@ -353,6 +382,19 @@ class LevelScreen : BaseScreen() {
             }
         }
 
+        for (skull in BaseActor.getList(mainStage, Skull::class.java.canonicalName)) {
+            if (hero.overlaps(skull)) {
+                hero.preventOverlap(skull)
+                skull.setMotionAngle(skull.getMotionAngle() + 180f)
+                val heroPosition = Vector2(hero.x, hero.y)
+                val skullPosition = Vector2(skull.x, skull.y)
+                val hitVector = heroPosition.sub(skullPosition)
+                hero.addAction(Actions.moveBy(hitVector.x, hitVector.y, .1f, Interpolation.exp10))
+                health--
+                hitHurtAudio.play()
+            }
+        }
+
         for (arrow in BaseActor.getList(mainStage, Arrow::class.java.canonicalName)) {
             for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
                 if (arrow.overlaps(flyer)) {
@@ -362,6 +404,18 @@ class LevelScreen : BaseScreen() {
                     coin.centerAtActor(flyer)
                     val smoke = Smoke(0f, 0f, mainStage)
                     smoke.centerAtActor(flyer)
+                    hitHurtAudio.play()
+                }
+            }
+
+            for (skull in BaseActor.getList(mainStage, Skull::class.java.canonicalName)) {
+                if (arrow.overlaps(skull)) {
+                    skull.remove()
+                    arrow.remove()
+                    val coin = Coin(0f, 0f, mainStage)
+                    coin.centerAtActor(skull)
+                    val smoke = Smoke(0f, 0f, mainStage)
+                    smoke.centerAtActor(skull)
                     hitHurtAudio.play()
                 }
             }
@@ -385,15 +439,15 @@ class LevelScreen : BaseScreen() {
             if (nearby && !npc.viewing) {
                 // check NPC ID for dynamic text
                 if (npc.getID() == "gatekeeper") {
-                    val flyerCount =
-                        BaseActor.count(mainStage, Flyer::class.java.canonicalName) // TODO: is this working?
-                    var message = "Destroy the Flyers and you can have the treasure. "
+                    val flyerCount = BaseActor.count(mainStage, Flyer::class.java.canonicalName)
+                    val skullCount = BaseActor.count(mainStage, Skull::class.java.canonicalName)
+                    var message = "Destroy the Flyers and the Skulls and you can have the treasure. "
                     when {
-                        flyerCount > 1 -> message += "There are $flyerCount left."
-                        flyerCount == 1 -> message += "There is $flyerCount left."
+                        flyerCount > 1 -> message += "There are $flyerCount Flyers left and $skullCount Skulls left."
+                        flyerCount == 1 -> message += "There is $flyerCount Flyers left and $skullCount Skulls left."
                         else -> { // flyerCount == 0
                             message += "It is yours!"
-                            npc.addAction(Actions.fadeOut(5f))
+                            npc.addAction(Actions.fadeOut(3f))
                             npc.addAction(Actions.after(Actions.moveBy(-10_000f, -10_000f)))
                         }
                     }
@@ -435,10 +489,17 @@ class LevelScreen : BaseScreen() {
                     bush.remove()
                 }
             }
+
             for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
                 if (explosion.isWithinDistance(4f, flyer)) {
                     enemyDeathAudio.play()
                     flyer.remove()
+                }
+            }
+            for (skull in BaseActor.getList(mainStage, Skull::class.java.canonicalName)) {
+                if (explosion.isWithinDistance(4f, skull)) {
+                    enemyDeathAudio.play()
+                    skull.remove()
                 }
             }
 

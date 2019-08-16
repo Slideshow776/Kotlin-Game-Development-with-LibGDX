@@ -55,6 +55,8 @@ class Hero(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         setAcceleration(400f)
         setMaxSpeed(100f)
         setDeceleration(400f)
+
+        alignCamera()
     }
 
     override fun act(dt: Float) {
@@ -82,7 +84,7 @@ class Hero(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             }
         }
 
-        alignCamera(lerp=.1f)
+        //alignCamera(lerp =.1f)
         boundToWorld()
         applyPhysics(dt)
     }

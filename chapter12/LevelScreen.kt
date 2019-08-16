@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.utils.Array
 
 class LevelScreen : BaseScreen() {
     lateinit var hero: Hero
@@ -59,6 +60,8 @@ class LevelScreen : BaseScreen() {
 
     lateinit var restartButton: Button
     lateinit var gameOverTable: Table
+
+    lateinit var focalPoints: Array<Vector2>
 
     override fun initialize() {
         val tma = TilemapActor("assets/map.tmx", mainStage)
@@ -171,6 +174,17 @@ class LevelScreen : BaseScreen() {
                 props.get("x") as Float,
                 props.get("y") as Float,
                 mainStage
+            )
+        }
+
+        focalPoints = Array()
+        for (obj in tma.getTileList("focalpoint")) {
+            val props = obj.properties
+            focalPoints.add(
+                Vector2(
+                    props.get("x") as Float,
+                    props.get("y") as Float
+                )
             )
         }
 
@@ -380,6 +394,8 @@ class LevelScreen : BaseScreen() {
                 health--
                 hitHurtAudio.play()
             }
+
+
         }
 
         for (skull in BaseActor.getList(mainStage, Skull::class.java.canonicalName)) {
@@ -393,6 +409,7 @@ class LevelScreen : BaseScreen() {
                 health--
                 hitHurtAudio.play()
             }
+
         }
 
         for (arrow in BaseActor.getList(mainStage, Arrow::class.java.canonicalName)) {
@@ -505,6 +522,19 @@ class LevelScreen : BaseScreen() {
 
             if (explosion.isWithinDistance(4f, hero)) {
                 health = 0
+            }
+        }
+
+        // camera
+        if (!hero.searchFocalPoints(focalPoints, Vector2(hero.x, hero.y), 90f, .1f)) {
+            hero.alignCamera(lerp = .1f)
+            for (flyer in BaseActor.getList(mainStage, Flyer::class.java.canonicalName)) {
+                if (hero.isWithinDistance(200f, flyer))
+                    hero.averageBetweenTargetsCamera(Vector2(hero.x, hero.y), Vector2(flyer.x, flyer.y), .1f)
+            }
+            for (skull in BaseActor.getList(mainStage, Skull::class.java.canonicalName)) {
+                if (hero.isWithinDistance(200f, skull))
+                    hero.averageBetweenTargetsCamera(Vector2(hero.x, hero.y), Vector2(skull.x, skull.y), .1f)
             }
         }
     }

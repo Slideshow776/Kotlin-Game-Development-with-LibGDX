@@ -11,6 +11,7 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputEvent.Type
+import com.badlogic.gdx.utils.viewport.FitViewport
 
 abstract class BaseScreen : Screen, InputProcessor {
     protected var mainStage: Stage
@@ -18,8 +19,8 @@ abstract class BaseScreen : Screen, InputProcessor {
     protected var uiTable: Table
 
     init {
-        mainStage = Stage()
-        uiStage = Stage()
+        mainStage = Stage(FitViewport(800f, 600f))
+        uiStage = Stage(FitViewport(800f, 600f))
 
         uiTable = Table()
         uiTable.setFillParent(true)

@@ -12,12 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.audio.Music
-import com.badlogic.gdx.maps.MapProperties
-import com.badlogic.gdx.maps.MapObject
+import com.badlogic.gdx.controllers.Controller
 
 
-
-class LevelScreen: BaseScreen() {
+class LevelScreen : BaseGamepadScreen() {
 
     private lateinit var turtle: Turtle
     private var win: Boolean = false
@@ -100,7 +98,7 @@ class LevelScreen: BaseScreen() {
         uiStage.addActor(restartButton);*/
 
         restartButton.addListener { e: Event ->
-            if(isTouchDownEvent(e)) {
+            if (isTouchDownEvent(e)) {
                 dispose()
                 BaseGame.setActiveScreen(LevelScreen())
             }
@@ -112,7 +110,7 @@ class LevelScreen: BaseScreen() {
         val pauseButton = Button(buttonStyle2)
         pauseButton.color = Color.CYAN
         pauseButton.addListener { e: Event ->
-            if(isTouchDownEvent(e)) {
+            if (isTouchDownEvent(e)) {
                 pause = !pause
                 turtle.pause = pause
             }
@@ -124,7 +122,7 @@ class LevelScreen: BaseScreen() {
         val muteButton = Button(buttonStyle3)
         muteButton.color = Color.CYAN
         muteButton.addListener { e: Event ->
-            if(isTouchDownEvent(e)) {
+            if (isTouchDownEvent(e)) {
                 audioVolume = 1 - audioVolume
                 instrumental.volume = audioVolume
                 oceanSurf.volume = audioVolume
@@ -206,7 +204,7 @@ class LevelScreen: BaseScreen() {
                     Actions.after(
                         Actions.run {
                             dispose()
-                            BaseGame.setActiveScreen( StoryScreen2() )
+                            BaseGame.setActiveScreen(StoryScreen2())
                         }
                     )
                 )
@@ -220,7 +218,7 @@ class LevelScreen: BaseScreen() {
                 time -= 1
             }
 
-            if(time >= 0)
+            if (time >= 0)
                 timeLabel.setText("Time: $time")
 
             if (time <= 0 && !win) {
@@ -236,7 +234,7 @@ class LevelScreen: BaseScreen() {
                     Actions.after(
                         Actions.run {
                             dispose()
-                            BaseGame.setActiveScreen( StoryScreen3() )
+                            BaseGame.setActiveScreen(StoryScreen3())
                         }
                     )
                 )
@@ -259,8 +257,7 @@ class LevelScreen: BaseScreen() {
                     sign.setViewing(false)
                 }
             }
-        }
-        else {
+        } else {
             turtle.pause = true
         }
     }
@@ -273,4 +270,11 @@ class LevelScreen: BaseScreen() {
         waterDrop.dispose()
     }
 
+    override fun buttonDown(controller: Controller, buttonCode: Int): Boolean {
+        if (buttonCode == XBoxGamepad.BUTTON_BACK) {
+            dispose()
+            BaseGame.setActiveScreen(LevelScreen())
+        }
+        return false
+    }
 }

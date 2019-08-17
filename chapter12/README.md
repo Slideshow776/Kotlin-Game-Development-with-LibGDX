@@ -116,7 +116,7 @@ if (hero.overlaps(flyer)) {
 }
 ```
 
-Moving the hero can also be done as by using Actions. 
+Moving the hero can also be done by using Actions. 
 ```
 hero.addAction(Actions.moveBy(hitVector.x, hitVector.y, .1f, Interpolation.exp10))
 ```

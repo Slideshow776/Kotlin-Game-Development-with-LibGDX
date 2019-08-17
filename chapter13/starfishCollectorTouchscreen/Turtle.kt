@@ -29,7 +29,7 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     override fun act(dt: Float) {
         super.act(dt)
 
-        if (!pause) {
+        /*if (!pause) {
             if (Gdx.input.isKeyPressed(Keys.W))
                 accelerateAtAngle(90f)
             if (Gdx.input.isKeyPressed(Keys.A))
@@ -38,7 +38,7 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
                 accelerateAtAngle(270f)
             if (Gdx.input.isKeyPressed(Keys.D))
                 accelerateAtAngle(0f)
-        }
+        }*/
         applyPhysics(dt)
 
         setAnimationPaused(!isMoving())

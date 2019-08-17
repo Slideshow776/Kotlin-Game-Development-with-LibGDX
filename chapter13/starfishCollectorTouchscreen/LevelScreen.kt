@@ -12,12 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.audio.Music
-import com.badlogic.gdx.maps.MapProperties
-import com.badlogic.gdx.maps.MapObject
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle
 
 
-
-class LevelScreen: BaseScreen() {
+class LevelScreen: BaseTouchScreen() {
 
     private lateinit var turtle: Turtle
     private var win: Boolean = false
@@ -35,6 +35,8 @@ class LevelScreen: BaseScreen() {
     private lateinit var trumpet: Sound
     private lateinit var instrumental: Music
     private lateinit var oceanSurf: Music
+
+    private lateinit var touchpad: Touchpad
 
     override fun initialize() {
         /*
@@ -171,6 +173,31 @@ class LevelScreen: BaseScreen() {
         oceanSurf.isLooping = true
         oceanSurf.volume = audioVolume
         oceanSurf.play()
+
+        Gdx.graphics.setWindowedMode(800, 800)
+        initializeControlArea()
+        val controlBackground = BaseActor(0f, 0f, controlStage)
+        controlBackground.loadTexture("assets/pixels.jpg")
+
+        val touchStyle = TouchpadStyle()
+
+        val padKnobTex = Texture(Gdx.files.internal("assets/joystick-knob.png"))
+        val padKnobReg = TextureRegion(padKnobTex)
+        touchStyle.knob = TextureRegionDrawable(padKnobReg)
+
+        val padBackTex = Texture(Gdx.files.internal("assets/joystick-background.png"))
+        val padBackReg = TextureRegion(padBackTex)
+        touchStyle.background = TextureRegionDrawable(padBackReg)
+
+        touchpad = Touchpad(5f, touchStyle)
+
+        controlTable.toFront()
+        controlTable.pad(50f)
+        controlTable.add().colspan(3).height(600f)
+        controlTable.row()
+        controlTable.add(touchpad)
+        controlTable.add().expandX()
+        controlTable.add(restartButton)
     }
 
     override fun update(dt: Float) {
@@ -262,6 +289,13 @@ class LevelScreen: BaseScreen() {
         }
         else {
             turtle.pause = true
+        }
+
+        val direction = Vector2(touchpad.knobPercentX, touchpad.knobPercentY)
+        val length = direction.len()
+        if (length > 0) {
+            turtle.setSpeed(100 * length)
+            turtle.setMotionAngle(direction.angle())
         }
     }
 

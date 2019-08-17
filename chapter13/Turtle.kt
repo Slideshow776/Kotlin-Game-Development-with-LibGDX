@@ -4,6 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.controllers.Controllers
+import com.badlogic.gdx.math.Vector2
 
 class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
@@ -30,14 +32,29 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         super.act(dt)
 
         if (!pause) {
-            if (Gdx.input.isKeyPressed(Keys.W))
-                accelerateAtAngle(90f)
-            if (Gdx.input.isKeyPressed(Keys.A))
-                accelerateAtAngle(180f)
-            if (Gdx.input.isKeyPressed(Keys.S))
-                accelerateAtAngle(270f)
-            if (Gdx.input.isKeyPressed(Keys.D))
-                accelerateAtAngle(0f)
+            if (Controllers.getControllers().size > 0) {
+                val gamepad = Controllers.getControllers()[0]
+                val xAxis = gamepad.getAxis(XBoxGamepad.AXIS_LEFT_X)
+                val yAxis =
+                    -gamepad.getAxis(XBoxGamepad.AXIS_LEFT_Y) // the orientation of most controllers is the opposite of LibGDX libraries
+                val direction = Vector2(xAxis, yAxis)
+
+                val length = direction.len()
+                val deadZone = .1f
+                if (length > deadZone) {
+                    setSpeed(length * 100)
+                    setMotionAngle(direction.angle())
+                }
+            } else { // fallback to keyboard
+                if (Gdx.input.isKeyPressed(Keys.W))
+                    accelerateAtAngle(90f)
+                if (Gdx.input.isKeyPressed(Keys.A))
+                    accelerateAtAngle(180f)
+                if (Gdx.input.isKeyPressed(Keys.S))
+                    accelerateAtAngle(270f)
+                if (Gdx.input.isKeyPressed(Keys.D))
+                    accelerateAtAngle(0f)
+            }
         }
         applyPhysics(dt)
 

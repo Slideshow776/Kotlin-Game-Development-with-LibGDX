@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
-class MenuScreen : BaseScreen() {
+class MenuScreen : BaseGamepadScreen() {
 
     private lateinit var music: Music
     private lateinit var blip: Sound
@@ -34,6 +35,15 @@ class MenuScreen : BaseScreen() {
     // Override default InputProcessor method
     override fun keyDown(keycode: Int): Boolean {
         if (keycode == Input.Keys.S) {
+            blip.play()
+            dispose()
+            BaseGame.setActiveScreen(LevelScreen())
+        }
+        return false
+    }
+
+    override fun buttonDown(controller: Controller, buttonCode: Int): Boolean {
+        if (buttonCode == XBoxGamepad.BUTTON_A) {
             blip.play()
             dispose()
             BaseGame.setActiveScreen(LevelScreen())

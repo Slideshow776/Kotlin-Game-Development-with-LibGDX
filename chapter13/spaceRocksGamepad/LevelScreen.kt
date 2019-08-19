@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
-class LevelScreen : BaseScreen() {
+class LevelScreen : BaseGamepadScreen() {
 
     private lateinit var spaceship: Spaceship
 
@@ -43,8 +44,8 @@ class LevelScreen : BaseScreen() {
         Rock(600f, 100f, mainStage, 1.5f, 5f)
         Rock(400f, 100f, mainStage, 1.5f, 5f)
         Rock(200f, 100f, mainStage, 1.5f, 5f)
-        /*Rock(200f, 300f, mainStage, 1.5f, 5f)
-        Rock(200f, 500f, mainStage, 1.5f, 5f)*/
+        Rock(200f, 300f, mainStage, 1.5f, 5f)
+        Rock(200f, 500f, mainStage, 1.5f, 5f)
 
         winSound = Gdx.audio.newSound(Gdx.files.internal("assets/congratulations.wav"))
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("assets/explosion.wav"))
@@ -154,6 +155,20 @@ class LevelScreen : BaseScreen() {
         return false
     }
 
+    override fun buttonDown(controller: Controller, buttonCode: Int): Boolean {
+        if (buttonCode == XBoxGamepad.BUTTON_A)
+            spaceship.shoot()
+        if (buttonCode == XBoxGamepad.BUTTON_X){
+            spaceship.warp()
+            warpSound.play()
+        }
+        if (buttonCode == XBoxGamepad.BUTTON_BACK) {
+            dispose()
+            BaseGame.setActiveScreen(LevelScreen())
+        }
+        return false
+    }
+
     private fun spawnRocks(rockActor: Actor, scale: Float, speed: Float) {
         Rock(rockActor.x, rockActor.y, mainStage, scale, speed)
         Rock(rockActor.x, rockActor.y, mainStage, scale, speed)
@@ -162,7 +177,7 @@ class LevelScreen : BaseScreen() {
 
     /*
     * https://stackoverflow.com/questions/9879258/how-can-i-generate-random-points-on-a-circles-circumference-in-javascript
-    * Screen is (800, 600), needed to offset the center of the spawning circle/ellipse by (400, 300)
+    * Screen is (800, 600), needed to offset the center of the spawning circle/ellipse by half (400, 300).
     * */
     private fun spawnUfo() {
         val randomAngle = MathUtils.random()*MathUtils.PI2

@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.controllers.Controllers
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 
 class Spaceship(x: Float, y: Float, private val s: Stage) : BaseActor(x, y, s) {
 
@@ -41,16 +43,43 @@ class Spaceship(x: Float, y: Float, private val s: Stage) : BaseActor(x, y, s) {
         super.act(dt)
 
         val degreesPerSecond = 140f // rotation speed
-        if (Gdx.input.isKeyPressed((Keys.A)))
-            rotateBy(degreesPerSecond * dt)
-        if (Gdx.input.isKeyPressed((Keys.D)))
-            rotateBy(-degreesPerSecond * dt)
-        if (Gdx.input.isKeyPressed((Keys.W))) {
-            playConsecutiveAudio(thrustersSound)
-            accelerateAtAngle(rotation)
-            thrusters.isVisible = true
-        } else {
-            thrusters.isVisible = false
+
+        if (Controllers.getControllers().size > 0) { // XBox controller
+            val gamepad = Controllers.getControllers()[0]
+            val xAxis = gamepad.getAxis(XBoxGamepad.AXIS_LEFT_X)
+            val yAxis = -gamepad.getAxis(XBoxGamepad.AXIS_LEFT_Y)
+            val shoot = -gamepad.getAxis(XBoxGamepad.AXIS_RIGHT_TRIGGER)
+            val direction = Vector2(xAxis, yAxis)
+
+            val length = direction.len()
+            val deadZone = .1f
+
+            if (length > deadZone) {
+                if (direction.angle() < 90 || (direction.angle() > 270 && direction.angle() <= 360))
+                    rotateBy(-degreesPerSecond * dt)
+                else if (direction.angle() >= 90 && direction.angle() <= 270)
+                    rotateBy(degreesPerSecond * dt)
+            }
+
+            if (shoot > 0) {
+                playConsecutiveAudio(thrustersSound)
+                accelerateAtAngle(rotation)
+                thrusters.isVisible = true
+            } else {
+                thrusters.isVisible = false
+            }
+        } else { // fall back to keyboard
+            if (Gdx.input.isKeyPressed((Keys.A)))
+                rotateBy(degreesPerSecond * dt)
+            if (Gdx.input.isKeyPressed((Keys.D)))
+                rotateBy(-degreesPerSecond * dt)
+            if (Gdx.input.isKeyPressed((Keys.W))) {
+                playConsecutiveAudio(thrustersSound)
+                accelerateAtAngle(rotation)
+                thrusters.isVisible = true
+            } else {
+                thrusters.isVisible = false
+            }
         }
 
         applyPhysics(dt)

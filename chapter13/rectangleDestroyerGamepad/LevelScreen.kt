@@ -3,6 +3,8 @@ package chapter13.rectangleDestroyerGamepad
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.controllers.Controllers
+import com.badlogic.gdx.controllers.PovDirection
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -32,6 +34,8 @@ class LevelScreen : BaseScreen() {
 
     private var paddleStop = false
     private var paddleTimer = 0f
+
+    private var padX: Float = 300f
 
     override fun initialize() {
         // background
@@ -103,9 +107,21 @@ class LevelScreen : BaseScreen() {
     }
 
     override fun update(dt: Float) {
-        val mouseX = Gdx.input.x
-        if (!paddleStop) paddle.x = mouseX - paddle.width / 2
+        // player input
+        if (Controllers.getControllers().size > 0) {
+            val gamepad = Controllers.getControllers().get(0)
+            val direction = gamepad.getPov(0)
+            if (direction == PovDirection.east)
+                padX += 8
+            else if (direction == PovDirection.west)
+                padX -= 8
+            if (!paddleStop) paddle.x = padX - paddle.width / 2
+        } else {
+            val mouseX = Gdx.input.x
+            if (!paddleStop) paddle.x = mouseX - paddle.width / 2
+        }
         paddle.boundToWorld()
+        // ---
 
         if ( ball.isPaused() ) {
             ball.x = paddle.x + paddle.width / 2 - ball.width / 2

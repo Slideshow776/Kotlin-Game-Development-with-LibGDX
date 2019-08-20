@@ -4,11 +4,21 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.ui.Button
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
-class LevelScreen : BaseScreen() {
+class LevelScreen : BaseTouchScreen() {
 
     private lateinit var spaceship: Spaceship
 
@@ -30,6 +40,8 @@ class LevelScreen : BaseScreen() {
     private lateinit var shootSound: Sound
     private lateinit var shieldHitSound: Sound
 
+    private lateinit var touchpad: Touchpad
+
     override fun initialize() {
         val space = BaseActor(0f, 0f, mainStage)
         space.loadTexture("assets/space.png")
@@ -39,11 +51,11 @@ class LevelScreen : BaseScreen() {
 
         spaceship = Spaceship(400f, 300f, mainStage)
 
-        Rock(600f, 500f, mainStage, 1.5f, 5f)
+        /*Rock(600f, 500f, mainStage, 1.5f, 5f)
         Rock(600f, 300f, mainStage, 1.5f, 5f)
         Rock(600f, 100f, mainStage, 1.5f, 5f)
         Rock(400f, 100f, mainStage, 1.5f, 5f)
-        Rock(200f, 100f, mainStage, 1.5f, 5f)
+        Rock(200f, 100f, mainStage, 1.5f, 5f)*/
         /*Rock(200f, 300f, mainStage, 1.5f, 5f)
         Rock(200f, 500f, mainStage, 1.5f, 5f)*/
 
@@ -60,6 +72,78 @@ class LevelScreen : BaseScreen() {
         music.isLooping = true
         music.volume = .75f
         music.play()
+
+        Gdx.graphics.setWindowedMode(800, 800)
+        initializeControlArea()
+        val controlBackground = BaseActor(0f, 0f, controlStage)
+        controlBackground.loadTexture("assets/pixels.jpg")
+
+        // touchpad
+        val touchStyle = TouchpadStyle()
+
+        val padKnobTex = Texture(Gdx.files.internal("assets/joystick-knob.png"))
+        val padKnobReg = TextureRegion(padKnobTex)
+        touchStyle.knob = TextureRegionDrawable(padKnobReg)
+
+        val padBackTex = Texture(Gdx.files.internal("assets/joystick-background.png"))
+        val padBackReg = TextureRegion(padBackTex)
+        touchStyle.background = TextureRegionDrawable(padBackReg)
+
+        touchpad = Touchpad(5f, touchStyle)
+
+        // buttons
+        val buttonStyle = ButtonStyle()
+        buttonStyle.up = TextureRegionDrawable(TextureRegion(Texture(Gdx.files.internal("assets/nes_button.png"))))
+
+        val restartButton = Button(buttonStyle)
+        restartButton.color = Color.BROWN
+        restartButton.addListener { e: Event ->
+            if(isTouchDownEvent(e)) {
+                dispose()
+                BaseGame.setActiveScreen(LevelScreen())
+            }
+            false
+        }
+
+        val shootButton = Button(buttonStyle)
+        shootButton.color = Color.WHITE
+        shootButton.addListener { e: Event ->
+            if(isTouchDownEvent(e)) {
+                spaceship.shoot()
+                shootSound.play()
+            }
+            false
+        }
+
+        val warpButton = Button(buttonStyle)
+        warpButton.color = Color.VIOLET
+        warpButton.addListener { e: Event ->
+            if(isTouchDownEvent(e)) {
+                spaceship.warp()
+                warpSound.play()
+            }
+            false
+        }
+
+        val moveButton = Button(buttonStyle)
+        moveButton.color = Color.GREEN
+        moveButton.addListener { e: Event ->
+            if(isTouchDownEvent(e)) {
+                spaceship.move(true)
+            }
+            false
+        }
+
+        //table
+        controlTable.toFront()
+        controlTable.pad(50f)
+        controlTable.add().colspan(3).height(600f)
+        controlTable.row()
+        controlTable.add(touchpad)
+        controlTable.add(moveButton)
+        controlTable.add(shootButton)
+        controlTable.add(warpButton)
+        controlTable.add(restartButton)
     }
 
     override fun update(dt: Float) {
@@ -142,6 +226,9 @@ class LevelScreen : BaseScreen() {
         else {
             powerUpSpawnTimer += dt
         }
+
+        spaceship.rotate(Vector2(touchpad.knobPercentX, touchpad.knobPercentY), dt)
+        spaceship.move(false)
     }
 
     // Override default InputProcessor method
@@ -155,6 +242,11 @@ class LevelScreen : BaseScreen() {
             shootSound.play()
         }
         return false
+    }
+
+    override fun dispose() {
+        super.dispose()
+        music.dispose()
     }
 
     private fun spawnRocks(rockActor: Actor, scale: Float, speed: Float) {

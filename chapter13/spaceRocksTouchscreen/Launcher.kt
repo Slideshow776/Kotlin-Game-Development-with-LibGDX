@@ -6,6 +6,6 @@ object Launcher {
     @JvmStatic
     fun main(args: Array<String>) {
         val myGame = SpaceGame()
-        LwjglApplication(myGame, "Space Rocks", 800, 600)
+        LwjglApplication(myGame, "Space Rocks", 800, 800)
     }
 }

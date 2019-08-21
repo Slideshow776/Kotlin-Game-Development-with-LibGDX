@@ -22,13 +22,13 @@ abstract class BaseTouchScreen : BaseScreen() {
     override fun show() {
         super.show()
         val im  = Gdx.input.inputProcessor as InputMultiplexer
-        im.addProcessor(im)
+        im.addProcessor(controlStage)
     }
 
     override fun hide() {
         super.hide()
         val im  = Gdx.input.inputProcessor as InputMultiplexer
-        im.addProcessor(im)
+        im.removeProcessor(controlStage)
     }
 
     override fun render(dt: Float) {

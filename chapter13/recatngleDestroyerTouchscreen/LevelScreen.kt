@@ -4,10 +4,19 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Event
+import com.badlogic.gdx.scenes.scene2d.ui.Button
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
-class LevelScreen : BaseScreen() {
+class LevelScreen : BaseTouchScreen() {
     private lateinit var paddle: Paddle
     private lateinit var ball: Ball
     private lateinit var solid: Solid
@@ -32,6 +41,8 @@ class LevelScreen : BaseScreen() {
 
     private var paddleStop = false
     private var paddleTimer = 0f
+
+    private lateinit var touchpad: Touchpad
 
     override fun initialize() {
         // background
@@ -74,7 +85,6 @@ class LevelScreen : BaseScreen() {
 
         // game
         balls = 3
-        println("balls: $balls")
         scoreLabel = Label("Score: $score", BaseGame.labelStyle)
         ballsLabel = Label("Balls: $balls", BaseGame.labelStyle)
         messageLabel = Label("Click to start", BaseGame.labelStyle)
@@ -100,11 +110,46 @@ class LevelScreen : BaseScreen() {
         backgroundMusic.isLooping = true
         backgroundMusic.volume = .5f
         backgroundMusic.play()
+
+        Gdx.graphics.setWindowedMode(800, 800)
+        initializeControlArea()
+        val controlBackground = BaseActor(0f, 0f, controlStage)
+        controlBackground.loadTexture("assets/pixels.jpg")
+
+        val touchStyle = TouchpadStyle()
+        touchStyle.knob = TextureRegionDrawable(TextureRegion(Texture(Gdx.files.internal("assets/joystick-knob.png"))))
+        touchStyle.background = TextureRegionDrawable(TextureRegion(Texture(Gdx.files.internal("assets/joystick-background.png"))))
+        touchpad = Touchpad(5f, touchStyle)
+
+        val buttonStyle = ButtonStyle()
+        buttonStyle.up = TextureRegionDrawable(TextureRegion(Texture("assets/nes_button.png")))
+
+        val releaseButton = Button(buttonStyle)
+        releaseButton.addListener { e: Event ->
+            if (isTouchDownEvent(e)) {
+                if (ball.isPaused()) {
+                    ball.setPaused(false)
+                    messageLabel.isVisible = false
+                }
+            }
+            false
+        }
+
+        controlTable.toFront()
+        controlTable.pad(50f)
+        controlTable.add().colspan(3).height(600f)
+        controlTable.row()
+        controlTable.add(touchpad)
+        controlTable.add(releaseButton)
     }
 
     override fun update(dt: Float) {
-        val mouseX = Gdx.input.x
-        if (!paddleStop) paddle.x = mouseX - paddle.width / 2
+        val direction = Vector2(touchpad.knobPercentX, touchpad.knobPercentY)
+        val length = direction.len()
+        if (length > 0) {
+            val mouseX = direction.x * 400 + 350 // this was rushed, but it works...
+            if (!paddleStop) paddle.x = mouseX - paddle.width / 2
+        }
         paddle.boundToWorld()
 
         if ( ball.isPaused() ) {
@@ -220,14 +265,6 @@ class LevelScreen : BaseScreen() {
                 solid.color = randomColor
             }
         }
-    }
-
-    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        if (ball.isPaused()) {
-            ball.setPaused(false)
-            messageLabel.isVisible = false
-        }
-        return false
     }
 
     private fun destroyRandomBrick() {

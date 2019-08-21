@@ -1,4 +1,4 @@
-package chapter13.recatngleDestroyerTouchscreen
+package chapter13.rectangleDestroyerTouchscreen
 
 import com.badlogic.gdx.scenes.scene2d.Stage
 

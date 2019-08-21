@@ -1,4 +1,4 @@
-package chapter13.recatngleDestroyerTouchscreen
+package chapter13.rectangleDestroyerTouchscreen
 
 class RectangleDestroyer : BaseGame() {
     override fun create() {

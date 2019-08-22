@@ -51,13 +51,13 @@ class LevelScreen : BaseTouchScreen() {
 
         spaceship = Spaceship(400f, 300f, mainStage)
 
-        /*Rock(600f, 500f, mainStage, 1.5f, 5f)
+        Rock(600f, 500f, mainStage, 1.5f, 5f)
         Rock(600f, 300f, mainStage, 1.5f, 5f)
         Rock(600f, 100f, mainStage, 1.5f, 5f)
         Rock(400f, 100f, mainStage, 1.5f, 5f)
-        Rock(200f, 100f, mainStage, 1.5f, 5f)*/
-        /*Rock(200f, 300f, mainStage, 1.5f, 5f)
-        Rock(200f, 500f, mainStage, 1.5f, 5f)*/
+        Rock(200f, 100f, mainStage, 1.5f, 5f)
+        Rock(200f, 300f, mainStage, 1.5f, 5f)
+        Rock(200f, 500f, mainStage, 1.5f, 5f)
 
         winSound = Gdx.audio.newSound(Gdx.files.internal("assets/congratulations.wav"))
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("assets/explosion.wav"))

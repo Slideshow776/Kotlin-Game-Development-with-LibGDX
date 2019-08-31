@@ -2,6 +2,7 @@ package chapter14
 
 import com.badlogic.gdx.scenes.scene2d.Stage
 import kotlin.math.floor
+import kotlin.math.roundToInt
 
 class Maze(s: Stage) {
     // maze size constants
@@ -11,7 +12,7 @@ class Maze(s: Stage) {
     private val roomHeight = 64
 
     // private var roomGrid = arrayOfNulls<arrayOfNulls<Room>>(4)
-    private var roomGrid = Array(roomCountX) {arrayOfNulls<Room>(roomCountY)}
+    private var roomGrid = Array(roomCountX) { arrayOfNulls<Room>(roomCountY) }
 
     init {
         for (gridY in 0 until roomCountY) {
@@ -72,7 +73,7 @@ class Maze(s: Stage) {
         while (wallsToRemove > 0) {
             val gridX = floor(Math.random() * roomCountX).toInt()
             val gridY = floor(Math.random() * roomCountY).toInt()
-            val direction  = floor(Math.random() * 4).toInt()
+            val direction = floor(Math.random() * 4).toInt()
             val room = roomGrid[gridX][gridY]
 
             if (room!!.hasNeighbor(direction) && room.hasWall(direction)) {
@@ -85,5 +86,22 @@ class Maze(s: Stage) {
 
     fun getRoom(gridX: Int, gridY: Int): Room? {
         return roomGrid[gridX][gridY]
+    }
+
+    // ghost
+    fun getRoom(actor: BaseActor): Room? {
+        val gridX = (actor.x / roomWidth).roundToInt()
+        val gridY = (actor.y / roomHeight).roundToInt()
+        return getRoom(gridX, gridY)
+    }
+
+    fun resetRooms() {
+        for (gridY in 0 until roomCountY) {
+            for (gridX in 0 until roomCountX) {
+                roomGrid[gridX][gridY]!!.visited = false
+                roomGrid[gridX][gridY]!!.previousRoom = null
+            }
+        }
+
     }
 }

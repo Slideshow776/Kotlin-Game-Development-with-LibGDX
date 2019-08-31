@@ -17,6 +17,9 @@ class Room(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     var connected = false
 
+    var visited = false
+    var previousRoom: Room? = null
+
     init {
         loadTexture("assets/dirt.png")
 
@@ -93,5 +96,15 @@ class Room(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         val directionIndex = floor(Math.random() * directionList.size).toInt()
         val direction = directionList[directionIndex]
         return getNeighbor(direction)
+    }
+
+    // ghost
+    fun unvisitedPathList(): ArrayList<Room> {
+        val list = ArrayList<Room>()
+        for (direction in directionArray) {
+            if (hasNeighbor(direction) && !hasWall(direction) && !getNeighbor(direction)?.visited!!)
+                getNeighbor(direction)?.let { list.add(it) }
+        }
+        return list
     }
 }

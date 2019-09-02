@@ -1,7 +1,12 @@
 package chapter14
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 
@@ -12,6 +17,9 @@ class LevelScreen : BaseScreen() {
 
     lateinit var coinsLabel: Label
     lateinit var messageLabel: Label
+
+    lateinit var coinSound: Sound
+    lateinit var windMusic: Music
 
     override fun initialize() {
         val background = BaseActor(0f, 0f, mainStage)
@@ -28,8 +36,10 @@ class LevelScreen : BaseScreen() {
         ghost.centerAtActor(maze.getRoom(11, 9)!!)
 
         for (room in BaseActor.getList(mainStage, Room::class.java.canonicalName)) {
-            val coin = Coin(0f, 0f, mainStage)
-            coin.centerAtActor(room)
+            if (MathUtils.random() >= .6f) { // P(maze with no Coins) = .4^(10*12) = 1.76*10^-48
+                val coin = Coin(0f, 0f, mainStage)
+                coin.centerAtActor(room)
+            }
         }
 
         ghost.toFront()
@@ -44,6 +54,12 @@ class LevelScreen : BaseScreen() {
         uiTable.add(coinsLabel)
         uiTable.row()
         uiTable.add(messageLabel).expandY()
+
+        coinSound = Gdx.audio.newSound(Gdx.files.internal("assets/coin.wav"))
+        windMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/wind.mp3"))
+        windMusic.isLooping = true
+        windMusic.volume = .1f
+        windMusic.play()
     }
 
     override fun update(dt: Float) {
@@ -57,8 +73,10 @@ class LevelScreen : BaseScreen() {
         }
 
         for (coin in BaseActor.getList(mainStage, Coin::class.java.canonicalName)) {
-            if (hero.overlaps(coin))
+            if (hero.overlaps(coin)) {
                 coin.remove()
+                coinSound.play()
+            }
         }
 
         val coins = BaseActor.count(mainStage, Coin::class.java.canonicalName)
@@ -81,6 +99,13 @@ class LevelScreen : BaseScreen() {
             messageLabel.setText("Game Over")
             messageLabel.color = Color.RED
             messageLabel.isVisible = true
+        }
+
+        if (!messageLabel.isVisible) {
+            val distance = Vector2(hero.x - ghost.x, hero.y - ghost.y).len()
+            var volume = -(distance - 64)/(300 - 64) + 1
+            volume = MathUtils.clamp(volume, .1f, 1f)
+            windMusic.volume = volume
         }
     }
 

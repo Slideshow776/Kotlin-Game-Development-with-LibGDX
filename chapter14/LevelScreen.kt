@@ -17,6 +17,10 @@ class LevelScreen : BaseScreen() {
 
     lateinit var coinsLabel: Label
     lateinit var messageLabel: Label
+    lateinit var timeLabel: Label
+
+    var time = 0f
+    var gameOver = false
 
     lateinit var coinSound: Sound
     lateinit var hurtSound: Sound
@@ -48,16 +52,24 @@ class LevelScreen : BaseScreen() {
 
         ghost.toFront()
 
+        val timeIcon = BaseActor(0f, 0f, uiStage)
+        timeIcon.loadTexture("assets/timer.png")
+
         coinsLabel = Label("Coins left:", BaseGame.labelStyle)
         coinsLabel.color = Color.GOLD
         messageLabel = Label("...", BaseGame.labelStyle)
         messageLabel.setFontScale(2f)
         messageLabel.isVisible = false
+        timeLabel = Label("Time: ${time.toInt()}", BaseGame.labelStyle)
+        timeLabel.color = Color.LIGHT_GRAY
 
+        // uiTable.debug()
         uiTable.pad(10f)
-        uiTable.add(coinsLabel)
+        uiTable.add(timeIcon)
+        uiTable.add(timeLabel)
+        uiTable.add(coinsLabel).padLeft(20f)
         uiTable.row()
-        uiTable.add(messageLabel).expandY()
+        uiTable.add(messageLabel).colspan(3).expandY()
 
         coinSound = Gdx.audio.newSound(Gdx.files.internal("assets/coin.wav"))
         hurtSound = Gdx.audio.newSound(Gdx.files.internal("assets/hitHurt.wav"))
@@ -71,6 +83,9 @@ class LevelScreen : BaseScreen() {
     }
 
     override fun update(dt: Float) {
+        if (gameOver)
+            return
+
         for (wall in BaseActor.getList(mainStage, Wall::class.java.canonicalName)) {
             hero.preventOverlap(wall)
         }
@@ -90,6 +105,9 @@ class LevelScreen : BaseScreen() {
         val coins = BaseActor.count(mainStage, Coin::class.java.canonicalName)
         coinsLabel.setText("Coins left: $coins")
 
+        time += dt
+        timeLabel.setText("Time: ${time.toInt()}")
+
         if (coins == 0) {
             ghost.remove()
             ghost.setPosition(-1000f, -1000f)
@@ -99,6 +117,7 @@ class LevelScreen : BaseScreen() {
             messageLabel.color = Color.GREEN
             messageLabel.isVisible = true
             winSound.play()
+            gameOver = true
         }
 
         if (hero.overlaps(ghost)) {
@@ -110,6 +129,7 @@ class LevelScreen : BaseScreen() {
             messageLabel.color = Color.RED
             messageLabel.isVisible = true
             looseSound.play()
+            gameOver = true
         }
 
         if (!messageLabel.isVisible) {

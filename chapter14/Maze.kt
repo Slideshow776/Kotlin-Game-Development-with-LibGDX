@@ -11,7 +11,6 @@ class Maze(s: Stage) {
     private val roomWidth = 64
     private val roomHeight = 64
 
-    // private var roomGrid = arrayOfNulls<arrayOfNulls<Room>>(4)
     private var roomGrid = Array(roomCountX) { arrayOfNulls<Room>(roomCountY) }
 
     init {

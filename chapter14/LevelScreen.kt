@@ -19,6 +19,10 @@ class LevelScreen : BaseScreen() {
     lateinit var messageLabel: Label
 
     lateinit var coinSound: Sound
+    lateinit var hurtSound: Sound
+    lateinit var winSound: Sound
+    lateinit var looseSound: Sound
+    lateinit var powerupSound: Sound
     lateinit var windMusic: Music
 
     override fun initialize() {
@@ -56,6 +60,10 @@ class LevelScreen : BaseScreen() {
         uiTable.add(messageLabel).expandY()
 
         coinSound = Gdx.audio.newSound(Gdx.files.internal("assets/coin.wav"))
+        hurtSound = Gdx.audio.newSound(Gdx.files.internal("assets/hitHurt.wav"))
+        winSound = Gdx.audio.newSound(Gdx.files.internal("assets/trumpetTriumph.mp3"))
+        looseSound = Gdx.audio.newSound(Gdx.files.internal("assets/playerDeath.wav"))
+        powerupSound = Gdx.audio.newSound(Gdx.files.internal("assets/powerup.wav"))
         windMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/wind.mp3"))
         windMusic.isLooping = true
         windMusic.volume = .1f
@@ -88,22 +96,25 @@ class LevelScreen : BaseScreen() {
             ghost.clearActions()
             ghost.addAction(Actions.forever(Actions.delay(1f)))
             messageLabel.setText("You win!")
-            messageLabel.setColor(Color.GREEN)
+            messageLabel.color = Color.GREEN
             messageLabel.isVisible = true
+            winSound.play()
         }
 
         if (hero.overlaps(ghost)) {
+            hurtSound.play()
             hero.remove()
             hero.setPosition(-1000f, -1000f)
             ghost.addAction(Actions.forever(Actions.delay(1f)))
             messageLabel.setText("Game Over")
             messageLabel.color = Color.RED
             messageLabel.isVisible = true
+            looseSound.play()
         }
 
         if (!messageLabel.isVisible) {
             val distance = Vector2(hero.x - ghost.x, hero.y - ghost.y).len()
-            var volume = -(distance - 64)/(300 - 64) + 1
+            var volume = -(distance - 64) / (300 - 64) + 1
             volume = MathUtils.clamp(volume, .1f, 1f)
             windMusic.volume = volume
         }
@@ -111,9 +122,16 @@ class LevelScreen : BaseScreen() {
 
     override fun keyDown(keycode: Int): Boolean {
         if (keycode == Keys.R) {
+            powerupSound.play(.125f)
             dispose()
             BaseGame.setActiveScreen(LevelScreen())
         }
         return false
+    }
+
+    override fun dispose() {
+        super.dispose()
+        windMusic.dispose()
+        coinSound.dispose()
     }
 }

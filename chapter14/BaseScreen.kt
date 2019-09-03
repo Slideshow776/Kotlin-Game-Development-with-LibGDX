@@ -86,9 +86,4 @@ abstract class BaseScreen : Screen, InputProcessor {
     fun isTouchDownEvent(e: Event): Boolean {
         return e is InputEvent && e.type == Type.touchDown
     }
-
-    fun playConsecutiveAudio(music: Music) {
-        if (!music.isPlaying) // only music have an isPlaying method
-            music.play()
-    }
 }

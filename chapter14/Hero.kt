@@ -2,6 +2,7 @@ package chapter14
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -13,6 +14,7 @@ class Hero(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     var south: Animation<TextureRegion>
     var east: Animation<TextureRegion>
     var west: Animation<TextureRegion>
+    var walkInGrassMusic: Music
 
     init {
         val fileName = "assets/hero.png"
@@ -53,20 +55,30 @@ class Hero(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         setAcceleration(800f)
         setMaxSpeed(100f)
         setDeceleration(800f)
+
+        walkInGrassMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/walkGrass.wav"))
     }
 
     override fun act(dt: Float) {
         super.act(dt)
 
         // hero movement controls
-        if (Gdx.input.isKeyPressed(Keys.LEFT))
+        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
             accelerateAtAngle(180f)
-        if (Gdx.input.isKeyPressed(Keys.RIGHT))
+            playConsecutiveAudio(walkInGrassMusic)
+        }
+        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
             accelerateAtAngle(0f)
-        if (Gdx.input.isKeyPressed(Keys.UP))
+            playConsecutiveAudio(walkInGrassMusic)
+        }
+        if (Gdx.input.isKeyPressed(Keys.UP)) {
             accelerateAtAngle(90f)
-        if (Gdx.input.isKeyPressed(Keys.DOWN))
+            playConsecutiveAudio(walkInGrassMusic)
+        }
+        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
             accelerateAtAngle(270f)
+            playConsecutiveAudio(walkInGrassMusic)
+        }
 
         // pause animation when character not moving
         if (getSpeed() == 0f)
@@ -85,5 +97,10 @@ class Hero(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
                 setAnimation(east)
         }
         applyPhysics(dt)
+    }
+
+    private fun playConsecutiveAudio(music: Music) {
+        if (!music.isPlaying) // only music have an isPlaying method
+            music.play()
     }
 }

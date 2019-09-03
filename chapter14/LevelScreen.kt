@@ -14,6 +14,7 @@ class LevelScreen : BaseScreen() {
     private lateinit var maze: Maze
     private lateinit var hero: Hero
     private lateinit var ghost: Ghost
+    private lateinit var heroIcon: HeroIcon
 
     lateinit var coinsLabel: Label
     lateinit var messageLabel: Label
@@ -52,6 +53,9 @@ class LevelScreen : BaseScreen() {
 
         ghost.toFront()
 
+        heroIcon = HeroIcon(0f, 0f, uiStage)
+        heroIcon.setSize(45f, 45f)
+
         val timeIcon = BaseActor(0f, 0f, uiStage)
         timeIcon.loadTexture("assets/timer.png")
 
@@ -65,11 +69,12 @@ class LevelScreen : BaseScreen() {
 
         // uiTable.debug()
         uiTable.pad(10f)
-        uiTable.add(timeIcon)
+        uiTable.add(heroIcon)
+        uiTable.add(timeIcon).padLeft(20f)
         uiTable.add(timeLabel)
         uiTable.add(coinsLabel).padLeft(20f)
         uiTable.row()
-        uiTable.add(messageLabel).colspan(3).expandY()
+        uiTable.add(messageLabel).colspan(4).expandY()
 
         coinSound = Gdx.audio.newSound(Gdx.files.internal("assets/coin.wav"))
         hurtSound = Gdx.audio.newSound(Gdx.files.internal("assets/hitHurt.wav"))
@@ -123,17 +128,25 @@ class LevelScreen : BaseScreen() {
             gameOver = true
         }
 
-        if (hero.overlaps(ghost)) {
-            hurtSound.play()
-            Ghost(hero.x, hero.y, mainStage)
-            hero.remove()
-            hero.setPosition(-1000f, -1000f)
-            ghost.addAction(Actions.forever(Actions.delay(1f)))
-            messageLabel.setText("Game Over")
-            messageLabel.color = Color.RED
-            messageLabel.isVisible = true
-            looseSound.play()
-            gameOver = true
+        if (hero.overlaps(ghost) && !hero.invincible) {
+            hero.hit()
+            heroIcon.setAnimation(heroIcon.dying)
+            heroIcon.setSize(45f, 45f)
+
+            if (hero.health <= 0) {
+                heroIcon.setAnimation(heroIcon.dead)
+                heroIcon.setSize(45f, 45f)
+                hurtSound.play()
+                Ghost(hero.x, hero.y, mainStage)
+                hero.remove()
+                hero.setPosition(-1000f, -1000f)
+                ghost.addAction(Actions.forever(Actions.delay(1f)))
+                messageLabel.setText("Game Over")
+                messageLabel.color = Color.RED
+                messageLabel.isVisible = true
+                looseSound.play()
+                gameOver = true
+            }
         }
 
         if (!messageLabel.isVisible) {

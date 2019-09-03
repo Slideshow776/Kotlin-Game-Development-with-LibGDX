@@ -108,6 +108,9 @@ class LevelScreen : BaseScreen() {
         time += dt
         timeLabel.setText("Time: ${time.toInt()}")
 
+        if (time > 20 && ghost.actorSpeed <= (hero.getSpeed() - 10))
+            ghost.actorSpeed += dt
+
         if (coins == 0) {
             ghost.remove()
             ghost.setPosition(-1000f, -1000f)
@@ -122,6 +125,7 @@ class LevelScreen : BaseScreen() {
 
         if (hero.overlaps(ghost)) {
             hurtSound.play()
+            Ghost(hero.x, hero.y, mainStage)
             hero.remove()
             hero.setPosition(-1000f, -1000f)
             ghost.addAction(Actions.forever(Actions.delay(1f)))

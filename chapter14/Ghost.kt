@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 
 class Ghost(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
-    val actorSpeed = 60f
+    var actorSpeed = 60f
 
     init {
         loadAnimationFromSheet("assets/ghost.png", 1, 3, .2f, true)

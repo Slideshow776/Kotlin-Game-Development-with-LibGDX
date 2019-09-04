@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 class LevelScreen : BaseScreen() {
     private lateinit var maze: Maze
     private lateinit var hero: Hero
-    private lateinit var ghost: Ghost
     private lateinit var heroIcon: HeroIcon
 
     lateinit var coinsLabel: Label
@@ -41,8 +40,12 @@ class LevelScreen : BaseScreen() {
         hero = Hero(0f, 0f, mainStage)
         hero.centerAtActor(maze.getRoom(0, 0)!!)
 
-        ghost = Ghost(0f, 0f, mainStage)
-        ghost.centerAtActor(maze.getRoom(11, 9)!!)
+        val ghost0 = Ghost(0f, 0f, mainStage)
+        ghost0.centerAtActor(maze.getRoom(11, 9)!!)
+        ghost0.color = Color(209f / 255, 117f / 255, 117f / 255, 1f) // red normalized -> rgba(209, 117, 117, 1)
+        val ghost1 = Ghost(0f, 0f, mainStage)
+        ghost1.centerAtActor(maze.getRoom(8, 8)!!)
+        ghost1.color = Color(142f / 255, 209f / 255, 117f / 255, 1f) // green normalized -> rgba(142, 209, 117, 1)
 
         for (room in BaseActor.getList(mainStage, Room::class.java.canonicalName)) {
             if (MathUtils.random() >= .6f) { // P(maze with no Coins) = .4^(10*12) = 1.76*10^-48
@@ -51,7 +54,8 @@ class LevelScreen : BaseScreen() {
             }
         }
 
-        ghost.toFront()
+        ghost0.toFront()
+        ghost1.toFront()
 
         heroIcon = HeroIcon(0f, 0f, uiStage)
         heroIcon.setSize(45f, 45f)
@@ -95,65 +99,70 @@ class LevelScreen : BaseScreen() {
             hero.preventOverlap(wall)
         }
 
-        if (ghost.actions.size == 0) {
-            maze.resetRooms()
-            ghost.findPath(maze.getRoom(ghost)!!, maze.getRoom(hero)!!)
-        }
+        for (ghost in BaseActor.getList(mainStage, Ghost::class.java.canonicalName)) {
 
-        for (coin in BaseActor.getList(mainStage, Coin::class.java.canonicalName)) {
-            if (hero.overlaps(coin)) {
-                coin.remove()
-                coinSound.play()
+            ghost as Ghost
+
+            if (ghost.actions.size == 0) {
+                maze.resetRooms()
+                ghost.findPath(maze.getRoom(ghost)!!, maze.getRoom(hero)!!)
             }
-        }
 
-        val coins = BaseActor.count(mainStage, Coin::class.java.canonicalName)
-        coinsLabel.setText("Coins left: $coins")
+            for (coin in BaseActor.getList(mainStage, Coin::class.java.canonicalName)) {
+                if (hero.overlaps(coin)) {
+                    coin.remove()
+                    coinSound.play()
+                }
+            }
 
-        time += dt
-        timeLabel.setText("Time: ${time.toInt()}")
+            val coins = BaseActor.count(mainStage, Coin::class.java.canonicalName)
+            coinsLabel.setText("Coins left: $coins")
 
-        if (time > 20 && ghost.actorSpeed <= (hero.getSpeed() - 10))
-            ghost.actorSpeed += dt
+            time += dt
+            timeLabel.setText("Time: ${time.toInt()}")
 
-        if (coins == 0) {
-            ghost.remove()
-            ghost.setPosition(-1000f, -1000f)
-            ghost.clearActions()
-            ghost.addAction(Actions.forever(Actions.delay(1f)))
-            messageLabel.setText("You win!")
-            messageLabel.color = Color.GREEN
-            messageLabel.isVisible = true
-            winSound.play()
-            gameOver = true
-        }
+            if (time > 20 && ghost.actorSpeed <= (hero.getSpeed() - 20))
+                ghost.actorSpeed += dt
 
-        if (hero.overlaps(ghost) && !hero.invincible) {
-            hero.hit()
-            heroIcon.setAnimation(heroIcon.dying)
-            heroIcon.setSize(45f, 45f)
-
-            if (hero.health <= 0) {
-                heroIcon.setAnimation(heroIcon.dead)
-                heroIcon.setSize(45f, 45f)
-                hurtSound.play()
-                Ghost(hero.x, hero.y, mainStage)
-                hero.remove()
-                hero.setPosition(-1000f, -1000f)
+            if (coins == 0) {
+                ghost.remove()
+                ghost.setPosition(-1000f, -1000f)
+                ghost.clearActions()
                 ghost.addAction(Actions.forever(Actions.delay(1f)))
-                messageLabel.setText("Game Over")
-                messageLabel.color = Color.RED
+                messageLabel.setText("You win!")
+                messageLabel.color = Color.GREEN
                 messageLabel.isVisible = true
-                looseSound.play()
+                winSound.play()
                 gameOver = true
             }
-        }
 
-        if (!messageLabel.isVisible) {
-            val distance = Vector2(hero.x - ghost.x, hero.y - ghost.y).len()
-            var volume = -(distance - 64) / (300 - 64) + 1
-            volume = MathUtils.clamp(volume, .1f, 1f)
-            windMusic.volume = volume
+            if (hero.overlaps(ghost) && !hero.invincible) {
+                hero.hit()
+                heroIcon.setAnimation(heroIcon.dying)
+                heroIcon.setSize(45f, 45f)
+
+                if (hero.health <= 0) {
+                    heroIcon.setAnimation(heroIcon.dead)
+                    heroIcon.setSize(45f, 45f)
+                    hurtSound.play()
+                    Ghost(hero.x, hero.y, mainStage)
+                    hero.remove()
+                    hero.setPosition(-1000f, -1000f)
+                    ghost.addAction(Actions.forever(Actions.delay(1f)))
+                    messageLabel.setText("Game Over")
+                    messageLabel.color = Color.RED
+                    messageLabel.isVisible = true
+                    looseSound.play()
+                    gameOver = true
+                }
+            }
+
+            if (!messageLabel.isVisible) {
+                val distance = Vector2(hero.x - ghost.x, hero.y - ghost.y).len()
+                var volume = -(distance - 64) / (300 - 64) + 1
+                volume = MathUtils.clamp(volume, .1f, 1f)
+                windMusic.volume = volume
+            }
         }
     }
 

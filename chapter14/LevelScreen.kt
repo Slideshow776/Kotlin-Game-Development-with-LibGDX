@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -36,15 +37,19 @@ class LevelScreen : BaseScreen() {
         background.setSize(768f, 700f)
 
         maze = Maze(mainStage)
+        BaseActor.setWorldBounds(
+            (maze.roomCountX * maze.roomWidth).toFloat(),
+            (maze.roomCountY * maze.roomHeight).toFloat()
+        )
 
         hero = Hero(0f, 0f, mainStage)
         hero.centerAtActor(maze.getRoom(0, 0)!!)
 
         val ghost0 = Ghost(0f, 0f, mainStage)
-        ghost0.centerAtActor(maze.getRoom(11, 9)!!)
+        ghost0.centerAtActor(maze.getRoom(maze.roomCountX - 1, maze.roomCountY - 1)!!)
         ghost0.color = Color(209f / 255, 117f / 255, 117f / 255, 1f) // red normalized -> rgba(209, 117, 117, 1)
         val ghost1 = Ghost(0f, 0f, mainStage)
-        ghost1.centerAtActor(maze.getRoom(8, 8)!!)
+        ghost1.centerAtActor(maze.getRoom(9, maze.roomCountY - 1)!!)
         ghost1.color = Color(142f / 255, 209f / 255, 117f / 255, 1f) // green normalized -> rgba(142, 209, 117, 1)
 
         for (room in BaseActor.getList(mainStage, Room::class.java.canonicalName)) {
@@ -145,7 +150,17 @@ class LevelScreen : BaseScreen() {
                     heroIcon.setAnimation(heroIcon.dead)
                     heroIcon.setSize(45f, 45f)
                     hurtSound.play()
-                    Ghost(hero.x, hero.y, mainStage)
+
+                    val newGhost = Ghost(hero.x, hero.y, mainStage)
+                    newGhost.isVisible = false
+                    newGhost.addAction(Actions.parallel(
+                        Actions.fadeOut(0f),
+                        Actions.fadeIn(3f),
+                        Actions.scaleTo(0f, 0f),
+                        Actions.scaleTo(1f, 1f, 3f),
+                        Actions.run { newGhost.isVisible = true }
+                    ))
+
                     hero.remove()
                     hero.setPosition(-1000f, -1000f)
                     ghost.addAction(Actions.forever(Actions.delay(1f)))

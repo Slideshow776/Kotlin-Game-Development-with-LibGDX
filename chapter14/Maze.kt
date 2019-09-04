@@ -6,10 +6,10 @@ import kotlin.math.roundToInt
 
 class Maze(s: Stage) {
     // maze size constants
-    private val roomCountX = 12
-    private val roomCountY = 10
-    private val roomWidth = 64
-    private val roomHeight = 64
+    val roomCountX = 22
+    val roomCountY = 20
+    val roomWidth = 64
+    val roomHeight = 64
 
     private var roomGrid = Array(roomCountX) { arrayOfNulls<Room>(roomCountY) }
 

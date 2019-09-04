@@ -67,6 +67,8 @@ class Hero(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         hurtSound = Gdx.audio.newSound(Gdx.files.internal("assets/hitHurt.wav"))
         walkInGrassMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/walkGrass.wav"))
+
+        zoomCamera(.9f)
     }
 
     override fun act(dt: Float) {
@@ -115,6 +117,9 @@ class Hero(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
             invincibleTimer = 0f
             invincible = false
         }
+
+        boundToWorld()
+        alignCamera(lerp = .1f)
     }
 
     fun hit(): Int {

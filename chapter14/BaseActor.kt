@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.math.*
@@ -267,9 +268,19 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
     }
 
     // camera -------------------------------------------------------------------------------------------------
+    fun zoomCamera(zoom: Float) {
+        if (this.stage != null) {
+            val camera = this.stage.camera as OrthographicCamera
+            camera.zoom = zoom
+
+            bindCameraToWorld(camera)
+            camera.update()
+        }
+    }
+
     fun alignCamera(target: Vector2 = Vector2(x, y), lerp: Float = 1f) {
         if (this.stage != null) {
-            val camera = this.stage.camera
+            val camera = this.stage.camera as OrthographicCamera
             // val viewport = this.stage.viewport
 
             // center camera on actor
@@ -286,7 +297,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
 
     fun averageBetweenTargetsCamera(targetA: Vector2, targetB: Vector2, lerp: Float = 1f) {
         if (this.stage != null) {
-            val camera = this.stage.camera
+            val camera = this.stage.camera as OrthographicCamera
             val avgX = (targetA.x + targetB.x) / 2
             val avgY = (targetA.y + targetB.y) / 2
             val position = camera.position
@@ -302,7 +313,7 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
 
     fun searchFocalPoints(focalPoints: Array<Vector2>, target: Vector2, threshold: Float, lerp: Float = .1f): Boolean {
         if (this.stage != null) {
-            val camera = this.stage.camera
+            val camera = this.stage.camera as OrthographicCamera
             for (point in focalPoints) {
                 if (target.dst(point) < threshold) {
                     alignCamera(point, lerp)
@@ -313,16 +324,16 @@ open class BaseActor(x: Float, y: Float, s: Stage) : Group() {
         return false
     }
 
-    private fun bindCameraToWorld(camera: Camera) {
+    private fun bindCameraToWorld(camera: OrthographicCamera) {
         camera.position.x = MathUtils.clamp(
             camera.position.x,
-            camera.viewportWidth / 2,
-            worldBounds.width - camera.viewportWidth / 2
+            (camera.viewportWidth * camera.zoom) / 2,
+            worldBounds.width - (camera.viewportWidth * .9f) / 2
         )
         camera.position.y = MathUtils.clamp(
             camera.position.y,
-            camera.viewportHeight / 2,
-            worldBounds.height - camera.viewportHeight / 2
+            (camera.viewportHeight * camera.zoom) / 2,
+            worldBounds.height - (camera.viewportHeight * .9f) / 2
         )
 
     }

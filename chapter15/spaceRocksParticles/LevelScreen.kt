@@ -64,8 +64,12 @@ class LevelScreen : BaseScreen() {
         for (rockActor: BaseActor in BaseActor.getList(mainStage, Rock::class.java.canonicalName)) {
             if (rockActor.overlaps(spaceship)) {
                 if (spaceship.shieldPower <= 0) {
-                    val boom = Explosion(0f, 0f, mainStage)
+                    // val boom = Explosion(0f, 0f, mainStage)
+                    // boom.centerAtActor(spaceship)
+                    val boom = ExplosionEffect()
                     boom.centerAtActor(spaceship)
+                    boom.start()
+                    mainStage.addActor(boom)
                     spaceship.remove()
                     spaceship.setPosition(-1000f, -1000f)
                     explosionSound.play()
@@ -73,8 +77,12 @@ class LevelScreen : BaseScreen() {
                     gameOver(false)
                 } else {
                     spaceship.shieldPower -=34
-                    val boom = Explosion(0f, 0f, mainStage)
+                    // val boom = Explosion(0f, 0f, mainStage)
+                    // boom.centerAtActor(rockActor)
+                    val boom = ExplosionEffect()
                     boom.centerAtActor(rockActor)
+                    boom.start()
+                    mainStage.addActor(boom)
 
                     if (rockActor.scaleX >= 1.5f * Constants.scale)
                         spawnRocks(rockActor, 1f, 60f)
@@ -87,8 +95,12 @@ class LevelScreen : BaseScreen() {
             }
             for (laserActor: BaseActor in BaseActor.getList(mainStage, Laser::class.java.canonicalName)) {
                 if (laserActor.overlaps(rockActor)) {
-                    val boom = Explosion(0f, 0f, mainStage)
+                    // val boom = Explosion(0f, 0f, mainStage)
+                    // boom.centerAtActor(rockActor)
+                    val boom = ExplosionEffect()
                     boom.centerAtActor(rockActor)
+                    boom.start()
+                    mainStage.addActor(boom)
                     laserActor.remove()
 
                     if (rockActor.scaleX >= 1.5f * Constants.scale)
@@ -103,8 +115,12 @@ class LevelScreen : BaseScreen() {
 
         for (ufoActor: BaseActor in BaseActor.getList(mainStage, Ufo::class.java.canonicalName)) {
             if (!gameOver && ufoActor.overlaps(spaceship)) {
-                val boom = Explosion(0f, 0f, mainStage)
+                // val boom = Explosion(0f, 0f, mainStage)
+                // boom.centerAtActor(spaceship)
+                val boom = ExplosionEffect()
                 boom.centerAtActor(spaceship)
+                boom.start()
+                mainStage.addActor(boom)
                 spaceship.remove()
                 spaceship.setPosition(-1000f, -1000f)
                 explosionSound.play()

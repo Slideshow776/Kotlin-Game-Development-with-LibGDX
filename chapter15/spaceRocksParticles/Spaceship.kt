@@ -8,7 +8,8 @@ import com.badlogic.gdx.math.MathUtils
 
 class Spaceship(x: Float, y: Float, private val s: Stage) : BaseActor(x, y, s) {
 
-    private var thrusters: Thrusters
+    // private var thrusters: Thrusters
+    private var thrusterEffect: ThrusterEffect
     private var shield: Shield
     var shieldPower: Int
     private var shootSound: Sound
@@ -23,9 +24,15 @@ class Spaceship(x: Float, y: Float, private val s: Stage) : BaseActor(x, y, s) {
         setMaxSpeed(200f)
         setDeceleration(1f)
 
-        thrusters = Thrusters(0f, 0f, s)
-        addActor(thrusters)
-        thrusters.setPosition(-thrusters.width, height / 2 - thrusters.height / 2)
+        // thrusters = Thrusters(0f, 0f, s)
+        // addActor(thrusters)
+        // thrusters.setPosition(-thrusters.width, height / 2 - thrusters.height / 2)
+        thrusterEffect = ThrusterEffect()
+        thrusterEffect.setPosition(0f, 32f)
+        // thrusterEffect.rotation(90f)
+        thrusterEffect.rotateBy(90f)
+        // thrusterEffect.rotateActor(90f)
+        addActor(thrusterEffect)
 
         shield = Shield(0f, 0f, s)
         addActor(shield)
@@ -45,9 +52,11 @@ class Spaceship(x: Float, y: Float, private val s: Stage) : BaseActor(x, y, s) {
             rotateBy(-degreesPerSecond * dt)
         if(Gdx.input.isKeyPressed((Keys.W))) {
             accelerateAtAngle(rotation)
-            thrusters.isVisible = true
+            // thrusters.isVisible = true
+            thrusterEffect.start()
         } else {
-            thrusters.isVisible = false
+            // thrusters.isVisible = false
+            thrusterEffect.stop()
         }
 
         applyPhysics(dt)

@@ -3,25 +3,20 @@ package chapter15.spaceRocksParticles
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.ParticleEffect
-import com.badlogic.gdx.graphics.g3d.particles.renderers.ParticleControllerRenderer
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 
-class ParticleActor(pfxFile: String, imageDirectory: String) : Group() {
-    private lateinit var effect: ParticleEffect
-    private lateinit var renderingActor: ParticleRenderer
+open class ParticleActor(pfxFile: String, imageDirectory: String) : Group() {
+    private var effect: ParticleEffect = ParticleEffect()
+    private var renderingActor: ParticleRenderer
 
-    private class ParticleRenderer(e: ParticleEffect) : Actor() {
-        private var effect: ParticleEffect = e
-
+    private inner class ParticleRenderer internal constructor(private val effect: ParticleEffect) : Actor() {
         override fun draw(batch: Batch?, parentAlpha: Float) {
-            super.draw(batch, parentAlpha)
             effect.draw(batch)
         }
     }
 
     init {
-        effect = ParticleEffect()
         effect.load(Gdx.files.internal(pfxFile), Gdx.files.internal(imageDirectory))
         renderingActor = ParticleRenderer(effect)
         this.addActor(renderingActor)
@@ -30,6 +25,7 @@ class ParticleActor(pfxFile: String, imageDirectory: String) : Group() {
     fun start() { effect.start() }
     fun stop() { effect.allowCompletion() } // pauses continuous emitters
     fun isRunning(): Boolean { return !effect.isComplete }
+    /*fun rotateActor(rotation: Float) { rotation(0f) }*/
 
     fun centerAtActor(other: Actor) {
         setPosition(

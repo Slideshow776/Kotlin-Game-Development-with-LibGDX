@@ -1,14 +1,19 @@
 package chapter15.starfishCollectorShaders
 
-import chapter15.starfishCollectorShaders.BaseActor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 
 class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     var pause = false
+
+    var vertexShaderCode: String
+    var fragmenterShaderCode: String
+    lateinit var shaderProgram: ShaderProgram
 
     init {
         val fileNames: Array<String> = Array()
@@ -25,6 +30,12 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         setAcceleration(400f) // time to reach max speed = 100/400 = .25 seconds
         setMaxSpeed(100f) // pixels/seconds
         setDeceleration(400f) // time to reach zero speed = 100/400 = .25 seconds
+
+        vertexShaderCode = Gdx.files.internal("assets/shaders/default.vs").readString()
+        fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
+        shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
+        if (!shaderProgram.isCompiled)
+            println("Shader compile error: " + shaderProgram.log)
     }
 
     override fun act(dt: Float) {
@@ -49,5 +60,11 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         boundToWorld()
         alignCamera()
+    }
+
+    override fun draw(batch: Batch, parentAlpha: Float) {
+        batch.shader = shaderProgram
+        super.draw(batch, parentAlpha)
+        batch.shader = null
     }
 }

@@ -7,5 +7,6 @@
 ## Space Rocks with Particles
 
 ## Shader Programming
+[invert shader](https://github.com/mattdesl/lwjgl-basics/wiki/ShaderLesson2)
 
 ## Starfish Collector with Shaders

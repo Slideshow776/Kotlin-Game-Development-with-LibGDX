@@ -32,7 +32,11 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         setDeceleration(400f) // time to reach zero speed = 100/400 = .25 seconds
 
         vertexShaderCode = Gdx.files.internal("assets/shaders/default.vs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
+
+        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
+        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale.fs").readString()
+        fragmenterShaderCode = Gdx.files.internal("assets/shaders/invert.fs").readString()
+
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
         if (!shaderProgram.isCompiled)
             println("Shader compile error: " + shaderProgram.log)

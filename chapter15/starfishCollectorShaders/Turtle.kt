@@ -4,8 +4,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.badlogic.gdx.math.Vector2
 
 class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
@@ -38,7 +40,8 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/invert.fs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale-pulse.fs").readString()
+        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale-pulse.fs").readString()
+        fragmenterShaderCode = Gdx.files.internal("assets/shaders/border.fs").readString()
 
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
         if (!shaderProgram.isCompiled)
@@ -73,7 +76,10 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         batch.shader = shaderProgram
-        shaderProgram.setUniformf("u_time", time)
+        // shaderProgram.setUniformf("u_time", time)
+        shaderProgram.setUniformf("u_imageSize", Vector2(width, height))
+        shaderProgram.setUniformf("u_borderColor", Color.BLACK)
+        shaderProgram.setUniformf("u_borderSize", 3f)
         super.draw(batch, parentAlpha)
         batch.shader = null
     }

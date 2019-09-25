@@ -41,7 +41,8 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/invert.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale-pulse.fs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/border.fs").readString()
+        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/border.fs").readString()
+        fragmenterShaderCode = Gdx.files.internal("assets/shaders/blur.fs").readString()
 
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
         if (!shaderProgram.isCompiled)
@@ -78,8 +79,9 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         batch.shader = shaderProgram
         // shaderProgram.setUniformf("u_time", time)
         shaderProgram.setUniformf("u_imageSize", Vector2(width, height))
-        shaderProgram.setUniformf("u_borderColor", Color.BLACK)
-        shaderProgram.setUniformf("u_borderSize", 3f)
+        // shaderProgram.setUniformf("u_borderColor", Color.BLACK)
+        // shaderProgram.setUniformf("u_borderSize", 3f)
+        shaderProgram.setUniformf("u_blurRadius", 5f) // greater numbers become a greater blur effect
         super.draw(batch, parentAlpha)
         batch.shader = null
     }

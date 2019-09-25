@@ -13,7 +13,9 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     var vertexShaderCode: String
     var fragmenterShaderCode: String
-    lateinit var shaderProgram: ShaderProgram
+    var shaderProgram: ShaderProgram
+
+    var time = .0f
 
     init {
         val fileNames: Array<String> = Array()
@@ -35,7 +37,8 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale.fs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/invert.fs").readString()
+        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/invert.fs").readString()
+        fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale-pulse.fs").readString()
 
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
         if (!shaderProgram.isCompiled)
@@ -64,10 +67,13 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         boundToWorld()
         alignCamera()
+
+        time += dt
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         batch.shader = shaderProgram
+        shaderProgram.setUniformf("u_time", time)
         super.draw(batch, parentAlpha)
         batch.shader = null
     }

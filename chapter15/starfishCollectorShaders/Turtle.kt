@@ -44,7 +44,8 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/border.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/blur.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/glow-pulse.fs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/wave.fs").readString()
+        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/wave.fs").readString()
+        fragmenterShaderCode = Gdx.files.internal("assets/shaders/red.fs").readString()
 
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
         if (!shaderProgram.isCompiled)
@@ -79,15 +80,15 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         batch.shader = shaderProgram
-        shaderProgram.setUniformf("u_time", time)
-        shaderProgram.setUniformf("u_imageSize", Vector2(width, height))
+        // shaderProgram.setUniformf("u_time", time)
+        // shaderProgram.setUniformf("u_imageSize", Vector2(width, height))
         // shaderProgram.setUniformf("u_borderColor", Color.BLACK)
         // shaderProgram.setUniformf("u_borderSize", 3f)
         // shaderProgram.setUniformf("u_blurRadius", 5f) // greater numbers become a greater blur effect
         // shaderProgram.setUniformf("u_glowRadius", 5f)
-        shaderProgram.setUniformf("u_amplitude", Vector2(1f, 1.5f))
-        shaderProgram.setUniformf("u_wavelength", Vector2(17f, 40f))
-        shaderProgram.setUniformf("u_velocity", Vector2(6f, 7f))
+        // shaderProgram.setUniformf("u_amplitude", Vector2(1f, 1.5f))
+        // shaderProgram.setUniformf("u_wavelength", Vector2(17f, 40f))
+        // shaderProgram.setUniformf("u_velocity", Vector2(6f, 7f))
         super.draw(batch, parentAlpha)
         batch.shader = null
     }

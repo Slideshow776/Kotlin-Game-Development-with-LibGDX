@@ -37,7 +37,7 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
 
         vertexShaderCode = Gdx.files.internal("assets/shaders/default.vs").readString()
 
-        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
+        fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/invert.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/grayscale-pulse.fs").readString()
@@ -45,7 +45,7 @@ class Turtle(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/blur.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/glow-pulse.fs").readString()
         // fragmenterShaderCode = Gdx.files.internal("assets/shaders/wave.fs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/red.fs").readString()
+        // fragmenterShaderCode = Gdx.files.internal("assets/shaders/red.fs").readString()
 
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
         if (!shaderProgram.isCompiled)

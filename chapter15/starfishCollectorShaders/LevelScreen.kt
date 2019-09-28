@@ -181,9 +181,14 @@ class LevelScreen: BaseScreen() {
                 if (turtle.overlaps(starfish) && !starfish.isCollected()) {
                     starfish.collect()
 
-                    val whirl = Whirlpool(0f, 0f, mainStage)
+                    /*val whirl = Whirlpool(0f, 0f, mainStage)
                     whirl.centerAtActor(starfish)
-                    whirl.setOpacity(.25f)
+                    whirl.setOpacity(.25f)*/
+
+                    val drops = DropletEffect()
+                    drops.centerAtActor(starfish)
+                    drops.start()
+                    mainStage.addActor(drops)
 
                     waterDrop.play()
                 }

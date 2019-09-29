@@ -6,6 +6,6 @@ import chapter15.starfishCollectorShaders.MenuScreen
 class StarfishGame: BaseGame() {
     override fun create() {
         super.create()
-        setActiveScreen(MenuScreen())
+        setActiveScreen(LevelScreen())
     }
 }

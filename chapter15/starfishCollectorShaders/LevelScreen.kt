@@ -55,6 +55,8 @@ class LevelScreen: BaseScreen() {
 
         val tma = TilemapActor("assets/map.tmx", mainStage)
 
+        val ocean = Water(0f, 0f, mainStage)
+
         for (obj in tma.getTileList("Rock")) {
             val props = obj.properties
             Rock(props.get("x") as Float, props.get("y") as Float, mainStage)

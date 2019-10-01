@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 
-class Water(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+class WaterBackground(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     var vertexShaderCode: String
     var fragmenterShaderCode: String
     var shaderProgram: ShaderProgram

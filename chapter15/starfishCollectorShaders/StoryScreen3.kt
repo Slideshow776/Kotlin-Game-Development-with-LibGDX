@@ -1,13 +1,5 @@
 package chapter15.starfishCollectorShaders
 
-import chapter15.starfishCollectorShaders.BaseActor
-import chapter15.starfishCollectorShaders.BaseGame
-import chapter15.starfishCollectorShaders.BaseScreen
-import chapter15.starfishCollectorShaders.DialogBox
-import chapter15.starfishCollectorShaders.MenuScreen
-import chapter15.starfishCollectorShaders.Scene
-import chapter15.starfishCollectorShaders.SceneActions
-import chapter15.starfishCollectorShaders.SceneSegment
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.audio.Music
@@ -20,11 +12,7 @@ class StoryScreen3: BaseScreen() {
     private lateinit var backgroundMusic: Music
 
     override fun initialize() {
-        val background = BaseActor(0f, 0f, mainStage)
-        background.loadTexture("assets/oceanside.png")
-        background.setSize(800f, 600f)
-        background.setOpacity(0f)
-        BaseActor.setWorldBounds(background)
+        val background = VignetteBackground(0f, 0f, mainStage)
 
         val turtle = BaseActor(0f, 0f, mainStage)
         turtle.loadTexture("assets/turtle-big.png")

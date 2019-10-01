@@ -12,7 +12,10 @@ class StoryScreen3: BaseScreen() {
     private lateinit var backgroundMusic: Music
 
     override fun initialize() {
-        val background = VignetteBackground(0f, 0f, mainStage)
+        val background = VignetteBackground(0f, 0f, "assets/oceanside.png", mainStage)
+        background.setSize(800f, 600f)
+        background.setOpacity(0f)
+        BaseActor.setWorldBounds(background)
 
         val turtle = BaseActor(0f, 0f, mainStage)
         turtle.loadTexture("assets/turtle-big.png")

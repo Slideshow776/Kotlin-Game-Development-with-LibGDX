@@ -5,18 +5,15 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.scenes.scene2d.Stage
 
-class VignetteBackground(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+class VignetteBackground(x: Float, y: Float, texturePath: String, s: Stage) : BaseActor(x, y, s) {
     var vertexShaderCode: String
     var fragmenterShaderCode: String
     var shaderProgram: ShaderProgram
 
     init {
-        loadTexture("assets/oceanside.png")
-        setSize(800f, 600f)
-        setOpacity(0f)
-        setWorldBounds(this)
+        if (!texturePath.isBlank())
+            loadTexture(texturePath)
 
-        ShaderProgram.pedantic = false
         vertexShaderCode = Gdx.files.internal("assets/shaders/vignette.vs").readString()
         fragmenterShaderCode = Gdx.files.internal("assets/shaders/vignette.fs").readString()
         shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)

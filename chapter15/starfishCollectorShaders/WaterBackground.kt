@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 
-class WaterBackground(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+class WaterBackground(x: Float, y: Float, texturePath: String, s: Stage) : BaseActor(x, y, s) {
     var vertexShaderCode: String
     var fragmenterShaderCode: String
     var shaderProgram: ShaderProgram
@@ -14,7 +14,7 @@ class WaterBackground(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
     var time = .0f
 
     init {
-        loadTexture("assets/large-water-water-only.jpg")
+        loadTexture(texturePath)
         //setPosition(40f, 40f) // beach shore offset
 
         vertexShaderCode = Gdx.files.internal("assets/shaders/default.vs").readString()

@@ -12,9 +12,11 @@ class MenuScreen: BaseScreen() {
     private lateinit var backgroundMusic: Music
 
     override fun initialize() {
-        val ocean = BaseActor(0f, 0f, mainStage)
-        ocean.loadTexture("assets/water.jpg")
+        val ocean = WaterBackground(0f, 0f, "assets/water.jpg", mainStage)
         ocean.setSize(800f, 600f)
+
+        val background = VignetteBackground(0f, 0f, "assets/opaqueWhite.png", mainStage)
+        background.setSize(800f, 600f)
 
         val title = BaseActor(0f, 0f, mainStage)
         title.loadTexture("assets/starfish-collector.png")

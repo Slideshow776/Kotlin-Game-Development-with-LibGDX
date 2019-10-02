@@ -1,6 +1,7 @@
 package chapter15.starfishCollectorShaders
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
@@ -12,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 
 
 class LevelScreen: BaseScreen() {
@@ -32,6 +35,8 @@ class LevelScreen: BaseScreen() {
     private lateinit var trumpet: Sound
     private lateinit var instrumental: Music
     private lateinit var oceanSurf: Music
+
+    private lateinit var shock: SchockwaveBackground
 
     override fun initialize() {
         /*
@@ -55,7 +60,15 @@ class LevelScreen: BaseScreen() {
 
         val tma = TilemapActor("assets/map.tmx", mainStage)
 
-        val ocean = WaterBackground(0f, 0f, "assets/large-water-water-only.jpg", mainStage)
+        // WaterBackground(0f, 0f, "assets/large-water-water-only.jpg", mainStage)
+        shock = SchockwaveBackground(0f, 0f, "assets/large-water-water-only.jpg", mainStage)
+        shock.addListener {e: Event ->
+            if (isTouchDownEvent(e)) {
+                println("click!")
+                shock.start(.5f, .5f)
+            }
+            false
+        }
 
         for (obj in tma.getTileList("Rock")) {
             val props = obj.properties
@@ -277,4 +290,9 @@ class LevelScreen: BaseScreen() {
         waterDrop.dispose()
     }
 
+    override fun keyDown(keycode: Int): Boolean {
+        if (keycode == Input.Keys.SPACE)
+            shock.start(.5f, .5f)
+        return false
+    }
 }

@@ -8,7 +8,7 @@ Make sure the particle editor is of the same version as the rest of your project
 ## Space Rocks with Particles
 
 ## Shader Programming
-Matt DesLauriers's [Intro to Shaders](https://github.com/mattdesl/lwjgl-basics/wiki/ShaderLesson2)
+Matt DesLauriers's [Intro to Shaders](https://github.com/mattdesl/lwjgl-basics/wiki/Shaders)
 
 [The Book of Shaders](https://thebookofshaders.com)
 

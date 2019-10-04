@@ -11,8 +11,10 @@ class StoryScreen: BaseScreen() {
     lateinit var continueKey: BaseActor
     private lateinit var backgroundMusic: Music
 
+    private lateinit var background: VignetteBackground
+
     override fun initialize() {
-        val background = VignetteBackground(0f, 0f, "assets/oceanside.png", mainStage)
+        background = VignetteBackground(0f, 0f, "assets/oceanside.png", mainStage)
         background.setSize(800f, 600f)
         background.setOpacity(0f)
         BaseActor.setWorldBounds(background)
@@ -65,12 +67,29 @@ class StoryScreen: BaseScreen() {
         scene.addSegment(SceneSegment(background, Actions.fadeOut(1f)))
 
         scene.start()
+
+        val transition = Transition(0f, 0f, "assets/transition3.png", uiStage)
+        transition.enabled = true
+        transition.wayIn = false
     }
 
     override fun update(dt: Float) {
         if (scene.isSceneFinished) {
-            dispose()
-            BaseGame.setActiveScreen(LevelScreen())
+            val transition = Transition(0f, 0f, "assets/transition3.png", uiStage)
+            transition.enabled = true
+            transition.wayIn = true
+            background.addAction(
+                Actions.sequence(
+                    Actions.delay(transition.duration, Actions.run {
+                        transition.remove()
+                        dispose()
+                        BaseGame.setActiveScreen(LevelScreen())
+                    })
+                )
+            )
+
+            /*dispose()
+            BaseGame.setActiveScreen(LevelScreen())*/
         }
     }
 

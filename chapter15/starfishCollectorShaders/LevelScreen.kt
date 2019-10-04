@@ -60,15 +60,15 @@ class LevelScreen: BaseScreen() {
 
         val tma = TilemapActor("assets/map.tmx", mainStage)
 
-        // WaterBackground(0f, 0f, "assets/large-water-water-only.jpg", mainStage)
-        shock = SchockwaveBackground(0f, 0f, "assets/large-water-water-only.jpg", mainStage)
+        WaterBackground(0f, 0f, "assets/large-water-water-only.jpg", mainStage)
+        /*shock = SchockwaveBackground(0f, 0f, "assets/large-water-water-only.jpg", mainStage)
         shock.addListener {e: Event ->
             if (isTouchDownEvent(e)) {
                 println("click!")
                 shock.start(.5f, .5f)
             }
             false
-        }
+        }*/
 
         for (obj in tma.getTileList("Rock")) {
             val props = obj.properties

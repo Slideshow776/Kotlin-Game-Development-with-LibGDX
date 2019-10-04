@@ -6,13 +6,15 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputEvent.Type
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 
-class MenuScreen: BaseScreen() {
+class MenuScreen : BaseScreen() {
     private lateinit var backgroundMusic: Music
+    private lateinit var ocean: WaterBackground
 
     override fun initialize() {
-        val ocean = WaterBackground(0f, 0f, "assets/water.jpg", mainStage)
+        ocean = WaterBackground(0f, 0f, "assets/water.jpg", mainStage)
         ocean.setSize(800f, 600f)
 
         val background = VignetteBackground(0f, 0f, "assets/opaqueWhite.png", mainStage)
@@ -32,10 +34,19 @@ class MenuScreen: BaseScreen() {
         /*startButton.setPosition(150f, 150f)
         uiStage.addActor(startButton)*/
         startButton.addListener { e: Event ->
-            val ie = e as InputEvent
-            if (ie.type == Type.touchDown) {
-                dispose()
-                BaseGame.setActiveScreen(StoryScreen())
+            if (isTouchDownEvent(e)) {
+                val transition = Transition(0f, 0f, "assets/transition2.png", uiStage)
+                transition.enabled = true
+                transition.wayIn = true
+                ocean.addAction(
+                    Actions.sequence(
+                        Actions.delay(transition.duration, Actions.run {
+                            transition.remove()
+                            dispose()
+                            BaseGame.setActiveScreen(StoryScreen())
+                        })
+                    )
+                )
             }
             false
         }
@@ -44,8 +55,7 @@ class MenuScreen: BaseScreen() {
         /*quitButton.setPosition(500f, 150f)
         uiStage.addActor(quitButton)*/
         quitButton.addListener { e: Event ->
-            val ie = e as InputEvent
-            if (ie.type == Type.touchDown) {
+            if (isTouchDownEvent(e)) {
                 dispose()
                 Gdx.app.exit()
             }
@@ -60,12 +70,26 @@ class MenuScreen: BaseScreen() {
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/fantasy-orchestra.wav"))
         backgroundMusic.isLooping = true
         backgroundMusic.play()
+
+        val transition = Transition(0f, 0f, "assets/transition2.png", uiStage)
+        transition.enabled = true
+        transition.wayIn = false
     }
 
-    override fun keyDown(keyCode: Int) : Boolean {
+    override fun keyDown(keyCode: Int): Boolean {
         if (Gdx.input.isKeyPressed(Keys.ENTER)) {
-            dispose()
-            BaseGame.setActiveScreen(StoryScreen())
+            val transition = Transition(0f, 0f, "assets/transition2.png", uiStage)
+            transition.enabled = true
+            transition.wayIn = true
+            ocean.addAction(
+                Actions.sequence(
+                    Actions.delay(transition.duration, Actions.run {
+                        transition.remove()
+                        dispose()
+                        BaseGame.setActiveScreen(StoryScreen())
+                    })
+                )
+            )
         }
         if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
             dispose()

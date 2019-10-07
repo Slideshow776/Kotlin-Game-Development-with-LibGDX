@@ -73,19 +73,19 @@ void main()
 The shader program is usually stored as two files in an _assets folder_, and is loaded into the game's app like this:
 ```
 vertexShaderCode = Gdx.files.internal("assets/shaders/default.vs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
-        shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
-        if (!shaderProgram.isCompiled)
-            println("Shader compile error: " + shaderProgram.log)
+fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
+shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
+if (!shaderProgram.isCompiled)
+    println("Shader compile error: " + shaderProgram.log)
 ```
 
 Then the shader program needs to be drawn:
 ```
 override fun draw(batch: Batch, parentAlpha: Float) {
-        batch.shader = shaderProgram
-        super.draw(batch, parentAlpha)
-        batch.shader = null
-    }
+    batch.shader = shaderProgram
+    super.draw(batch, parentAlpha)
+    batch.shader = null
+}
 ```
 
 ### Starfish Collector with shaders

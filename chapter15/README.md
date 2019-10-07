@@ -104,5 +104,7 @@ This topic is far too broad and advanced to be covered in a chapter's summary. T
 ## New Imports
 
 **import com.badlogic.gdx.graphics.g2d.ParticleEffect** - Main particle effect library
+
 **import com.badlogic.gdx.graphics.g2d.ParticleEmitter** - Emitter library
+
 **import com.badlogic.gdx.graphics.glutils.ShaderProgram** - A shader program encapsulates a vertex and fragment shader pair linked to form a shader program 

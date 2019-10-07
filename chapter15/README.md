@@ -70,7 +70,7 @@ void main()
 }
 ```
 
-The shader program is usually store as two files in an _assets folder_, and is loaded into the game's app like this:
+The shader program is usually stored as two files in an _assets folder_, and is loaded into the game's app like this:
 ```
 vertexShaderCode = Gdx.files.internal("assets/shaders/default.vs").readString()
         fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()

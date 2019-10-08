@@ -70,22 +70,22 @@ void main()
 }
 ```
 
-The shader program is usually store as two files in an _assets folder_, and is loaded into the game's app like this:
+The shader program is usually stored as two files in an _assets folder_, and is loaded into the game's app like this:
 ```
 vertexShaderCode = Gdx.files.internal("assets/shaders/default.vs").readString()
-        fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
-        shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
-        if (!shaderProgram.isCompiled)
-            println("Shader compile error: " + shaderProgram.log)
+fragmenterShaderCode = Gdx.files.internal("assets/shaders/default.fs").readString()
+shaderProgram = ShaderProgram(vertexShaderCode, fragmenterShaderCode)
+if (!shaderProgram.isCompiled)
+    println("Shader compile error: " + shaderProgram.log)
 ```
 
 Then the shader program needs to be drawn:
 ```
 override fun draw(batch: Batch, parentAlpha: Float) {
-        batch.shader = shaderProgram
-        super.draw(batch, parentAlpha)
-        batch.shader = null
-    }
+    batch.shader = shaderProgram
+    super.draw(batch, parentAlpha)
+    batch.shader = null
+}
 ```
 
 ### Starfish Collector with shaders
@@ -104,5 +104,7 @@ This topic is far too broad and advanced to be covered in a chapter's summary. T
 ## New Imports
 
 **import com.badlogic.gdx.graphics.g2d.ParticleEffect** - Main particle effect library
+
 **import com.badlogic.gdx.graphics.g2d.ParticleEmitter** - Emitter library
+
 **import com.badlogic.gdx.graphics.glutils.ShaderProgram** - A shader program encapsulates a vertex and fragment shader pair linked to form a shader program 

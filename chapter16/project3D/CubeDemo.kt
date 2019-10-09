@@ -1,4 +1,4 @@
-package chapter16.cubeDemo
+package chapter16.project3D
 
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx

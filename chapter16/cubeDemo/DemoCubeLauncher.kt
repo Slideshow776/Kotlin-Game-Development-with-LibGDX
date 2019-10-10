@@ -1,8 +1,9 @@
-package chapter16.project3D
+package chapter16.cubeDemo
 
+import chapter16.project3D.demoCube
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 
-object demoCubeLauncher {
+object DemoCubeLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
         val myGame = demoCube()

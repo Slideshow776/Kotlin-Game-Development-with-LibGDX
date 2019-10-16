@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector3
-import com.badlogic.gdx.utils.Array as GDXArray
+import java.util.ArrayList;
 
 class Stage3D {
     private var environment: Environment
     private var camera: PerspectiveCamera
     private var modelBatch: ModelBatch
-    private var actorList: GDXArray<BaseActor3D>
+    private var actorList: ArrayList<BaseActor3D>
 
     init {
         environment = Environment()
@@ -35,24 +35,25 @@ class Stage3D {
 
         modelBatch = ModelBatch()
 
-        actorList = GDXArray<BaseActor3D>()
+        actorList = ArrayList()
     }
 
     fun act(dt: Float) {
-        for (baseActor3D in actorList)
-            baseActor3D.act(dt)
+        camera.update()
+        for (ba in this.actorList)
+            ba.act(dt)
     }
 
     fun draw() {
         modelBatch.begin(camera)
-        for (baseActor3D in actorList)
-            baseActor3D.draw(modelBatch, environment)
+        for (ba in this.actorList)
+            ba.draw(modelBatch, environment)
         modelBatch.end()
     }
 
     fun addActor(ba: BaseActor3D) { actorList.add(ba) }
-    fun removeActor(ba: BaseActor3D) { actorList.removeValue(ba, true) }
-    fun getActors():GDXArray<BaseActor3D> { return actorList }
+    fun removeActor(ba: BaseActor3D) { actorList.remove(ba) }
+    fun getActors(): ArrayList<BaseActor3D> { return actorList }
 
     fun setCameraPosition(x: Float, y: Float, z: Float) { camera.position.set(x, y, z) }
     fun setCameraPosition(v: Vector3) { camera.position.set(v) }

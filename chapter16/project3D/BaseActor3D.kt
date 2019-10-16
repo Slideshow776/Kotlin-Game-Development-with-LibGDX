@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 
-class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
+open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
     private var modelData: ModelInstance?
     private var position: Vector3
     private var rotation: Quaternion

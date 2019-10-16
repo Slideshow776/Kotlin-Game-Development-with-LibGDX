@@ -1,7 +1,5 @@
-package chapter16.project3D
+package chapter16.starfishCollector3D
 
-import chapter16.starfishCollector3D.BaseGame
-import chapter16.starfishCollector3D.BaseScreen
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer

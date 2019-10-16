@@ -1,4 +1,4 @@
-package chapter16.project3D
+package chapter16.starfishCollector3D
 
 import chapter16.starfishCollector3D.BaseGame
 import chapter16.starfishCollector3D.DemoScreen

@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
-import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.math.Quaternion
-import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.math.*
+import java.lang.Exception
+import java.util.ArrayList
+import com.badlogic.gdx.math.Intersector.MinimumTranslationVector
+import com.badlogic.gdx.math.collision.BoundingBox
 
 open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
     private var modelData: ModelInstance?
@@ -18,6 +20,8 @@ open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
     private var rotation: Quaternion
     private var scale: Vector3
     protected var stage: Stage3D
+
+    private lateinit var boundingPolygon: Polygon
 
     init {
         modelData = null
@@ -44,7 +48,7 @@ open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
             m.set(TextureAttribute.createDiffuse(tex))
     }
 
-    fun act(dt: Float) { modelData?.transform?.set(calculateTransform()) }
+    open fun act(dt: Float) { modelData?.transform?.set(calculateTransform()) }
     fun draw(batch: ModelBatch, env: Environment) { batch.render(modelData, env) }
 
     fun getPosition():Vector3 { return position }
@@ -60,4 +64,96 @@ open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
     fun moveUp(dist: Float) { moveBy(rotation.transform(Vector3(0f, 1f, 0f)).scl(dist)) }
     fun moveRight(dist: Float) { moveBy(rotation.transform(Vector3(1f, 0f, 0f)).scl(dist)) }
     fun setScale(x: Float, y: Float, z: Float) { scale.set(x, y, z) }
+
+    fun setBaseRectangle() {
+        val modelBounds = modelData?.calculateBoundingBox(BoundingBox())
+        val max = modelBounds?.max
+        val min = modelBounds?.min
+
+        val vertices = floatArrayOf(max?.x!!, max.z, min?.x!!, max.z, min.x, min.z, max.x, min.z)
+        boundingPolygon = Polygon(vertices)
+        boundingPolygon.setOrigin(0f, 0f)
+    }
+
+    fun setBasePolygon() {
+        val modelBounds = modelData?.calculateBoundingBox(BoundingBox())
+        val max = modelBounds?.max
+        val min = modelBounds?.min
+
+        val a = 0.75f // offset amount.
+        val vertices = floatArrayOf(
+            max?.x!!,
+            0f,
+            a * max.x,
+            a * max.z,
+            0f,
+            max.z,
+            a * min?.x!!,
+            a * max.z,
+            min.x,
+            0f,
+            a * min.x,
+            a * min.z,
+            0f,
+            min.z,
+            a * max.x,
+            a * min.z
+        )
+        boundingPolygon = Polygon(vertices)
+        boundingPolygon.setOrigin(0f, 0f)
+    }
+
+    fun getBoundaryPolygon(): Polygon {
+        boundingPolygon.setPosition(position.x, position.z)
+        boundingPolygon.setRotation(getTurnAngle())
+        boundingPolygon.setScale(scale.x, scale.z)
+        return boundingPolygon
+    }
+
+    fun overlaps(other: BaseActor3D): Boolean {
+        val poly1 = this.getBoundaryPolygon()
+        val poly2 = other.getBoundaryPolygon()
+
+        if (!poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()))
+            return false
+
+        val mtv = MinimumTranslationVector()
+
+        return Intersector.overlapConvexPolygons(poly1, poly2, mtv)
+    }
+
+    fun preventOverlap(other: BaseActor3D) {
+        val poly1 = this.getBoundaryPolygon()
+        val poly2 = other.getBoundaryPolygon()
+
+        // initial test to improve performance
+        if (!poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()))
+            return
+
+        val mtv = MinimumTranslationVector()
+        val polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv)
+
+        if (polygonOverlap)
+            this.moveBy(mtv.normal.x * mtv.depth, 0f, mtv.normal.y * mtv.depth)
+    }
+
+    companion object {
+        fun getList(stage:Stage3D, className: String): ArrayList<BaseActor3D> {
+            val list = ArrayList<BaseActor3D>()
+
+            var theClass: Class<*>? = null
+            try { theClass = Class.forName(className) }
+            catch (error: Exception) { error.printStackTrace() }
+
+            for (ba3d in stage.getActors()) {
+                if (theClass!!.isInstance(ba3d))
+                    list.add(ba3d)
+            }
+            return list
+        }
+
+        fun count(stage: Stage3D, className: String):Int { return getList(stage, className).size }
+    }
+
+    fun remove() { stage.removeActor(this) }
 }

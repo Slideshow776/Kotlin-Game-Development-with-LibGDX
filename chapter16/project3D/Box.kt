@@ -1,7 +1,5 @@
 package chapter16.project3D
 
-import chapter16.starfishCollector3D.BaseActor3D
-import chapter16.starfishCollector3D.Stage3D
 import com.badlogic.gdx.graphics.VertexAttributes.Usage
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.ModelInstance

@@ -1,6 +1,5 @@
 package chapter16.project3D
 
-import chapter16.starfishCollector3D.Stage3D
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.InputProcessor

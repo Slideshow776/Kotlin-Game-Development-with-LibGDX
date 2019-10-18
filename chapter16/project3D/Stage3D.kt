@@ -1,6 +1,5 @@
 package chapter16.project3D
 
-import chapter16.starfishCollector3D.BaseActor3D
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.PerspectiveCamera

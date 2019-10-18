@@ -1,6 +1,5 @@
 package chapter16.project3D
 
-import chapter16.starfishCollector3D.MoveDemo
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 
 object Launcher2 {

@@ -1,9 +1,5 @@
 package chapter16.project3D
 
-import chapter16.starfishCollector3D.BaseActor3D
-import chapter16.starfishCollector3D.BaseScreen
-import chapter16.starfishCollector3D.Box
-import chapter16.starfishCollector3D.Sphere
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color

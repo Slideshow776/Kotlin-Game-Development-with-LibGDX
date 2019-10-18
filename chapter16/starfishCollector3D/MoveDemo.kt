@@ -1,4 +1,4 @@
-package chapter16.project3D
+package chapter16.starfishCollector3D
 
 class MoveDemo : BaseGame() {
     override fun create() {

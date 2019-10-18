@@ -1,11 +1,11 @@
-package chapter16.project3D
+package chapter16.starfishCollector3D
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 
 object Launcher {
     @JvmStatic
     fun main(args: Array<String>) {
-        val myGame = demoCube()
+        val myGame = CubeDemo()
         LwjglApplication(myGame, "Cube Demo", 800, 600)
     }
 }

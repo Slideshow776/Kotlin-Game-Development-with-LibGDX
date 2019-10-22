@@ -1,10 +1,10 @@
 package chapter16.rectangleDestroyer3D
 
-import com.badlogic.gdx.scenes.scene2d.Stage
-
-class Brick(x: Float, y: Float, s: Stage) : BaseActor(x, y, s) {
+class Brick(x: Float, y: Float, z: Float, s: Stage3D) : Box(x, y, z, s) {
     init {
         loadTexture("assets/brick-gray.png")
+        setScale(1.15f, .5f, .5f)
+        setBaseRectangle()
     }
-
 }
+

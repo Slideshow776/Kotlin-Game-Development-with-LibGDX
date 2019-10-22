@@ -1,8 +1,8 @@
 package chapter16.rectangleDestroyer3D
 
-class RectangleDestroyer : BaseGame() {
+class RectangleDestroyer3D : BaseGame() {
     override fun create() {
         super.create()
-        setActiveScreen(MenuScreen())
+        setActiveScreen(LevelScreen())
     }
 }

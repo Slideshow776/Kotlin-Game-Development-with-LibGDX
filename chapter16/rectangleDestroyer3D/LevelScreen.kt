@@ -1,299 +1,142 @@
 package chapter16.rectangleDestroyer3D
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.audio.Music
-import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.VertexAttributes
+import com.badlogic.gdx.graphics.g3d.Material
+import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.math.Vector3
 
 class LevelScreen : BaseScreen() {
-    private lateinit var paddle: Paddle
+
+    private lateinit var paddle: Box
     private lateinit var ball: Ball
-    private lateinit var solid: Solid
+    private lateinit var wallTop: BaseActor3D
+    private lateinit var wallLeft: BaseActor3D
+    private lateinit var wallRight: BaseActor3D
+    private lateinit var wallBottom: BaseActor3D
 
-    private var score = 0
-    private var balls = 3
-    private var gameOver = false
-    private lateinit var scoreLabel: Label
-    private lateinit var ballsLabel: Label
-    private lateinit var messageLabel: Label
+    private val ballWidth = .6f
+    private val paddleWidth = 2f
 
-    private lateinit var bounceSound: Sound
-    private lateinit var brickBumpSound: Sound
-    private lateinit var wallBumpSound: Sound
-    private lateinit var itemAppearSound: Sound
-    private lateinit var itemCollectSound: Sound
-    private lateinit var gameOverSound: Sound
-    private lateinit var gameWin: Sound
-    private lateinit var ballLost: Sound
-
-    private lateinit var backgroundMusic: Music
-
-    private var paddleStop = false
-    private var paddleTimer = 0f
+    private val controlSpeed = 6f
 
     override fun initialize() {
-        val tma = TilemapActor("assets/map.tmx", mainStage)
+        // background
+        val screen = Box(0f, 0f, 0f, mainStage3D)
+        screen.setScale(16f, 12f, 0.1f)
+        screen.loadTexture("assets/space.png")
 
-        for (obj in tma.getTileList("wall")) {
-            val props = obj.properties
-            Wall(
-                props.get("x") as Float,
-                props.get("y") as Float,
-                props.get("width") as Float,
-                props.get("height") as Float,
-                mainStage
-            )
-        }
-
+        // bricks
+        val tma = TilemapActor("assets/map.tmx")
         for (obj in tma.getTileList("brick")) {
             val props = obj.properties
-            val b = Brick(props.get("x") as Float, props.get("y") as Float, mainStage)
-            b.setSize(props.get("width") as Float, props.get("height") as Float)
-            b.setBoundaryRectangle()
+            val b = Brick(
+                ((props.get("x") as Float) / 50) - 7.6f,
+                ((props.get("y") as Float) / 50) - 4.5f,
+                0f,
+                mainStage3D
+            )
 
-            when(props.get("color")) {
-                "red" -> b.color = Color.RED
-                "orange" -> b.color = Color.ORANGE
-                "yellow" -> b.color = Color.YELLOW
-                "green" -> b.color = Color.GREEN
-                "blue" -> b.color = Color.BLUE
-                "purple" -> b.color = Color.PURPLE
-                "white" -> b.color = Color.WHITE
-                "gray" -> b.color = Color.GRAY
-                "pink" -> b.color = Color.PINK
+            when (props.get("color")) {
+                "red" -> b.setColor(Color.RED)
+                "orange" -> b.setColor(Color.ORANGE)
+                "yellow" -> b.setColor(Color.YELLOW)
+                "green" -> b.setColor(Color.GREEN)
+                "blue" -> b.setColor(Color.BLUE)
+                "purple" -> b.setColor(Color.PURPLE)
+                "white" -> b.setColor(Color.WHITE)
+                "gray" -> b.setColor(Color.GRAY)
+                "pink" -> b.setColor(Color.PINK)
                 else -> println("LevelScreen: Error => Could not set color ${props.get("color")} for brick!")
             }
         }
 
-        val startPoint = tma.getRectangleList("start")[0]
-        val props = startPoint.properties
-        paddle = Paddle(props.get("x") as Float, props.get("y") as Float, mainStage)
-
-        /*
-        // background
-        val background = BaseActor(0f, 0f, mainStage)
-        background.loadTexture("assets/space.png")
-        BaseActor.setWorldBounds(background)
+        // ball
+        ball = Ball(0f, -5.8f, 0f, mainStage3D)
 
         // paddle
-        paddle = Paddle(320f, 32f, mainStage)
+        paddle = Box(0f, -5.25f, 0f, mainStage3D)
+        paddle.loadTexture("assets/brick-gray.png")
+        paddle.setColor(Color.GOLDENROD)
+        paddle.setScale(2f, .5f, .5f)
+        paddle.setBaseRectangle()
 
         // walls
-        Wall(0f, 0f, mainStage, 20f, 600f) // left wall
-        Wall(780f, 0f, mainStage, 20f, 600f) // right wall
-        Wall(0f, 550f, mainStage, 800f, 50f) // top wall
+        wallTop = BaseActor3D(0f, 6.3f, 0f, mainStage3D)
+        val modelBuilder = ModelBuilder()
+        val boxMaterial = Material()
 
-        // bricks
-        val tempBrick = Brick(0f, 0f, mainStage)
-        val brickWidth = tempBrick.width
-        val brickHeight = tempBrick.height
-        tempBrick.remove()
+        val usageCode =
+            VertexAttributes.Usage.Position + VertexAttributes.Usage.ColorPacked + VertexAttributes.Usage.Normal + VertexAttributes.Usage.TextureCoordinates
+        var boxModel = modelBuilder.createBox(16f, .5f, 1f, boxMaterial, usageCode.toLong())
+        val position = Vector3(0f, 0f, 0f)
+        wallTop.setModelInstance(ModelInstance(boxModel, position))
+        // wallTop.setColor(Color.BLACK)
+        wallTop.setBaseRectangle()
 
-        val totalRows = 10
-        val totalCols = 10
-        val marginX = (800 - totalCols * brickWidth) / 2
-        val marginY = (600 - totalRows * brickHeight) -120
+        wallBottom = BaseActor3D(0f, -6.3f, 0f, mainStage3D)
+        wallBottom.setModelInstance(ModelInstance(boxModel, position))
+        wallBottom.setBaseRectangle()
 
-        for (rowNum in 0 until totalRows) {
-            for (colNum in 0 until totalCols) {
-                val x = marginX + brickWidth * colNum
-                val y = marginY + brickHeight * rowNum
-                Brick(x, y, mainStage)
-            }
-        }
-        */
+        boxModel = modelBuilder.createBox(.5f, 16f, 1f, boxMaterial, usageCode.toLong())
 
-        // ball
-        ball = Ball(0f, 0f, mainStage)
+        wallLeft = BaseActor3D(-8.1f, 0f, 0f, mainStage3D)
+        wallLeft.setModelInstance(ModelInstance(boxModel, position))
+        wallLeft.setBaseRectangle()
 
-        // solid
-        val solidStartPoint = tma.getRectangleList("solid")[0]
-        val solidProps = solidStartPoint.properties
-        solid = Solid(solidProps.get("x") as Float, solidProps.get("y") as Float, mainStage)
+        wallRight = BaseActor3D(8.1f, 0f, 0f, mainStage3D)
+        wallRight.setModelInstance(ModelInstance(boxModel, position))
+        wallRight.setBaseRectangle()
 
-        // solid = Solid(400f, 300f, mainStage)
-
-        // game
-        balls = 3
-        scoreLabel = Label("Score: $score", BaseGame.labelStyle)
-        ballsLabel = Label("Balls: $balls", BaseGame.labelStyle)
-        messageLabel = Label("Click to start", BaseGame.labelStyle)
-        messageLabel.color = Color.CYAN
-
-        uiTable.pad(5f)
-        uiTable.add(scoreLabel)
-        uiTable.add().expandX()
-        uiTable.add(ballsLabel)
-        uiTable.row()
-        uiTable.add(messageLabel).colspan(3).expandY()
-
-        bounceSound = Gdx.audio.newSound((Gdx.files.internal(("assets/boing.wav"))))
-        brickBumpSound = Gdx.audio.newSound((Gdx.files.internal(("assets/bump.wav"))))
-        wallBumpSound = Gdx.audio.newSound((Gdx.files.internal(("assets/bump-low.wav"))))
-        itemAppearSound = Gdx.audio.newSound((Gdx.files.internal(("assets/swoosh.wav"))))
-        itemCollectSound = Gdx.audio.newSound((Gdx.files.internal(("assets/pop.wav"))))
-        gameOverSound = Gdx.audio.newSound((Gdx.files.internal(("assets/382310__myfox14__game-over-arcade.wav"))))
-        gameWin = Gdx.audio.newSound((Gdx.files.internal(("assets/391539__mativve__electro-win-sound.wav"))))
-        ballLost = Gdx.audio.newSound((Gdx.files.internal(("assets/159408__noirenex__life-lost-game-over.wav"))))
-
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(("assets/Rollin-at-5.mp3")))
-        backgroundMusic.isLooping = true
-        backgroundMusic.volume = .5f
-        backgroundMusic.play()
+        // camera
+        mainStage3D.setCameraPosition(0f, 0f, 9.1f)
+        mainStage3D.setCameraDirection(0f, 0f, 0f)
     }
 
     override fun update(dt: Float) {
-        val mouseX = Gdx.input.x
-        if (!paddleStop) paddle.x = mouseX - paddle.width / 2
-        paddle.boundToWorld()
+        controls(dt)
 
-        if ( ball.isPaused() ) {
-            ball.x = paddle.x + paddle.width / 2 - ball.width / 2
-            ball.y = paddle.y + paddle.height / 2 + ball.height / 2
-        }
-
-        for (wall: BaseActor in BaseActor.getList(mainStage, Wall::class.java.canonicalName)) {
-            if (ball.overlaps(wall)) {
-                ball.bounceOff((wall))
-                wallBumpSound.play()
-            }
-        }
-
-        for (brick: BaseActor in BaseActor.getList(mainStage, Brick::class.java.canonicalName)) {
-            if (ball.overlaps(brick)) {
-                ball.bounceOff(brick)
-                val explosion = Explosion(brick.x, brick.y, mainStage)
-                explosion.height = brick.height
-                explosion.centerAtActor(brick)
-                brick.remove()
-                score += 100
-                scoreLabel.setText(("Score: $score"))
-
-                val spawnProbability = 10
-                if (MathUtils.random(0, 100) < spawnProbability) {
-                    val i = Item(0f, 0f, mainStage)
-                    i.centerAtActor(brick)
-                    itemAppearSound.play()
-                }
-
-                brickBumpSound.play()
-            }
+        // game state
+        if (ball.isPaused()) {
+            ball.getPosition().x = paddle.getPosition().x + .5f / 2 - .6f / 2
+            ball.getPosition().y = (paddle.getPosition().y + .5f / 2 + .6f / 2)
         }
 
         if (ball.overlaps(paddle)) {
-            val ballCenterX = ball.x + ball.width / 2
-            val paddlePercentHit = (ballCenterX - paddle.x) / paddle.width
+            val ballCenterX = ball.getPosition().x + 2.1f / 2 // 2.1f just works... (should be ball.width)
+            val paddlePercentHit = (ballCenterX - paddle.getPosition().x) / paddleWidth
             val bounceAngle = MathUtils.lerp(150f, 30f, paddlePercentHit)
             ball.setMotionAngle(bounceAngle)
-            bounceSound.play()
         }
 
-        if (BaseActor.count(mainStage, Brick::class.java.canonicalName) == 0 && !gameOver) {
-            messageLabel.setText("You win!")
-            messageLabel.color = Color.LIME
-            messageLabel.isVisible = true
-            gameWin.play()
-            gameOver = true
-        }
+        if (ball.overlaps(wallTop)) ball.bounceOff(wallTop)
+        if (ball.overlaps(wallBottom)) ball.setPaused(true)
+        if (ball.overlaps(wallLeft)) ball.bounceOff(wallLeft)
+        if (ball.overlaps(wallRight)) ball.bounceOff(wallRight)
+        paddle.preventOverlap(wallRight)
+        paddle.preventOverlap(wallLeft)
 
-        if (ball.y < -50 && BaseActor.count(mainStage, Brick::class.java.canonicalName) > 0) {
-            ball.remove()
-
-            if (balls > 0) {
-                balls -= 1
-                ballsLabel.setText("Balls: $balls")
-                ball = Ball(0f, 0f, mainStage)
-
-                messageLabel.setText("Click to start")
-                messageLabel.color = Color.CYAN
-                messageLabel.isVisible = true
-                ballLost.play()
-            } else if(!gameOver){
-                messageLabel.setText("Game Over")
-                messageLabel.color = Color.RED
-                messageLabel.isVisible = true
-                gameOverSound.play()
-                gameOver = true
-            }
-        }
-
-        for (item: BaseActor in BaseActor.getList(mainStage, Item::class.java.canonicalName)) {
-            if (paddle.overlaps(item)) {
-                val realItem = item as Item
-
-                when {
-                    realItem.getType() == Item.Type.PADDLE_EXPAND -> paddle.width = paddle.width * 1.25f
-                    realItem.getType() == Item.Type.PADDLE_SHRINK -> paddle.width = paddle.width * .8f
-                    realItem.getType() == Item.Type.BALL_SPEED_UP -> ball.setSpeed(ball.getSpeed() * 1.5f)
-                    realItem.getType() == Item.Type.BALL_SPEED_DOWN -> ball.setSpeed(ball.getSpeed() * .9f)
-                    realItem.getType() == Item.Type.PADDLE_STOP -> paddleStop = true
-                    realItem.getType() == Item.Type.BRICK_DESTROY -> destroyRandomBrick()
-                    realItem.getType() == Item.Type.BALL_LARGE -> scaleBall(1.2f)
-                    realItem.getType() == Item.Type.BALL_SMALL -> scaleBall(.8f)
-                    realItem.getType() == Item.Type.BALL_EXTRA -> extraBall()
-                    realItem.getType() == Item.Type.BONUS_POINTS -> bonusPoints()
-                }
-
-                paddle.setBoundaryRectangle()
-                item.remove()
-                itemCollectSound.play()
-            }
-        }
-
-        if (paddleStop) {
-            paddleTimer += dt
-            if (paddleTimer > 1) {
-                paddleStop = false
-                paddleTimer = 0f
-            }
-        }
-
-        for (solid: BaseActor in BaseActor.getList(mainStage, Solid::class.java.canonicalName)) {
-            if (ball.overlaps(solid)) {
-                ball.bounceOff(solid)
-                brickBumpSound.play()
-
-                val r = MathUtils.random()
-                val g = MathUtils.random()
-                val b = MathUtils.random()
-                val randomColor = Color(r, g, b, 1f)
-                solid.color = randomColor
+        for (brick in BaseActor3D.getList(mainStage3D, Brick::class.java.canonicalName)) {
+            if (ball.overlaps(brick)) {
+                ball.bounceOff(brick)
+                brick.remove()
             }
         }
     }
 
-    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        if (ball.isPaused()) {
-            ball.setPaused(false)
-            messageLabel.isVisible = false
+    private fun controls(dt: Float) {
+        if (Gdx.input.isKeyPressed(Keys.A))
+            paddle.moveRight(-controlSpeed * dt);
+        if (Gdx.input.isKeyPressed(Keys.D))
+            paddle.moveRight(controlSpeed * dt);
+        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+            if (ball.isPaused()) {
+                ball.setPaused(false)
+            }
         }
-        return false
-    }
-
-    private fun destroyRandomBrick() {
-        val brickList = ArrayList<Brick>()
-        for (brick: BaseActor in BaseActor.getList(mainStage, Brick::class.java.canonicalName)) {
-            brickList.add(brick as Brick)
-        }
-        val randomBrickToDestroy = MathUtils.random(0, brickList.size-1)
-        brickList[randomBrickToDestroy].remove()
-    }
-
-    private fun scaleBall(scale: Float) {
-        ball.width *= scale
-        ball.height *= scale
-        ball.setBoundaryRectangle()
-    }
-
-    private fun extraBall() {
-        balls += 1
-        ballsLabel.setText("Balls: $balls")
-    }
-
-    private fun bonusPoints() {
-        score += 1000
-        scoreLabel.setText("Score: $score")
     }
 }

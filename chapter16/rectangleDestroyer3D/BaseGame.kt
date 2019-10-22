@@ -12,31 +12,17 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 
-/**
- * Created when program is launched;
- * manages the screens that appear during the game.
- */
 abstract class BaseGame : Game() {
-    /**
-     * Called when game is initialized; stores global reference to game object.
-     */
     init {
         game = this
     }
 
     companion object {
-        /**
-         * Stores reference to game; used when calling setActiveScreen method.
-         */
         private var game: BaseGame? = null
 
         var labelStyle: LabelStyle? = null
         var textButtonStyle: TextButtonStyle? = null
 
-        /**
-         * Used to switch screens while game is running.
-         * Method is static to simplify usage.
-         */
         fun setActiveScreen(s: BaseScreen) {
             game?.setScreen(s)
         }

@@ -137,8 +137,12 @@ open class BaseActor3D(x: Float, y: Float, z: Float, s: Stage3D) {
         val mtv = MinimumTranslationVector()
         val polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv)
 
+        if(!polygonOverlap)
+            return null
+
         if (polygonOverlap)
-            this.moveBy(mtv.normal.x * mtv.depth, 0f, mtv.normal.y * mtv.depth)
+            this.moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth, 0f)
+        // return Vector2(0f, -.1f)
         return mtv.normal
     }
 

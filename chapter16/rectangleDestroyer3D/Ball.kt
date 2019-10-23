@@ -55,13 +55,13 @@ open class Ball (x: Float, y: Float, z: Float, s: Stage3D) : Sphere(x, y, z, s) 
     }
 
     fun getSpeed() = velocityVec.len()
-    fun setMotionAngle(angle: Float) = velocityVec.setAngle(angle)
+    fun setMotionAngle(angle: Float): Vector2 = velocityVec.setAngle(angle)
     fun getMotionAngle() = velocityVec.angle()
     fun isMoving() = getSpeed() > 0
 
     fun setAcceleration(acc: Float) { acceleration = acc }
-    fun accelerateAtAngle(angle: Float) = accelerationVec.add( Vector2(acceleration, 0f).setAngle(angle))
-    fun accelerateForward() = accelerateAtAngle(getTurnAngle())
+    fun accelerateAtAngle(angle: Float): Vector2 = accelerationVec.add( Vector2(acceleration, 0f).setAngle(angle))
+    fun accelerateForward(): Vector2 = accelerateAtAngle(getTurnAngle())
     fun setMaxSpeed(ms: Float) { maxSpeed = ms }
     fun setDeceleration(dec: Float) { deceleration = dec }
 

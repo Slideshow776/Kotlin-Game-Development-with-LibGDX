@@ -30,7 +30,7 @@ camera.position.set(10f, 10f, 10f)
 camera.lookAt(0f, 0f, 0f)
 camera.update()
 ```
-![libGDX's perspective camera](http://www.badlogicgames.com/wordpress/wp-content/uploads/2011/02/figure-10.3.png)
+![libGDX's perspective camera](https://habrastorage.org/files/1fd/6b3/eaf/1fd6b3eafd8b4f1d8941ea3609a3781b.png)
 
 Instead of a `SpriteBatch` renders 2-dimensional objects, a `ModelBatch` is used to render 3-dimensional objects.
 Data needed to draw an object is contained in a `ModelObject`, which consists of a _Mesh_ and a _Material_.

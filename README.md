@@ -9,4 +9,4 @@ Check out the [Wiki](https://github.com/Slideshow776/Kotlin-Game-Development-wit
 
 _The code is converted from Java to Kotlin._
 
-![Book cover of "Java Game Development with LibGDX by Lee Stemkoski"](https://images-na.ssl-images-amazon.com/images/I/41jIXLls7PL._SX348_BO1,204,203,200_.jpg)
+[![Book cover of "Java Game Development with LibGDX by Lee Stemkoski"](https://images-na.ssl-images-amazon.com/images/I/41jIXLls7PL._SX348_BO1,204,203,200_.jpg)](https://www.apress.com/gp/book/9781484233238)
